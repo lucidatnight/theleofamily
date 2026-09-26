@@ -424,6 +424,111 @@ body.inside .ribbon{position:relative;z-index:2}
   .reel::before,.reel::after{flex:0 0 calc(50% - 60px)}
 }
 
+/* ── La Storia ─────────────────────────────────────
+   A page of writing with notes pinned round the edge of it. Three columns on
+   anything wide enough: notes, the history, more notes. The history keeps a
+   reading measure of about seventy characters however wide the window gets,
+   because a line of prose the full width of a laptop is exhausting to read
+   and nobody finishes it. */
+.storia{
+  display:grid;gap:22px;align-items:start;
+  grid-template-columns:minmax(150px,210px) minmax(0,1fr) minmax(150px,210px);
+}
+.pages{
+  background:var(--paper);border:1px solid var(--edge);border-radius:14px;
+  padding:34px clamp(22px,4vw,46px) 30px;
+  box-shadow:0 10px 30px rgba(60,28,14,.09);
+}
+.part{margin:0 0 34px}
+.part:last-child{margin-bottom:6px}
+.part h3{
+  font-family:var(--serif);font-weight:400;font-size:clamp(23px,3vw,29px);
+  margin:0 0 10px;color:var(--wine);
+}
+.part .body{font-family:var(--serif);font-size:19px;line-height:1.72;color:var(--ink);max-width:68ch}
+.part .body p{margin:0 0 15px}
+.part .body p:last-child{margin-bottom:0}
+/* The question that is standing in until somebody answers it. Italic and
+   grey so it never looks like it is part of the history. */
+.part .prompt{
+  font-family:var(--serif);font-style:italic;font-size:18px;line-height:1.65;
+  color:var(--ink-soft);opacity:.85;margin:0;max-width:62ch;
+}
+.part .byline{margin:12px 0 0;font-size:13.5px;color:var(--ink-soft)}
+.partbtns{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 0}
+.mini{
+  background:none;border:1px solid var(--edge);border-radius:9px;
+  padding:6px 13px;font-family:var(--sans);font-size:14px;color:var(--wine);cursor:pointer;
+}
+.mini:hover{border-color:var(--wine)}
+.mini.keep{color:#FFF9EF;background:var(--olive);border-color:transparent}
+.part textarea{
+  width:100%;box-sizing:border-box;font-family:var(--serif);font-size:18px;line-height:1.7;
+  padding:14px 15px;border:1px solid var(--edge);border-radius:11px;background:#FFFDF8;
+  color:var(--ink);resize:vertical;min-height:220px;
+}
+.part input.title{
+  width:100%;box-sizing:border-box;font-family:var(--serif);font-size:24px;
+  padding:9px 12px;margin:0 0 10px;border:1px solid var(--edge);border-radius:10px;background:#FFFDF8;color:var(--wine);
+}
+.hist{margin:10px 0 0;font-size:13.5px;color:var(--ink-soft)}
+.hist summary{cursor:pointer;color:var(--amalfi)}
+.hist .was{
+  white-space:pre-wrap;font-family:var(--serif);font-size:15px;line-height:1.55;
+  background:#F6EEE1;border-radius:9px;padding:10px 12px;margin:7px 0 0;max-height:200px;overflow:auto;
+}
+
+/* ── the notes in the margin ──────────────────────
+   Paper squares, pinned a couple of degrees off straight. The tilt is worked
+   out from the note's own id so it never changes under somebody while they
+   are reading it. */
+.margin{display:flex;flex-direction:column;gap:16px;padding-top:8px}
+.pin{
+  position:relative;border-radius:3px;padding:14px 14px 11px;
+  background:#FBEFC0;border:1px solid rgba(60,28,14,.13);
+  box-shadow:0 5px 14px rgba(60,28,14,.16);
+  transform:rotate(var(--tilt,-1.5deg));
+  transition:transform .18s ease, box-shadow .18s ease;
+}
+.pin:hover{transform:rotate(0deg);box-shadow:0 8px 20px rgba(60,28,14,.2)}
+.pin.c2{background:#DCEBD8}
+.pin.c3{background:#F3DDD3}
+.pin.done{opacity:.52}
+.pin .about{
+  display:block;font-size:11px;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--wine);margin:0 0 5px;
+}
+.pin .pintext{margin:0;font-family:var(--serif);font-size:16px;line-height:1.5;color:var(--ink);white-space:pre-wrap;word-break:break-word}
+.pin .pinwho{margin:9px 0 0;font-size:12.5px;color:var(--ink-soft)}
+.pinbtns{display:flex;gap:6px;margin:8px 0 0}
+.pinbtn{
+  background:none;border:1px solid rgba(60,28,14,.18);border-radius:7px;
+  padding:3px 9px;font-family:var(--sans);font-size:12px;color:var(--ink-soft);cursor:pointer;
+}
+.pinbtn:hover{border-color:var(--wine);color:var(--wine)}
+.pin textarea{
+  width:100%;box-sizing:border-box;font-family:var(--serif);font-size:16px;line-height:1.5;
+  border:none;background:transparent;resize:vertical;min-height:96px;color:var(--ink);padding:0;
+}
+.pin textarea:focus{outline:none}
+.pinnone{margin:16px 0 0;font-size:15px;color:var(--ink-soft)}
+.storyfoot{display:flex;flex-wrap:wrap;gap:12px;margin:24px 0 0}
+.storyfoot .ghostbtn{display:inline-block;width:auto;margin:0}
+/* A class that sets display beats the browser's own rule for [hidden], so
+   "Add a part" stayed on screen for everybody while the element cheerfully
+   reported that it was hidden. The test believed it, too. */
+.storyfoot .ghostbtn[hidden]{display:none}
+
+/* On a phone there are no margins to pin anything in, so the notes go
+   underneath in one column and say so. Pretending a 390px screen has a margin
+   is how you end up with a 90px-wide note nobody can read. */
+@media (max-width:820px){
+  .storia{grid-template-columns:1fr;gap:18px}
+  .margin{flex-direction:column}
+  .pin{transform:rotate(0deg)}
+  .pages{order:-1}
+}
+
 /* ── one photograph ───────────────────────────────── */
 .onegrid{display:grid;gap:28px;grid-template-columns:minmax(0,1.35fr) minmax(300px,1fr);align-items:start}
 .onepic{background:#241812;border-radius:14px;overflow:hidden;display:grid;place-items:center;min-height:240px}
@@ -662,6 +767,21 @@ footer p{margin:0 auto;max-width:44ch}
       <p class="reelcount" id="reelCount"></p>
 
       <p class="wallnone" id="wallNone" hidden></p>
+    </div>
+
+    <!-- La Storia -->
+    <div id="storiaRoom" hidden>
+      <p class="msg" id="storyMsg" hidden></p>
+      <div class="storia">
+        <aside class="margin" id="pinLeft" aria-label="Notes"></aside>
+        <article class="pages" id="storyPages"></article>
+        <aside class="margin" id="pinRight" aria-label="More notes"></aside>
+      </div>
+      <p class="pinnone" id="pinNone" hidden></p>
+      <div class="storyfoot">
+        <button class="ghostbtn" id="storyNote">Pin up a note</button>
+        <button class="ghostbtn" id="storyAdd" hidden>Add a part</button>
+      </div>
     </div>
 
     <button class="backlink" data-back>&larr; Back to the courtyard</button>
@@ -1045,11 +1165,13 @@ footer p{margin:0 auto;max-width:44ch}
     $('roomView').classList.add('on');
     window.scrollTo(0, 0);
 
-    /* Only one room is built. The others honestly say so. */
-    var built = (slug === 'fotografie');
-    $('fotoRoom').hidden = !built;
-    $('rvEmpty').hidden = built;
-    if (built){ fotoSay(''); pile = 'all'; setTab(); loadWall(); }
+    /* Two rooms are built now. The rest honestly say they are not. */
+    var foto = (slug === 'fotografie'), storia = (slug === 'storia');
+    $('fotoRoom').hidden = !foto;
+    $('storiaRoom').hidden = !storia;
+    $('rvEmpty').hidden = foto || storia;
+    if (foto){ fotoSay(''); pile = 'all'; setTab(); loadWall(); }
+    if (storia){ storySay(''); editingPart = null; draft = null; loadStory(); }
   }
 
   function setTab(){
@@ -1461,6 +1583,248 @@ footer p{margin:0 auto;max-width:44ch}
     }
     next();
   }
+
+  /* ── La Storia ───────────────────────────────────────
+     The room works differently from the rest of the house, and on purpose:
+     Tony writes the history, everybody else pins him a note. The page hides
+     the Edit buttons from everybody else, but that is only manners — the
+     server is what actually refuses, and there is a test that proves it by
+     asking it rudely with somebody else's token. */
+  var storySections = [], storyNotes = [], canWrite = false,
+      keeper = 'the family', editingPart = null, draft = null;
+
+  function storySay(text, good){
+    var m = $('storyMsg');
+    m.textContent = text || ''; m.className = 'msg' + (good ? ' ok' : ''); m.hidden = !text;
+  }
+
+  function loadStory(){
+    return api('/api/story').then(function(d){
+      storySections = d.sections || [];
+      storyNotes = d.notes || [];
+      canWrite = !!d.canEdit;
+      keeper = d.keeper || 'whoever keeps this';
+      $('storyAdd').hidden = !canWrite;
+      $('storyNote').textContent = canWrite ? 'Pin up a note' : 'Leave a note for ' + keeper;
+      drawStory(); drawPins();
+    }).catch(function(err){ storySay(err.message); });
+  }
+
+  /* Blank lines are paragraphs, single newlines are line breaks, and that is
+     the whole of the formatting. Anything more — bold, headings, links —
+     means either a toolbar nobody asked for or teaching a family to type
+     asterisks. Everything is escaped on the way in: it is a family website,
+     but it is still a website. */
+  function paras(text){
+    return String(text).trim().split(/\n{2,}/).map(function(p){
+      return '<p>' + esc(p).replace(/\n/g, '<br>') + '</p>';
+    }).join('');
+  }
+
+  function drawStory(){
+    if (editingPart !== null) return;      // never redraw over somebody's typing
+    var h = '';
+    storySections.forEach(function(s){
+      h += '<section class="part" data-id="' + s.id + '">';
+      h += '<h3>' + esc(s.title) + '</h3>';
+      if (String(s.body || '').trim()) h += '<div class="body">' + paras(s.body) + '</div>';
+      else h += '<p class="prompt">' + esc(s.prompt || 'Nothing here yet.') + '</p>';
+      if (s.updated_at){
+        h += '<p class="byline">Written by ' + esc(s.updated_by_name || 'somebody')
+           + ' ' + when(s.updated_at) + '</p>';
+      }
+      h += '<div class="partbtns">';
+      if (canWrite) h += '<button class="mini" data-edit="' + s.id + '">Edit</button>';
+      h += '<button class="mini" data-noteon="' + s.id + '">Leave a note about this</button>';
+      h += '</div>';
+      if (s.updated_at){
+        h += '<details class="hist" data-hist="' + s.id + '">'
+           + '<summary>What this said before</summary><div>Looking…</div></details>';
+      }
+      h += '</section>';
+    });
+    $('storyPages').innerHTML = h || '<p class="prompt">Nothing here yet.</p>';
+  }
+
+  function editPart(id){
+    var s = null;
+    storySections.forEach(function(x){ if (x.id === id) s = x; });
+    if (!s) return;
+    var part = document.querySelector('.part[data-id="' + id + '"]');
+    if (!part) return;
+    editingPart = id;
+    part.innerHTML =
+      '<input class="title" value="' + esc(s.title) + '" maxlength="90" aria-label="Heading">'
+      + '<textarea aria-label="' + esc(s.title) + '">' + esc(s.body || '') + '</textarea>'
+      + '<div class="partbtns">'
+      + '<button class="mini keep" data-save="' + id + '">Save</button>'
+      + '<button class="mini" data-cancel="1">Cancel</button>'
+      + (String(s.body || '').trim() ? '' : '<button class="mini" data-drop="' + id + '">Take this part out</button>')
+      + '</div>'
+      + '<p class="byline">Blank line between paragraphs. Nothing is lost when you save — every version is kept.</p>';
+    var t = part.querySelector('textarea');
+    // Tall enough for what is already there, so nobody writes into a letterbox.
+    t.style.height = Math.max(220, Math.min(680, t.value.split('\n').length * 30 + 120)) + 'px';
+    t.focus();
+  }
+
+  function savePart(id){
+    var part = document.querySelector('.part[data-id="' + id + '"]');
+    if (!part) return;
+    var title = part.querySelector('input.title').value;
+    var body = part.querySelector('textarea').value;
+    var btn = part.querySelector('[data-save]');
+    btn.disabled = true; btn.textContent = 'Saving…';
+    api('/api/story/sections/' + id, { method: 'POST', body: { title: title, body: body } })
+      .then(function(d){
+        editingPart = null;
+        storySections = d.sections;
+        drawStory(); drawPins();
+        storySay('Saved.', true);
+        setTimeout(function(){ storySay(''); }, 2200);
+      })
+      .catch(function(err){
+        btn.disabled = false; btn.textContent = 'Save';
+        // The typing stays on screen. Losing an hour's writing to a dropped
+        // connection is the one failure this room must never have.
+        storySay(err.message + ' Your writing is still here — try Save again.');
+      });
+  }
+
+  /* ── the notes ─────────────────────────────────────
+     Pinned round the edge, alternating left and right so the page looks like
+     a thing somebody has been working on rather than a form. */
+  function pinHtml(n){
+    var mine = me && n.user_id === me.id;
+    var about = null;
+    storySections.forEach(function(s){ if (s.id === n.section_id) about = s.title; });
+    var tilt = ((n.id * 37) % 9 - 4) * 0.7;      // steady per note, never re-rolls
+    var h = '<div class="pin c' + (n.id % 3 + 1) + (n.answered_at ? ' done' : '')
+          + '" data-note="' + n.id + '" style="--tilt:' + tilt.toFixed(1) + 'deg">';
+    if (about) h += '<span class="about">about ' + esc(about) + '</span>';
+    h += '<p class="pintext">' + esc(n.body) + '</p>';
+    h += '<p class="pinwho">' + esc(n.who || 'somebody') + ' · ' + when(n.created_at)
+       + (n.answered_at ? ' · seen to' : '') + '</p>';
+    if (canWrite || mine){
+      h += '<div class="pinbtns">';
+      if (canWrite) h += '<button class="pinbtn" data-done="' + n.id + '">'
+                       + (n.answered_at ? 'Put it back' : 'Seen to') + '</button>';
+      if (mine || canWrite) h += '<button class="pinbtn" data-unpin="' + n.id + '">Take down</button>';
+      h += '</div>';
+    }
+    return h + '</div>';
+  }
+
+  function draftHtml(){
+    var about = null;
+    storySections.forEach(function(s){ if (s.id === draft.section) about = s.title; });
+    return '<div class="pin c2" id="draftPin" style="--tilt:0deg">'
+      + (about ? '<span class="about">about ' + esc(about) + '</span>' : '')
+      + '<textarea id="draftText" maxlength="800" placeholder="'
+      + (canWrite ? 'A note to yourself…' : 'Tell ' + esc(keeper) + ' what you know…') + '"></textarea>'
+      + '<div class="pinbtns"><button class="pinbtn" id="pinIt">Pin it up</button>'
+      + '<button class="pinbtn" id="pinCancel">Never mind</button></div></div>';
+  }
+
+  function drawPins(){
+    var left = [], right = [];
+    storyNotes.forEach(function(n, k){ (k % 2 ? right : left).push(pinHtml(n)); });
+    if (draft) left.unshift(draftHtml());
+    $('pinLeft').innerHTML = left.join('');
+    $('pinRight').innerHTML = right.join('');
+    var none = storyNotes.length === 0 && !draft;
+    $('pinNone').hidden = !none;
+    $('pinNone').textContent = canWrite
+      ? 'Nothing pinned up yet. When somebody reads this and knows better, their note lands here.'
+      : 'Nothing pinned up yet. If you know a name, a year, or a better version of one of these — pin it up.';
+    if (draft){
+      var t = $('draftText');
+      if (t){ t.value = draft.text || ''; t.focus(); }
+    }
+  }
+
+  function openDraft(sectionId){
+    draft = { section: sectionId == null ? null : Number(sectionId), text: draft ? draft.text : '' };
+    drawPins();
+    var t = $('draftText');
+    if (t) t.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }
+
+  function pinDraft(){
+    var t = $('draftText');
+    if (!t || !t.value.trim()){ storySay('Write something on it first.'); return; }
+    var btn = $('pinIt'); btn.disabled = true; btn.textContent = 'Pinning…';
+    api('/api/story/notes', { method: 'POST', body: { body: t.value, section_id: draft.section } })
+      .then(function(d){
+        draft = null; storyNotes = d.notes; drawPins();
+        storySay('Pinned up.', true);
+        setTimeout(function(){ storySay(''); }, 2200);
+      })
+      .catch(function(err){
+        btn.disabled = false; btn.textContent = 'Pin it up';
+        draft.text = t.value;
+        storySay(err.message);
+      });
+  }
+
+  $('storyNote').addEventListener('click', function(){ openDraft(null); });
+  $('storyAdd').addEventListener('click', function(){
+    var title = prompt('What is this part called?');
+    if (title === null || !title.trim()) return;
+    api('/api/story/sections', { method: 'POST', body: { title: title } })
+      .then(function(d){ storySections = d.sections; drawStory(); drawPins(); })
+      .catch(function(err){ storySay(err.message); });
+  });
+
+  $('storiaRoom').addEventListener('click', function(e){
+    var t = e.target;
+    if (t.id === 'pinIt') return pinDraft();
+    if (t.id === 'pinCancel'){ draft = null; drawPins(); return; }
+    if (t.hasAttribute('data-edit')) return editPart(Number(t.getAttribute('data-edit')));
+    if (t.hasAttribute('data-save')) return savePart(Number(t.getAttribute('data-save')));
+    if (t.hasAttribute('data-cancel')){ editingPart = null; drawStory(); return; }
+    if (t.hasAttribute('data-noteon')) return openDraft(t.getAttribute('data-noteon'));
+    if (t.hasAttribute('data-drop')){
+      var id = Number(t.getAttribute('data-drop'));
+      if (!confirm('Take this part out? It stops showing on the page. Nothing written in it is deleted.')) return;
+      editingPart = null;
+      api('/api/story/sections/' + id, { method: 'DELETE' })
+        .then(function(d){ storySections = d.sections; drawStory(); drawPins(); })
+        .catch(function(err){ storySay(err.message); });
+      return;
+    }
+    if (t.hasAttribute('data-done')){
+      api('/api/story/notes/' + t.getAttribute('data-done') + '/answered', { method: 'POST' })
+        .then(function(d){ storyNotes = d.notes; drawPins(); })
+        .catch(function(err){ storySay(err.message); });
+      return;
+    }
+    if (t.hasAttribute('data-unpin')){
+      api('/api/story/notes/' + t.getAttribute('data-unpin'), { method: 'DELETE' })
+        .then(function(d){ storyNotes = d.notes; drawPins(); })
+        .catch(function(err){ storySay(err.message); });
+      return;
+    }
+  });
+
+  /* The old versions are only fetched when somebody actually opens the
+     triangle. Forty versions of six sections is a lot to send to a phone on
+     the chance that somebody is curious. */
+  $('storyPages').addEventListener('toggle', function(e){
+    var d = e.target;
+    if (!d.open || !d.hasAttribute('data-hist') || d.dataset.got === '1') return;
+    d.dataset.got = '1';
+    api('/api/story/sections/' + d.getAttribute('data-hist') + '/history')
+      .then(function(r){
+        var box = d.querySelector('div');
+        if (!r.edits.length){ box.textContent = 'This part has not been rewritten yet.'; return; }
+        box.innerHTML = r.edits.map(function(e2){
+          return '<p style="margin:10px 0 0">' + esc(e2.who || 'somebody') + ', ' + when(e2.at)
+               + '<span class="was">' + esc(String(e2.body || '').trim() || '(it was empty)') + '</span></p>';
+        }).join('');
+      })
+      .catch(function(){ d.querySelector('div').textContent = 'Could not fetch that just now.'; });
+  }, true);
 
   /* ── one photograph, open ────────────────────────── */
   var openPhoto = null;
