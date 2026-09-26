@@ -323,25 +323,76 @@ body.inside .ribbon{position:relative;z-index:2}
 .tab.on{background:var(--wine);border-color:var(--wine);color:#FFF9EF}
 .tab span{opacity:.75;font-size:13.5px}
 
-/* A wall, not a list. Square crops so the grid stays a grid whatever shape
-   the photographs are — a scanned portrait and a phone panorama in the same
-   row otherwise look like a mistake. */
-.wall{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
-.frame{
-  position:relative;aspect-ratio:1;border:none;padding:0;cursor:pointer;
-  background:#EFE3D2;border-radius:10px;overflow:hidden;
+/* ── the reel ─────────────────────────────────────────
+   One photograph at a time, the rest waiting small on either side. A grid of
+   fifty unnamed squares is a pile; this is an album. It is a real scroll
+   container rather than a transformed strip, which means a thumb-swipe on a
+   phone works without a line of code and the arrows are only there for people
+   using a mouse. */
+.reelwrap{position:relative;margin:0 0 10px}
+.reel{
+  display:flex;align-items:center;gap:14px;
+  overflow-x:auto;overflow-y:hidden;
+  padding:18px 0 22px;
+  /* No CSS scroll-snap. It and our own centring were two things steering the
+     same scrollbar and they disagreed — by 166px on a phone, 330 on a laptop.
+     The page settles the reel itself instead: when a swipe stops, whichever
+     photograph ended up nearest the middle is scrolled properly into it. Same
+     feel, one thing in charge. */
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
 }
-.frame img{width:100%;height:100%;object-fit:cover;display:block;
-  opacity:0;transition:opacity .35s ease}
-.frame img.in{opacity:1}
-.frame:hover{outline:3px solid var(--terracotta);outline-offset:2px}
-.frame:focus-visible{outline:3px solid var(--amalfi);outline-offset:2px}
-.frame .noname{
-  position:absolute;left:8px;bottom:8px;
+.reel::-webkit-scrollbar{display:none}
+.reel::before,.reel::after{content:'';flex:0 0 calc(50% - 90px)}
+
+.shot{
+  flex:0 0 auto;position:relative;border:none;padding:0;cursor:pointer;
+  width:112px;height:112px;border-radius:10px;overflow:hidden;
+  background:#E6D8C6;
+  opacity:.5;
+  transition:width .4s ease, height .4s ease, opacity .4s ease, box-shadow .4s ease;
+}
+.shot img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .35s ease}
+.shot img.in{opacity:1}
+.shot.mid{
+  width:min(62vw,520px);height:min(52vh,420px);
+  opacity:1;box-shadow:0 16px 40px rgba(60,28,14,.35);
+}
+.shot:focus-visible{outline:3px solid var(--amalfi);outline-offset:3px}
+.shot .noname{
+  position:absolute;left:9px;bottom:9px;
   background:rgba(123,45,59,.92);color:#FFF9EF;
   font-size:11.5px;letter-spacing:.06em;padding:4px 9px;border-radius:99px;
+  opacity:0;transition:opacity .3s ease;
 }
+.shot.mid .noname{opacity:1}
+
+.arrow{
+  position:absolute;top:50%;transform:translateY(-50%);z-index:3;
+  width:52px;height:52px;border-radius:50%;
+  background:rgba(255,246,233,.94);border:1px solid var(--edge);
+  color:var(--wine);font-size:26px;line-height:1;cursor:pointer;
+  box-shadow:0 4px 14px rgba(60,28,14,.22);
+}
+.arrow:hover{background:#fff;border-color:var(--wine)}
+.arrow:disabled{opacity:.3;cursor:default}
+.arrow.left{left:2px}
+.arrow.right{right:2px}
+
+.reelcap{
+  text-align:center;margin:0 0 6px;font-size:16px;color:var(--ink);min-height:26px;
+}
+.reelcap .none{color:var(--wine)}
+.reelcap .where{color:var(--ink-soft)}
+.reelcount{text-align:center;margin:0 0 4px;font-size:13.5px;color:var(--ink-soft)}
 .wallnone{margin:26px 0;font-size:17px;color:var(--ink-soft)}
+
+@media (max-width:560px){
+  .shot{width:84px;height:84px}
+  .shot.mid{width:78vw;height:44vh}
+  .arrow{width:44px;height:44px;font-size:22px}
+  .reel::before,.reel::after{flex:0 0 calc(50% - 60px)}
+}
 
 /* ── one photograph ───────────────────────────────── */
 .onegrid{display:grid;gap:28px;grid-template-columns:minmax(0,1.35fr) minmax(300px,1fr);align-items:start}
@@ -567,9 +618,16 @@ footer p{margin:0 auto;max-width:44ch}
         </div>
       </div>
       <p class="msg" id="fotoMsg" hidden></p>
-      <div class="wall" id="wall"></div>
+
+      <div class="reelwrap">
+        <button class="arrow left" id="reelPrev" aria-label="Previous photograph">&lsaquo;</button>
+        <div class="reel" id="reel" tabindex="0" aria-label="Photographs"></div>
+        <button class="arrow right" id="reelNext" aria-label="Next photograph">&rsaquo;</button>
+      </div>
+      <p class="reelcap" id="reelCap"></p>
+      <p class="reelcount" id="reelCount"></p>
+
       <p class="wallnone" id="wallNone" hidden></p>
-      <button class="backlink" id="wallMore" hidden>Older photographs</button>
     </div>
 
     <button class="backlink" data-back>&larr; Back to the courtyard</button>
@@ -856,11 +914,28 @@ footer p{margin:0 auto;max-width:44ch}
     });
   });
 
-  $('wallMore').addEventListener('click', function(){ wallPage++; loadWall(true); });
+  $('reelPrev').addEventListener('click', function(){ goTo(midIndex - 1); });
+  $('reelNext').addEventListener('click', function(){ goTo(midIndex + 1); });
+  $('reel').addEventListener('scroll', onReelScroll, { passive: true });
 
-  $('wall').addEventListener('click', function(e){
-    var f = e.target.closest('.frame');
-    if (f) showPhoto(Number(f.getAttribute('data-photo')));
+  /* Clicking the one in the middle opens it. Clicking one of the small ones
+     brings it to the middle first — nobody wants to open a photograph they
+     cannot see yet. */
+  $('reel').addEventListener('click', function(e){
+    var s = e.target.closest('.shot');
+    if (!s) return;
+    var i = Number(s.getAttribute('data-i'));
+    if (i === midIndex) showPhoto(Number(s.getAttribute('data-photo')));
+    else goTo(i);
+  });
+
+  $('reel').addEventListener('keydown', function(e){
+    if (e.key === 'ArrowRight'){ e.preventDefault(); goTo(midIndex + 1); }
+    else if (e.key === 'ArrowLeft'){ e.preventDefault(); goTo(midIndex - 1); }
+    else if (e.key === 'Enter' || e.key === ' '){
+      var p = wallItems[midIndex];
+      if (p){ e.preventDefault(); showPhoto(p.id); }
+    }
   });
 
   $('oneBack').addEventListener('click', function(){
@@ -997,39 +1072,174 @@ footer p{margin:0 auto;max-width:44ch}
     m.textContent = text; m.className = 'msg' + (good ? ' ok' : ''); m.hidden = !text;
   }
 
+  var midIndex = 0, lastPage = false, settling = null;
+
   function loadWall(more){
-    if (!more){ wallPage = 0; wallItems = []; releaseBlobs(); $('wall').innerHTML = ''; }
+    if (!more){
+      wallPage = 0; wallItems = []; midIndex = 0; lastPage = false;
+      releaseBlobs(); $('reel').innerHTML = '';
+    }
     return api('/api/photos?page=' + wallPage + (pile === 'unnamed' ? '&unnamed=1' : ''))
       .then(function(d){
         $('tabAll').textContent = '(' + d.total + ')';
         $('tabUnnamed').textContent = '(' + d.unnamed + ')';
+        var start = wallItems.length;
         wallItems = wallItems.concat(d.photos);
-        d.photos.forEach(addFrame);
-        var none = !wallItems.length;
-        $('wallNone').hidden = !none;
+        d.photos.forEach(function(p, k){ addShot(p, start + k); });
+        lastPage = d.photos.length < d.per;
+
+        var none = wallItems.length === 0;
+        $('wallNone').hidden = none === false;
         $('wallNone').textContent = pile === 'unnamed'
           ? 'Every photograph here has a name on it. That is not nothing.'
-          : 'Nothing on the wall yet. Add the first one.';
-        $('wallMore').hidden = d.photos.length < d.per;
+          : 'Nothing here yet. Add the first one.';
+        document.querySelector('.reelwrap').style.display = none ? 'none' : '';
+        $('reelCap').style.display = none ? 'none' : '';
+        $('reelCount').style.display = none ? 'none' : '';
+        if (none === false && more !== true) goTo(0, true);
+        else caption();
       })
       .catch(function(err){ fotoSay(err.message); });
   }
 
-  function addFrame(p){
+  function addShot(p, index){
     var b = document.createElement('button');
-    b.className = 'frame';
+    b.className = 'shot';
     b.setAttribute('data-photo', p.id);
+    b.setAttribute('data-i', index);
     var img = document.createElement('img');
     img.alt = p.who || 'A photograph nobody has named yet';
     b.appendChild(img);
-    if (!String(p.who || '').trim()){
+    if (String(p.who || '').trim() === ''){
       var tag = document.createElement('span');
       tag.className = 'noname';
       tag.textContent = 'who is this?';
       b.appendChild(tag);
     }
-    $('wall').appendChild(b);
-    loadPicture(img, 'thumb', p.slug);
+    $('reel').appendChild(b);
+  }
+
+  /* Only fetch what is near the middle. Every picture is a separate
+     authenticated request, and firing sixty of them the moment somebody walks
+     into the room is how a page feels broken on a phone. */
+  function loadNear(i){
+    var shots = $('reel').children;
+    for (var k = Math.max(0, i - 4); k < Math.min(shots.length, i + 5); k++){
+      var img = shots[k].querySelector('img');
+      if (img && img.dataset.asked !== '1'){
+        img.dataset.asked = '1';
+        loadPicture(img, 'thumb', wallItems[k].slug);
+      }
+    }
+  }
+
+  function caption(){
+    var p = wallItems[midIndex];
+    if (!p){ $('reelCap').innerHTML = ''; $('reelCount').textContent = ''; return; }
+    var who = String(p.who || '').trim();
+    var bits = [];
+    if (who) bits.push('<b>' + esc(who) + '</b>');
+    else bits.push('<span class="none">Nobody has named this one yet</span>');
+    var when = String(p.taken_hint || '').trim();
+    var where = String(p.place || '').trim();
+    if (when || where) bits.push('<span class="where">' + esc([when, where].filter(Boolean).join(' · ')) + '</span>');
+    $('reelCap').innerHTML = bits.join(' &nbsp;·&nbsp; ');
+    $('reelCount').textContent = (midIndex + 1) + ' of ' + wallItems.length
+      + (lastPage ? '' : '  (more loading as you go)');
+  }
+
+  function setMid(i){
+    var shots = $('reel').children;
+    if (i < 0 || i >= shots.length) return;
+    midIndex = i;
+    for (var k = 0; k < shots.length; k++) shots[k].classList.toggle('mid', k === i);
+    $('reelPrev').disabled = (i === 0);
+    $('reelNext').disabled = (i >= wallItems.length - 1 && lastPage);
+    loadNear(i);
+    caption();
+    // Fetch the next page before somebody runs out of reel.
+    if (lastPage === false && i > wallItems.length - 8){ wallPage++; loadWall(true); }
+  }
+
+  /* True while WE are doing the scrolling. Without this the arrows move two
+     at a time: goTo sets the middle and starts a smooth scroll, the scroll
+     fires the handler, and the handler re-picks the nearest item while the
+     animation is still halfway there. The page ends up arguing with itself. */
+  var steering = false, steerOff = null;
+
+  /* Where the reel has to be scrolled to for item i to sit in the middle.
+     Worked out rather than measured, because the moment .mid is applied the
+     element starts a 400ms width animation — measure it then and you get the
+     THUMBNAIL's geometry, which puts the big picture off to one side. That is
+     exactly what the first version did.
+
+     Everything before item i is still small, so its position is arithmetic:
+     the lead spacer, plus i small ones with their gaps. */
+  function bigWidth(){
+    var reel = $('reel');
+    var probe = document.createElement('button');
+    probe.className = 'shot mid';
+    probe.style.cssText = 'position:absolute;visibility:hidden;pointer-events:none;transition:none';
+    reel.appendChild(probe);
+    var w = probe.offsetWidth;
+    reel.removeChild(probe);
+    return w;
+  }
+
+  function centreFor(i){
+    var reel = $('reel'), shots = reel.children;
+    if (!shots.length) return 0;
+    var small = null;
+    for (var k = 0; k < shots.length; k++){
+      if (shots[k].classList.contains('mid') === false){ small = shots[k]; break; }
+    }
+    var smallW = small ? small.offsetWidth : 112;
+    var gap = parseFloat(getComputedStyle(reel).columnGap || getComputedStyle(reel).gap) || 14;
+    var lead = shots[0].offsetLeft;              // the ::before spacer; it never moves
+    var midW = bigWidth();
+    return lead + i * (smallW + gap) - (reel.clientWidth - midW) / 2;
+  }
+
+  function goTo(i, instant){
+    var shots = $('reel').children;
+    if (i < 0 || i >= shots.length) return;
+    steering = true;
+    clearTimeout(steerOff);
+    setMid(i);
+    var reel = $('reel');
+    requestAnimationFrame(function(){
+      var want = centreFor(i);
+      if (instant){
+        var was = reel.style.scrollBehavior;
+        reel.style.scrollBehavior = 'auto';
+        reel.scrollLeft = want;
+        reel.style.scrollBehavior = was || '';
+      } else {
+        reel.scrollTo({ left: want, behavior: 'smooth' });
+      }
+      // Long enough for a smooth scroll and the width transition to finish.
+      steerOff = setTimeout(function(){ steering = false; }, 650);
+    });
+  }
+
+  /* Somebody swiping on a phone never touches the arrows, so the middle has
+     to be worked out from where the scrolling actually stopped. */
+  function onReelScroll(){
+    if (steering) return;
+    clearTimeout(settling);
+    settling = setTimeout(function(){
+      if (steering) return;
+      var reel = $('reel'), shots = reel.children;
+      var centre = reel.scrollLeft + reel.clientWidth / 2;
+      var best = 0, bestGap = Infinity;
+      for (var k = 0; k < shots.length; k++){
+        var gap = Math.abs(shots[k].offsetLeft + shots[k].offsetWidth / 2 - centre);
+        if (gap < bestGap){ bestGap = gap; best = k; }
+      }
+      // Snap it home. This is what CSS scroll-snap would have done, except
+      // it is the same code path the arrows use, so the two cannot disagree.
+      goTo(best);
+    }, 90);
   }
 
   /* Uploading. One at a time rather than all at once on purpose: twenty
