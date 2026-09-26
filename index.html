@@ -167,6 +167,9 @@ input:focus,textarea:focus{outline:3px solid rgba(31,111,139,.35);outline-offset
 .linky:focus-visible{outline:3px solid rgba(31,111,139,.4);outline-offset:3px;border-radius:3px}
 
 .msg.ok{background:#E8F2E0;border-color:rgba(110,140,74,.45);color:#3F5C28}
+/* Upload trouble is reported one file per line, so the line breaks have to
+   survive. */
+.msg{white-space:pre-wrap}
 /* Sits under the box it explains. The negative top margin closes the gap the
    input's own bottom margin leaves, so the hint reads as part of that field
    rather than as the start of the next one. */
@@ -1035,29 +1038,48 @@ footer p{margin:0 auto;max-width:44ch}
   function uploadAll(files){
     var list = Array.prototype.slice.call(files);
     if (!list.length) return;
-    var done = 0, failed = 0;
-    fotoSay('Sending ' + list.length + (list.length === 1 ? ' photograph…' : ' photographs…'), true);
+    var total = list.length, done = 0, trouble = [];
+    fotoSay('Sending ' + total + (total === 1 ? ' photograph…' : ' photographs…'), true);
+
+    function report(){
+      if (!trouble.length) return fotoSay(done + ' added.', true);
+      /* Name the file and say what the server actually said. An earlier
+         version counted failures and threw the reasons away, which left
+         "1 would not go" on screen and nothing to act on — useless to the
+         person looking at it and useless to me when they asked why. */
+      var lines = trouble.slice(0, 4).map(function(t){ return t.name + ' — ' + t.why; });
+      if (trouble.length > 4) lines.push('…and ' + (trouble.length - 4) + ' more.');
+      fotoSay((done ? done + ' added. ' : '') + trouble.length
+        + (trouble.length === 1 ? ' would not go:\n' : ' would not go:\n') + lines.join('\n'));
+    }
 
     function next(){
-      if (!list.length){
-        fotoSay(done + ' added' + (failed ? ', ' + failed + ' would not go' : '') + '.', !failed);
-        return loadWall();
-      }
+      if (!list.length){ report(); return loadWall(); }
       var f = list.shift();
       fetch(API + '/api/photos', {
         method: 'POST',
         headers: { Authorization: 'Bearer ' + token, 'Content-Type': f.type || 'application/octet-stream' },
         body: f
       }).then(function(r){
-        return r.json().catch(function(){ return {}; }).then(function(d){
-          if (!r.ok) throw new Error(d.error || 'refused');
+        return r.text().then(function(txt){
+          var d = {};
+          try { d = JSON.parse(txt); } catch (e) {}
+          if (!r.ok) {
+            throw new Error(d.error || ('the server said ' + r.status
+              + (txt && txt.length < 120 ? ' — ' + txt : '')));
+          }
           done++;
         });
-      }).catch(function(){ failed++; })
-        .then(function(){
-          fotoSay('Sent ' + (done + failed) + ' of ' + (done + failed + list.length) + '…', true);
-          next();
+      }).catch(function(err){
+        trouble.push({
+          name: f.name || 'that file',
+          why: err.message + ' (' + (f.type || 'unknown type') + ', '
+             + (f.size > 1048576 ? (f.size / 1048576).toFixed(1) + 'MB' : Math.round(f.size / 1024) + 'K') + ')'
         });
+      }).then(function(){
+        fotoSay('Sent ' + (done + trouble.length) + ' of ' + total + '…', true);
+        next();
+      });
     }
     next();
   }
