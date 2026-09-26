@@ -227,6 +227,26 @@ input:focus{outline:3px solid rgba(31,111,139,.35);outline-offset:1px;border-col
 }
 .sheet > .wrap{padding-left:26px;padding-right:26px}
 
+/* ── the room you are standing in ─────────────────────
+   A second fixed layer over the front-door photograph, so walking into a
+   room fades the whole window rather than swapping it with a jolt. */
+.backdrop-room{
+  position:fixed;inset:0;z-index:-1;
+  background-position:center center;background-size:cover;background-repeat:no-repeat;
+  opacity:0;transition:opacity .55s ease;pointer-events:none;
+}
+.backdrop-room.on{opacity:1}
+.backdrop-room::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(44,18,9,.20),rgba(44,18,9,.05) 45%,rgba(44,18,9,.26));
+}
+/* Inside a room the hero is in the way — you have already been welcomed. */
+body.inside .hero{display:none}
+/* Enough height that the sheet reads as a wall of the room rather than a
+   strip floating on top of a photograph. */
+body.inside .sheet{border-radius:0;margin-top:0;min-height:72vh}
+body.inside .ribbon{position:relative;z-index:2}
+
 /* ── the rooms ────────────────────────────────────── */
 .rooms{padding:64px 0 20px}
 .rooms h2{
@@ -247,6 +267,46 @@ input:focus{outline:3px solid rgba(31,111,139,.35);outline-offset:1px;border-col
   border-radius:15px;
   padding:22px 20px 20px;
 }
+
+/* Signed out these are a description of the place. Signed in they become the
+   doors, and only then do the seven photographs get fetched — a stranger
+   reading the front page should not be made to download the whole house. */
+.room .art{display:none}
+.grid.open .room{padding:0 0 20px;overflow:hidden;cursor:pointer;text-align:left;
+  width:100%;font:inherit;color:inherit;transition:transform .18s ease, box-shadow .18s ease}
+.grid.open .room:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(70,35,18,.22)}
+.grid.open .room:focus-visible{outline:3px solid var(--amalfi);outline-offset:3px}
+.grid.open .room .art{display:block;margin:0 0 16px}
+.grid.open .room .art img{width:100%;height:150px;object-fit:cover;display:block}
+.grid.open .room .ico,
+.grid.open .room h3,
+.grid.open .room .en,
+.grid.open .room p{margin-left:20px;margin-right:20px}
+.grid.open .room .ico{margin-bottom:8px}
+
+/* ── inside a room ────────────────────────────────── */
+.roomview{padding:44px 0 30px;display:none}
+.roomview.on{display:block}
+.roomview h2{
+  font-family:var(--serif);font-weight:400;font-size:clamp(30px,5vw,44px);
+  margin:0 0 2px;color:var(--accent,var(--wine));
+}
+.roomview .en{
+  font-size:13px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;
+  color:var(--ink-soft);margin:0 0 22px;
+}
+.roomview .soon{
+  background:var(--paper);border:1px solid var(--edge);
+  border-left:5px solid var(--accent,var(--terracotta));
+  border-radius:13px;padding:22px 24px;margin:0 0 24px;
+}
+.roomview .soon p{margin:0;font-size:17px;color:var(--ink-soft);line-height:1.65}
+.backlink{
+  background:none;border:1px solid var(--edge);border-radius:11px;
+  padding:13px 20px;font-family:var(--sans);font-size:16px;color:var(--wine);
+  cursor:pointer;
+}
+.backlink:hover{border-color:var(--wine)}
 .room .ico{width:34px;height:34px;margin-bottom:12px;color:var(--accent,var(--terracotta))}
 .room h3{
   font-family:var(--serif);font-weight:400;font-size:24px;margin:0 0 2px;
@@ -286,6 +346,7 @@ footer p{margin:0 auto;max-width:44ch}
 <body>
 
 <div class="backdrop" aria-hidden="true"></div>
+<div class="backdrop-room" id="roomBack" aria-hidden="true"></div>
 
 <div class="ribbon"></div>
 
@@ -305,7 +366,7 @@ footer p{margin:0 auto;max-width:44ch}
       <!-- ── coming in ─────────────────────────────── -->
       <section class="screen on" id="scr-signin">
         <h2>Come in</h2>
-        <p class="sub">This house is for family. The door stays locked.</p>
+        <p class="sub">This house is for family.</p>
 
         <form id="formSignin" novalidate>
           <label for="siEmail">Your email</label>
@@ -390,7 +451,7 @@ footer p{margin:0 auto;max-width:44ch}
             <p class="sub" style="margin:0" id="inSince"></p>
           </div>
         </div>
-        <p class="note" id="inRooms">The rooms below aren't built yet &mdash; that's next.</p>
+        <p class="note" id="inRooms">Seven doors below. Most of what's behind them is still empty &mdash; that's the next part.</p>
         <div class="alt">
           <button class="linky" data-go="signout">Sign out</button>
         </div>
@@ -417,13 +478,21 @@ footer p{margin:0 auto;max-width:44ch}
     </div>
   </section>
 
-  <section class="wrap rooms">
-    <h2>What is inside</h2>
-    <p class="lede">Seven rooms. Everybody can add to all of them — that is the whole point of it.</p>
+  <section class="wrap roomview" id="roomView">
+    <h2 id="rvTitle"></h2>
+    <p class="en" id="rvEn"></p>
+    <div class="soon"><p id="rvSoon"></p></div>
+    <button class="backlink" data-back>&larr; Back to the courtyard</button>
+  </section>
 
-    <div class="grid">
+  <section class="wrap rooms" id="roomsSection">
+    <h2 id="roomsHead">What is inside</h2>
+    <p class="lede" id="roomsLede">Seven rooms. Everybody can add to all of them — that is the whole point of it.</p>
 
-      <article class="room" style="--accent:#7B2D3B">
+    <div class="grid" id="grid">
+
+      <article class="room" style="--accent:#7B2D3B" data-room="storia" data-title="La Storia">
+        <div class="art"></div>
         <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H19v3H6.5A2.5 2.5 0 0 1 4 20.5z"/><path d="M8 7.5h7M8 11h5"/>
         </svg>
@@ -432,7 +501,8 @@ footer p{margin:0 auto;max-width:44ch}
         <p>Written together, a page anyone can add to. What we remember, corrected by whoever remembers it better.</p>
       </article>
 
-      <article class="room" style="--accent:#1F6F8B">
+      <article class="room" style="--accent:#1F6F8B" data-room="fotografie" data-title="Le Fotografie">
+        <div class="art"></div>
         <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <rect x="2.5" y="6.5" width="19" height="13.5" rx="2.5"/><path d="M8.5 6.5 10 3.8h4l1.5 2.7"/><circle cx="12" cy="13.2" r="3.6"/>
         </svg>
@@ -441,7 +511,8 @@ footer p{margin:0 auto;max-width:44ch}
         <p>Everybody uploads. The shoebox at your mother's house belongs up here where the rest of us can see it.</p>
       </article>
 
-      <article class="room" style="--accent:#6E8C4A">
+      <article class="room" style="--accent:#6E8C4A" data-room="albero" data-title="L'Albero">
+        <div class="art"></div>
         <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="12" cy="4.6" r="2.4"/><circle cx="5.5" cy="19.4" r="2.4"/><circle cx="18.5" cy="19.4" r="2.4"/><path d="M12 7v4.2M5.5 17V13a1.5 1.5 0 0 1 1.5-1.5h10a1.5 1.5 0 0 1 1.5 1.5v4"/>
         </svg>
@@ -450,7 +521,8 @@ footer p{margin:0 auto;max-width:44ch}
         <p>It opens out as far as anyone can take it, back to the towns people left and forward to whoever was born last week.</p>
       </article>
 
-      <article class="room" style="--accent:#C05A3E">
+      <article class="room" style="--accent:#C05A3E" data-room="cucina" data-title="La Cucina">
+        <div class="art"></div>
         <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M4 10.5h16"/><path d="M5.5 10.5v6A3.5 3.5 0 0 0 9 20h6a3.5 3.5 0 0 0 3.5-3.5v-6"/><path d="M9 7.2c0-1.3 1.3-1.6 1.3-2.9M12.6 7.2c0-1.3 1.3-1.6 1.3-2.9"/>
         </svg>
@@ -459,7 +531,8 @@ footer p{margin:0 auto;max-width:44ch}
         <p>Scanned in her own handwriting, typed underneath so you can search it, and always with whose recipe it was.</p>
       </article>
 
-      <article class="room" style="--accent:#B8863B">
+      <article class="room" style="--accent:#B8863B" data-room="voci" data-title="Le Voci">
+        <div class="art"></div>
         <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <rect x="9" y="2.6" width="6" height="11.5" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3.4M9 21.4h6"/>
         </svg>
@@ -468,7 +541,8 @@ footer p{margin:0 auto;max-width:44ch}
         <p>Press record on your phone and let them talk. Ten minutes of her actual voice outlasts everything else on this page.</p>
       </article>
 
-      <article class="room" style="--accent:#D9452F">
+      <article class="room" style="--accent:#D9452F" data-room="calendario" data-title="Il Calendario">
+        <div class="art"></div>
         <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 9.8h18M8 3v4M16 3v4"/><circle cx="8.4" cy="14.2" r="1.15" fill="currentColor" stroke="none"/><circle cx="12" cy="14.2" r="1.15" fill="currentColor" stroke="none"/>
         </svg>
@@ -477,7 +551,8 @@ footer p{margin:0 auto;max-width:44ch}
         <p>Who to call this week. Birthdays, anniversaries, onomastici, and the ones we keep on the day they left.</p>
       </article>
 
-      <article class="room" style="--accent:#8A5A9E">
+      <article class="room" style="--accent:#8A5A9E" data-room="tavola" data-title="La Tavola">
+        <div class="art"></div>
         <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M20.5 12.3c0 3.9-3.8 7-8.5 7a9.8 9.8 0 0 1-2.6-.35L4.2 20.6l1.3-3.6A6.6 6.6 0 0 1 3.5 12.3c0-3.9 3.8-7 8.5-7s8.5 3.1 8.5 7z"/>
         </svg>
@@ -574,6 +649,92 @@ footer p{margin:0 auto;max-width:44ch}
     $('inName').textContent = 'Come in, ' + (me.name || '').split(' ')[0] + '.';
     $('inSince').textContent = me.owner ? 'You look after this place.' : 'Good to see you.';
     show('in');
+    openHouse();
+  }
+
+  /* ── the courtyard ───────────────────────────────────
+     The same seven cards the front page shows to everybody, except that
+     signing in gives them their photographs and turns them into doors. One
+     layout, two states, rather than a second page that has to be kept in
+     step with the first. */
+  var SOON = {
+    storia:     'Nothing written here yet. When it is built, anybody can add to it, and whoever remembers it better can correct it.',
+    fotografie: 'No photographs yet. This is the one that needs the shoebox at your mother’s house.',
+    albero:     'The tree is empty. It will open out as far back as anybody can take it.',
+    cucina:     'No recipes yet. Scanned in her own handwriting, typed underneath so you can search it.',
+    voci:       'Nothing recorded yet. This is the room with a clock on it — ten minutes of somebody’s actual voice outlasts the rest of this website.',
+    calendario: 'No dates yet. Birthdays, anniversaries, name days, and the ones we keep on the day they left.',
+    tavola:     'Nobody has said anything yet. The whole table at once, or one person quietly.'
+  };
+  var artLoaded = false;
+
+  function openHouse(){
+    var grid = $('grid');
+    if (!artLoaded){
+      Array.prototype.forEach.call(grid.querySelectorAll('.room'), function(card){
+        var slug = card.getAttribute('data-room');
+        var img = new Image();
+        img.src = 'img/' + slug + '-card.jpg';
+        img.alt = '';
+        img.loading = 'lazy';
+        card.querySelector('.art').appendChild(img);
+        // It is only a button once it does something, so it only becomes
+        // reachable by keyboard once it does something.
+        card.setAttribute('role', 'button');
+        card.setAttribute('tabindex', '0');
+      });
+      artLoaded = true;
+    }
+    grid.classList.add('open');
+    $('roomsHead').textContent = 'Where do you want to go?';
+    $('roomsLede').textContent = 'Seven rooms. Everybody can add to all of them — that is the whole point of it.';
+  }
+
+  function closeHouse(){
+    var grid = $('grid');
+    grid.classList.remove('open');
+    Array.prototype.forEach.call(grid.querySelectorAll('.room'), function(card){
+      card.removeAttribute('role');
+      card.removeAttribute('tabindex');
+    });
+    $('roomsHead').textContent = 'What is inside';
+  }
+
+  document.addEventListener('keydown', function(e){
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    var card = e.target.closest && e.target.closest('.room');
+    if (card && $('grid').classList.contains('open')){
+      e.preventDefault();
+      enterRoom(card);
+    }
+  });
+
+  function enterRoom(card){
+    var slug = card.getAttribute('data-room');
+    var accent = card.style.getPropertyValue('--accent');
+    $('rvTitle').textContent = card.getAttribute('data-title');
+    $('rvTitle').parentElement.style.setProperty('--accent', accent);
+    $('rvEn').textContent = card.querySelector('.en').textContent;
+    $('rvSoon').textContent = SOON[slug] || 'This room is still being built.';
+
+    var back = $('roomBack');
+    back.style.backgroundImage = 'url("img/' + slug + '.jpg")';
+    back.classList.add('on');
+
+    document.body.classList.add('inside');
+    $('roomsSection').style.display = 'none';
+    document.querySelector('.door').parentElement.style.display = 'none';
+    $('roomView').classList.add('on');
+    window.scrollTo(0, 0);
+  }
+
+  function leaveRoom(){
+    $('roomBack').classList.remove('on');
+    document.body.classList.remove('inside');
+    $('roomsSection').style.display = '';
+    document.querySelector('.door').parentElement.style.display = '';
+    $('roomView').classList.remove('on');
+    window.scrollTo(0, 0);
   }
 
   function busy(form, on, label){
@@ -585,13 +746,24 @@ footer p{margin:0 auto;max-width:44ch}
 
   /* ── the screens ─────────────────────────────────── */
   document.addEventListener('click', function(e){
-    var b = e.target.closest ? e.target.closest('[data-go]') : null;
+    if (!e.target.closest) return;
+
+    if (e.target.closest('[data-back]')) { leaveRoom(); return; }
+
+    /* Only a signed-in card is a door. Signed out the same element is just a
+       description of the place, and clicking it should do nothing. */
+    var card = e.target.closest('.room');
+    if (card && $('grid').classList.contains('open')) { enterRoom(card); return; }
+
+    var b = e.target.closest('[data-go]');
     if (!b) return;
     var to = b.getAttribute('data-go');
     if (to === 'signout'){
       api('/api/signout', { method: 'POST' }).catch(function(){});
       token = null; me = null;
       try { localStorage.removeItem(KEY); } catch (err) {}
+      leaveRoom();
+      closeHouse();
       show('signin');
       say('Signed out. See you soon.', true);
       return;
