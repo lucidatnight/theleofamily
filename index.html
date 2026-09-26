@@ -341,6 +341,10 @@ body.inside .ribbon{position:relative;z-index:2}
      feel, one thing in charge. */
   -webkit-overflow-scrolling:touch;
   scrollbar-width:none;
+  /* Held at the tallest the middle is ever allowed to be. The middle now
+     takes the shape of whatever photograph it is showing, and without this a
+     portrait followed by a landscape would make the whole page jump. */
+  min-height:calc(min(52vh,420px) + 40px);
 }
 .reel::-webkit-scrollbar{display:none}
 .reel::before,.reel::after{content:'';flex:0 0 calc(50% - 90px)}
@@ -373,6 +377,12 @@ body.inside .ribbon{position:relative;z-index:2}
    photographs painted at once. */
 .shot.mid img.big.in{opacity:1}
 .shot:not(.mid) img{filter:saturate(.88)}
+/* The BIGGEST the middle may be, not the size it is. A photograph is shown at
+   its own shape: the page measures this envelope and then fits the
+   photograph's proportions inside it, writing the real width and height onto
+   the element. A fixed landscape box cropped every portrait photograph
+   through the middle — the first few in the family's reel are upright, and
+   they were losing their heads and their feet. */
 .shot.mid{
   width:min(62vw,520px);height:min(52vh,420px);
   opacity:1;box-shadow:0 16px 40px rgba(60,28,14,.35);
@@ -409,6 +419,7 @@ body.inside .ribbon{position:relative;z-index:2}
 @media (max-width:560px){
   .shot{width:84px;height:84px}
   .shot.mid{width:78vw;height:44vh}
+  .reel{min-height:calc(44vh + 40px)}
   .arrow{width:44px;height:44px;font-size:22px}
   .reel::before,.reel::after{flex:0 0 calc(50% - 60px)}
 }
@@ -1156,7 +1167,23 @@ footer p{margin:0 auto;max-width:44ch}
       var img = shots[k].querySelector('img.thumb');
       if (img && img.dataset.asked !== '1'){
         img.dataset.asked = '1';
-        loadPicture(img, 'thumb', wallItems[k].slug);
+        /* The shape of the middle is worked out before its thumbnail has
+           necessarily arrived, from what the database says the photograph
+           measures. If the picture turns out to disagree — a file whose
+           stored dimensions were written down before it was turned upright —
+           put it right once it is actually here. */
+        (function(at, el){
+          loadPicture(el, 'thumb', wallItems[at].slug).then(function(){
+            if (at !== midIndex || !el.naturalWidth) return;
+            var p = wallItems[at];
+            // Compare the two ANSWERS, not the element's current size: it may
+            // be halfway through a 0.62s resize, which would read as a
+            // disagreement on every single photograph.
+            var assumed = (p && p.w && p.h) ? p.w / p.h : 4 / 3;
+            var real = el.naturalWidth / el.naturalHeight;
+            if (Math.abs(real - assumed) / real > 0.02) goTo(at);
+          });
+        })(k, img);
       }
     }
   }
@@ -1248,6 +1275,7 @@ footer p{margin:0 auto;max-width:44ch}
     if (i < 0 || i >= shots.length) return;
     midIndex = i;
     for (var k = 0; k < shots.length; k++) shots[k].classList.toggle('mid', k === i);
+    sizeMid(i);
     $('reelPrev').disabled = (i === 0);
     $('reelNext').disabled = (i >= wallItems.length - 1 && lastPage);
     loadNear(i);
@@ -1271,28 +1299,72 @@ footer p{margin:0 auto;max-width:44ch}
 
      Everything before item i is still small, so its position is arithmetic:
      the lead spacer, plus i small ones with their gaps. */
-  function bigWidth(){
+  /* Ask the stylesheet how big a photograph is allowed to be, by standing a
+     hidden one up and measuring it. Never measure a real one: at the moment
+     any of this is worked out, two of them are partway through a 0.62s resize
+     and their sizes are both wrong and changing. */
+  function probeSize(cls){
     var reel = $('reel');
     var probe = document.createElement('button');
-    probe.className = 'shot mid';
+    probe.className = cls;
     probe.style.cssText = 'position:absolute;visibility:hidden;pointer-events:none;transition:none';
     reel.appendChild(probe);
-    var w = probe.offsetWidth;
+    var box = { w: probe.offsetWidth, h: probe.offsetHeight };
     reel.removeChild(probe);
-    return w;
+    return box;
+  }
+  function midEnvelope(){ return probeSize('shot mid'); }
+
+  /* What shape is photograph i? The loaded thumbnail is the honest answer —
+     it was written by the server with the orientation already baked in. The
+     database's own width and height are the fallback for one that has not
+     arrived yet; they agree with the thumbnails on every photograph in the
+     family album, but the thumbnail is the one that cannot be wrong. */
+  function ratioFor(i){
+    var shots = $('reel').children;
+    var t = shots[i] && shots[i].querySelector('img.thumb');
+    if (t && t.naturalWidth && t.naturalHeight) return t.naturalWidth / t.naturalHeight;
+    var p = wallItems[i];
+    if (p && p.w && p.h) return p.w / p.h;
+    return 4 / 3;
+  }
+
+  /* The photograph's own shape, fitted inside the envelope the stylesheet
+     allows. Tall ones come out narrow, wide ones come out short, and neither
+     is cropped. */
+  function midBox(i){
+    var env = midEnvelope(), r = ratioFor(i);
+    var h = env.h, w = h * r;
+    if (w > env.w){ w = env.w; h = w / r; }
+    return { w: Math.round(w), h: Math.round(h) };
+  }
+
+  function sizeMid(i){
+    var shots = $('reel').children;
+    for (var k = 0; k < shots.length; k++){
+      if (k === i) continue;
+      // Back to the stylesheet's thumbnail size, and it animates on the way.
+      shots[k].style.width = ''; shots[k].style.height = '';
+    }
+    if (!shots[i]) return;
+    var box = midBox(i);
+    shots[i].style.width = box.w + 'px';
+    shots[i].style.height = box.h + 'px';
   }
 
   function centreFor(i){
     var reel = $('reel'), shots = reel.children;
     if (!shots.length) return 0;
-    var small = null;
-    for (var k = 0; k < shots.length; k++){
-      if (shots[k].classList.contains('mid') === false){ small = shots[k]; break; }
-    }
-    var smallW = small ? small.offsetWidth : 112;
+    /* A thumbnail's width from the stylesheet, NOT by measuring one. The first
+       non-mid shot used to be measured here, and the first non-mid shot is
+       usually the one that has just stopped being the middle — caught halfway
+       through shrinking, several hundred pixels too wide. Every photograph
+       after it was then placed off to one side. It only became obvious once
+       photographs stopped all being the same shape. */
+    var smallW = probeSize('shot').w;
     var gap = parseFloat(getComputedStyle(reel).columnGap || getComputedStyle(reel).gap) || 14;
     var lead = shots[0].offsetLeft;              // the ::before spacer; it never moves
-    var midW = bigWidth();
+    var midW = midBox(i).w;                      // this photograph's width, not a fixed one
     return lead + i * (smallW + gap) - (reel.clientWidth - midW) / 2;
   }
 
