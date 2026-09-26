@@ -349,11 +349,30 @@ body.inside .ribbon{position:relative;z-index:2}
   flex:0 0 auto;position:relative;border:none;padding:0;cursor:pointer;
   width:112px;height:112px;border-radius:10px;overflow:hidden;
   background:#E6D8C6;
-  opacity:.5;
-  transition:width .4s ease, height .4s ease, opacity .4s ease, box-shadow .4s ease;
+  opacity:.45;
+  /* Slow and eased-out rather than linear-ish. Everything moves at once here
+     — one growing, one shrinking, the reel sliding — and at 0.4s ease that
+     reads as a lurch. The curve below decelerates hard at the end, which is
+     what makes it feel like settling instead of stopping. */
+  transition:width .62s cubic-bezier(.22,.61,.36,1),
+             height .62s cubic-bezier(.22,.61,.36,1),
+             opacity .5s ease,
+             box-shadow .55s ease;
 }
-.shot img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .35s ease}
+/* Two layers: the thumbnail, and the proper picture faded in over it once
+   this one is in the middle. Before, the big photograph was a 420px
+   thumbnail stretched to 520 — soft, and the swap would have been a jump. */
+.shot img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;
+  opacity:0;transition:opacity .45s ease;
+}
 .shot img.in{opacity:1}
+.shot img.big{opacity:0;transition:opacity .55s ease}
+/* Visible only while this one is in the middle, so stepping away fades the
+   big copy back down to its thumbnail instead of leaving sixty full-size
+   photographs painted at once. */
+.shot.mid img.big.in{opacity:1}
+.shot:not(.mid) img{filter:saturate(.88)}
 .shot.mid{
   width:min(62vw,520px);height:min(52vh,420px);
   opacity:1;box-shadow:0 16px 40px rgba(60,28,14,.35);
@@ -397,7 +416,11 @@ body.inside .ribbon{position:relative;z-index:2}
 /* ── one photograph ───────────────────────────────── */
 .onegrid{display:grid;gap:28px;grid-template-columns:minmax(0,1.35fr) minmax(300px,1fr);align-items:start}
 .onepic{background:#241812;border-radius:14px;overflow:hidden;display:grid;place-items:center;min-height:240px}
-.onepic img{max-width:100%;max-height:74vh;display:block}
+/* Same reason as the reel: the src is cleared before the new one is fetched,
+   so without this the photograph you were looking at blinks out and the next
+   one lands. It fades instead. */
+.onepic img{max-width:100%;max-height:74vh;display:block;opacity:0;transition:opacity .4s ease}
+.onepic img.in{opacity:1}
 .oneside label{margin-top:14px}
 .oneside .btn{margin-top:8px}
 .onemeta{margin:16px 0 0;font-size:14px;color:var(--ink-soft);line-height:1.6}
@@ -1048,7 +1071,7 @@ footer p{margin:0 auto;max-width:44ch}
     blobs = [];
   }
 
-  function loadPicture(imgEl, size, slug){
+  function loadPicture(imgEl, size, slug, quiet){
     return fetch(API + '/photos/' + size + '/' + slug + '.jpg', {
       headers: token ? { Authorization: 'Bearer ' + token } : {}
     }).then(function(r){
@@ -1060,6 +1083,10 @@ footer p{margin:0 auto;max-width:44ch}
       imgEl.onload = function(){ imgEl.classList.add('in'); };
       imgEl.src = url;
     }).catch(function(){
+      // quiet is for the big layer on the reel: there is already a thumbnail
+      // underneath it, so a failure there should leave that showing rather
+      // than fade a broken frame over the top of it.
+      if (quiet){ imgEl.removeAttribute('src'); return; }
       imgEl.alt = 'This photograph could not be loaded.';
       imgEl.classList.add('in');
     });
@@ -1108,6 +1135,7 @@ footer p{margin:0 auto;max-width:44ch}
     b.setAttribute('data-photo', p.id);
     b.setAttribute('data-i', index);
     var img = document.createElement('img');
+    img.className = 'thumb';
     img.alt = p.who || 'A photograph nobody has named yet';
     b.appendChild(img);
     if (String(p.who || '').trim() === ''){
@@ -1125,11 +1153,78 @@ footer p{margin:0 auto;max-width:44ch}
   function loadNear(i){
     var shots = $('reel').children;
     for (var k = Math.max(0, i - 4); k < Math.min(shots.length, i + 5); k++){
-      var img = shots[k].querySelector('img');
+      var img = shots[k].querySelector('img.thumb');
       if (img && img.dataset.asked !== '1'){
         img.dataset.asked = '1';
         loadPicture(img, 'thumb', wallItems[k].slug);
       }
+    }
+  }
+
+  /* The one in the middle gets the proper 1600px copy, faded in over the
+     thumbnail that is already sitting there. Two reasons, and the second one
+     matters more.
+
+     The obvious one: a 420px thumbnail stretched to 520 is soft, and the
+     middle is the only photograph anybody is actually looking at.
+
+     The quieter one: changing the src of a single <img> empties it for a frame
+     or two before the new picture arrives — the picture blinks out, then in.
+     That blink, on top of three things resizing at once, is what "it feels
+     violent" was describing. Two layers never have a blank frame between them.
+
+     Only the middle and its immediate neighbours are kept. Sixty decoded
+     1600px photographs is a few hundred megabytes of somebody's phone held
+     for pictures that are 84 pixels wide. */
+  function bigLayer(shot){
+    var big = shot.querySelector('img.big');
+    if (!big){
+      big = document.createElement('img');
+      big.className = 'big';
+      // The thumbnail underneath already carries the description; a screen
+      // reader should not hear the same photograph twice.
+      big.alt = '';
+      big.setAttribute('aria-hidden', 'true');
+      shot.appendChild(big);
+    }
+    return big;
+  }
+
+  function loadBig(i){
+    var shots = $('reel').children;
+    if (i < 0 || i >= shots.length || !wallItems[i]) return;
+    var big = bigLayer(shots[i]);
+    if (big.dataset.asked === '1') return;
+    big.dataset.asked = '1';
+    loadPicture(big, 'display', wallItems[i].slug, true);
+  }
+
+  var bigSoon = null;
+  function bigsFor(i){
+    loadBig(i);
+    /* The neighbours a moment later. Somebody holding the arrow down walks
+       through ten photographs in two seconds, and starting a full-size
+       download for each one means ten requests fighting over the connection
+       and none of them arriving. The delay means only where you stop is
+       fetched. */
+    clearTimeout(bigSoon);
+    bigSoon = setTimeout(function(){ loadBig(i - 1); loadBig(i + 1); }, 450);
+    trimBigs(i);
+  }
+
+  function trimBigs(i){
+    var shots = $('reel').children;
+    for (var k = 0; k < shots.length; k++){
+      if (Math.abs(k - i) <= 2) continue;
+      var big = shots[k].querySelector('img.big');
+      if (!big || !big.getAttribute('src')) continue;
+      var url = big.src;
+      big.removeAttribute('src');
+      big.classList.remove('in');
+      delete big.dataset.asked;
+      var at = blobs.indexOf(url);
+      if (at >= 0) blobs.splice(at, 1);
+      try { URL.revokeObjectURL(url); } catch (e) {}
     }
   }
 
@@ -1156,6 +1251,7 @@ footer p{margin:0 auto;max-width:44ch}
     $('reelPrev').disabled = (i === 0);
     $('reelNext').disabled = (i >= wallItems.length - 1 && lastPage);
     loadNear(i);
+    bigsFor(i);
     caption();
     // Fetch the next page before somebody runs out of reel.
     if (lastPage === false && i > wallItems.length - 8){ wallPage++; loadWall(true); }
