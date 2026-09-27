@@ -20,6 +20,13 @@
   --edge:rgba(43,33,24,.14);
   --serif:'Iowan Old Style','Palatino Linotype',Palatino,'Book Antiqua',Georgia,serif;
   --sans:system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  /* La Cucina only, and only ever for the family's own words — what they call
+     a dish, and what is different about somebody's version. A photograph of a
+     handwritten card and a typed transcription of it have to look different,
+     or the transcription quietly becomes the recipe. Nothing structural is set
+     in it: on a machine with none of these installed it falls back to a system
+     cursive and stays readable, which is all it has to do. */
+  --hand:'Bradley Hand','Segoe Script','Brush Script MT','Snell Roundhand',cursive;
   /* A maiolica tile, the kind on a kitchen wall in Vietri. Drawn in cream so
      it reads as glaze on top of the terracotta rather than dirt under it. */
   --tile:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='%23FFF6E9' stroke-width='2'%3E%3Ccircle cx='36' cy='36' r='13'/%3E%3Cpath d='M36 7 L65 36 L36 65 L7 36 Z'/%3E%3Cpath d='M36 23 L49 36 L36 49 L23 36 Z'/%3E%3C/g%3E%3Cg fill='%23FFF6E9'%3E%3Ccircle cx='0' cy='0' r='5.5'/%3E%3Ccircle cx='72' cy='0' r='5.5'/%3E%3Ccircle cx='0' cy='72' r='5.5'/%3E%3Ccircle cx='72' cy='72' r='5.5'/%3E%3Ccircle cx='36' cy='36' r='3.5'/%3E%3C/g%3E%3C/svg%3E");
@@ -628,6 +635,103 @@ path.limb{
   font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);padding:5px 6px;
 }
 .sdcard .edit:hover{color:var(--wine)}
+/* ── La Cucina: a shelf of dishes, then one dish open ─
+   Two screens inside one room. The shelf is cards by group; clicking one
+   opens the dish, with every version of it side by side.
+
+   The handwriting font is doing real work, not decoration. A photograph of
+   somebody's index card and a typed transcription of it are different things
+   and have to look different, or the transcription quietly becomes the
+   recipe and the card becomes a picture of it. */
+.cubar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 20px}
+.grpname{
+  font-family:var(--serif);font-weight:400;font-size:15px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--wine);margin:26px 0 12px;
+  border-bottom:1px solid var(--edge);padding-bottom:6px;
+}
+.grpname:first-child{margin-top:0}
+.shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(216px,1fr));gap:18px}
+.dishcard{
+  background:var(--paper);border:1px solid var(--edge);border-radius:14px;
+  overflow:hidden;cursor:pointer;text-align:left;padding:0;font:inherit;color:inherit;
+  transition:transform .16s ease,box-shadow .16s ease;display:block;width:100%;
+}
+.dishcard:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(43,33,24,.10)}
+.dishcard .top{height:92px;background:linear-gradient(140deg,#D8C7A6,#C7A98A);position:relative;overflow:hidden}
+.dishcard .top img{width:100%;height:100%;object-fit:cover;display:block}
+.dishcard .top .count{
+  position:absolute;right:9px;bottom:8px;background:rgba(255,253,248,.92);
+  border-radius:999px;padding:3px 9px;font-size:11.5px;color:var(--ink-soft);
+}
+/* A dish nobody has written down yet is not a mistake — it is the ask. So it
+   is drawn as an empty card on purpose rather than hidden until it is full. */
+.dishcard.wanted .top{background:repeating-linear-gradient(45deg,#E4DAC8,#E4DAC8 10px,#DCD0BA 10px,#DCD0BA 20px)}
+.dishcard .body{padding:13px 15px 15px}
+.dishcard h4{font-family:var(--serif);font-weight:400;font-size:20px;margin:0 0 2px;color:var(--ink)}
+.dishcard .call{font-family:var(--hand);font-size:18px;color:var(--terracotta);margin:0 0 7px}
+.dishcard .who{font-size:13px;color:var(--ink-soft);margin:0}
+
+.dishsheet{display:none}
+.dishsheet.on{display:block}
+.dishhead{margin:0 0 6px}
+.dishhead h3{font-family:var(--serif);font-weight:400;font-size:clamp(25px,4vw,33px);margin:0;color:var(--ink)}
+.dishhead .call{font-family:var(--hand);font-size:27px;color:var(--terracotta);margin:2px 0 4px}
+.dishmeta{display:flex;gap:24px;flex-wrap:wrap;font-size:14.5px;color:var(--ink-soft);margin:8px 0 22px}
+.dishmeta b{color:var(--ink);font-weight:600}
+
+.vers{display:grid;grid-template-columns:repeat(auto-fit,minmax(272px,1fr));gap:18px;margin:0 0 26px;align-items:start}
+.ver{background:var(--paper);border:1px solid var(--edge);border-radius:14px;padding:18px 19px;position:relative}
+.ver h5{font-family:var(--serif);font-weight:400;font-size:20px;margin:0 0 2px;color:var(--ink)}
+.ver .byline{font-size:13px;color:var(--ink-soft);margin:0 0 12px}
+/* What is different about this one. On a wall of four versions of the same
+   dish it is the only line anybody reads twice. */
+.ver .diff{
+  font-family:var(--hand);font-size:18.5px;line-height:1.5;color:var(--wine);
+  border-left:2px solid rgba(123,45,59,.3);padding-left:11px;margin:0 0 13px;
+}
+.ver .ilist{margin:0 0 12px;padding-left:18px;font-size:15px;line-height:1.55}
+.ver .ilist li{margin:0 0 3px}
+.ver .steps{margin:0 0 12px;padding-left:19px;font-size:15px;line-height:1.6}
+.ver .steps li{margin:0 0 7px}
+.ver .tell{
+  font-size:14.5px;line-height:1.55;color:var(--ink-soft);
+  border-top:1px dashed var(--edge);padding-top:11px;margin:12px 0 0;
+}
+.ver .tell b{color:var(--ink);font-weight:600}
+.ver .vtools{margin:13px 0 0;display:flex;gap:8px;flex-wrap:wrap}
+/* A card with a photograph and nothing typed is finished. This says what it is
+   without calling it unfinished. */
+.ver .untyped{font-size:13.5px;color:var(--ink-soft);margin:0;font-style:italic}
+.scan{
+  display:block;width:100%;border:0;padding:0;cursor:pointer;background:none;
+  margin:0 0 13px;border-radius:9px;overflow:hidden;position:relative;
+}
+/* A capped preview, cropped from the top. A photograph of an index card is
+   taller than it is wide, and at full column width it ran to 500px and shoved
+   everything under it off the bottom while the version beside it ended half a
+   screen higher. The top of a card is the part you recognise it by; the whole
+   thing is one tap away. */
+.scan img{
+  width:100%;height:230px;object-fit:cover;object-position:top;display:block;
+  border:1px solid var(--edge);border-radius:9px;background:#EFE7DA;
+}
+.scan .inher{
+  position:absolute;left:8px;bottom:8px;background:rgba(255,253,248,.92);
+  border-radius:999px;padding:3px 9px;font-size:11px;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--ink-soft);
+}
+/* The photograph of the card, big. Pinch-zoom on a phone is the only way to
+   read somebody's grandmother's handwriting, so nothing traps the gesture. */
+.cardbig{
+  position:fixed;inset:0;z-index:70;background:rgba(30,20,12,.88);
+  display:none;align-items:center;justify-content:center;padding:18px;
+}
+.cardbig.on{display:flex}
+.cardbig img{max-width:100%;max-height:86vh;border-radius:10px;background:#EFE7DA}
+.cardbig .shut{
+  position:absolute;top:14px;right:16px;border:0;background:rgba(255,253,248,.9);
+  border-radius:999px;padding:9px 15px;font:inherit;font-size:14px;cursor:pointer;color:var(--ink);
+}
 .svcrow{border:1px solid var(--edge);border-radius:11px;padding:12px 13px;margin:0 0 10px;background:rgba(0,0,0,.02)}
 .svcrow .two{display:flex;gap:9px}
 .svcrow .two > *{flex:1;min-width:0}
@@ -1015,8 +1119,59 @@ footer p{margin:0 auto;max-width:44ch}
       <div class="wallof" id="sdWall"></div>
     </div>
 
+    <div id="cucinaRoom" hidden>
+      <p class="msg" id="cuMsg" hidden></p>
+      <!-- Recipe photographs go straight in here, not through Le Fotografie.
+           Tony's ask, and the right one: a splattered index card is not an
+           album photograph and should not turn up between a wedding and a
+           christening. Same pipeline, tagged kind=recipe, different wall. -->
+      <input type="file" id="cuFile" accept="image/*" hidden>
+
+      <!-- the shelf -->
+      <div id="cuShelfPage">
+        <div class="soon" id="cuEmpty" hidden>
+          <p>Nothing in the kitchen yet. Put up a dish — meatballs, the Easter bread,
+             whatever gets asked about. Then anybody can hang their version of it
+             underneath: hers, his, and what is different about each one.</p>
+          <p style="margin-top:12px">A photograph of the card in her own handwriting is a
+             whole entry on its own. Typing it up can wait, or never happen.</p>
+          <button class="mini keep" id="cuStart" style="margin-top:14px">Put up a dish</button>
+        </div>
+
+        <div class="cubar" id="cuBar" hidden>
+          <button class="mini keep" id="cuAdd">Put up a dish</button>
+          <span class="hint">Two people who both make it? Same dish, two versions — side by side, with whose is whose.</span>
+        </div>
+
+        <div id="cuShelf"></div>
+      </div>
+
+      <!-- one dish, open -->
+      <div class="dishsheet" id="cuDishPage">
+        <button class="backlink" id="cuBack" style="margin:0 0 18px">&larr; Back to the shelf</button>
+        <div class="dishhead">
+          <h3 id="cuDishName"></h3>
+          <p class="call" id="cuDishCall" hidden></p>
+        </div>
+        <p class="dishmeta" id="cuDishMeta"></p>
+
+        <div class="cubar">
+          <button class="mini keep" id="cuVerAdd">Add a version</button>
+          <button class="mini" id="cuDishEdit">Correct the dish</button>
+        </div>
+
+        <div class="vers" id="cuVers"></div>
+      </div>
+    </div>
+
     <button class="backlink" data-back>&larr; Back to the courtyard</button>
   </section>
+
+<!-- the photograph of a card, big enough to read -->
+<div class="cardbig" id="cardBig">
+  <button class="shut" id="cardBigShut">Close</button>
+  <img id="cardBigImg" alt="">
+</div>
 
 
 <!-- somebody who served -->
@@ -1052,6 +1207,90 @@ footer p{margin:0 auto;max-width:44ch}
   </div>
 
   <button class="mini" id="sdClose" style="margin-top:22px">Close</button>
+</aside>
+
+<!-- a dish -->
+<aside class="treepanel" id="cuDishPanel" aria-label="A dish">
+  <h3 id="cuDpTitle">Put up a dish</h3>
+  <p class="sub" id="cuDpSub"></p>
+
+  <label for="cuDpGrp">Where it belongs</label>
+  <select id="cuDpGrp"></select>
+
+  <label for="cuDpName">What it is</label>
+  <input id="cuDpName" maxlength="70" placeholder="Meatballs">
+
+  <label for="cuDpCalled">What this family calls it</label>
+  <input id="cuDpCalled" maxlength="70" placeholder="polpette, or purpette">
+  <p class="hint" style="margin:6px 0 0">However it gets said out loud, spelling and all.</p>
+
+  <label for="cuDpWhose">Whose it was</label>
+  <input id="cuDpWhose" maxlength="80" placeholder="Nonna Caterina">
+
+  <label for="cuDpWhen">When it gets made</label>
+  <input id="cuDpWhen" maxlength="120" placeholder="Sundays, and Christmas Eve">
+
+  <div style="display:flex;gap:8px;margin-top:16px">
+    <button class="mini keep" id="cuDpSave">Save</button>
+    <button class="mini away" id="cuDpDrop" hidden>Take the dish off</button>
+  </div>
+  <p class="msg" id="cuDpMsg" hidden style="margin:14px 0 0"></p>
+
+  <div id="cuDpPhotoBlock" hidden>
+    <p class="tsect">A photograph of it on the table</p>
+    <div id="cuDpPhoto"></div>
+  </div>
+
+  <details class="thist" id="cuDpHist"><summary>Every change to this dish</summary><div></div></details>
+
+  <button class="mini" id="cuDpClose" style="margin-top:22px">Close</button>
+</aside>
+
+<!-- somebody's version of it -->
+<aside class="treepanel" id="cuVerPanel" aria-label="A version">
+  <h3 id="cuVpTitle">Add a version</h3>
+  <p class="sub" id="cuVpSub"></p>
+
+  <label for="cuVpWhose">Whose version</label>
+  <input id="cuVpWhose" maxlength="80" placeholder="Caterina Scarpino">
+
+  <label for="cuVpRel">Who they were</label>
+  <input id="cuVpRel" maxlength="120" placeholder="the original — or married in, 1950s">
+
+  <label for="cuVpDiff">What is different about this one</label>
+  <textarea id="cuVpDiff" maxlength="400" rows="2" placeholder="Half pork, and no cheese at all."></textarea>
+  <p class="hint" style="margin:6px 0 0">The line people actually read. Leave it empty if this is just how it is made.</p>
+
+  <label for="cuVpIng">What goes in it</label>
+  <textarea id="cuVpIng" maxlength="4000" rows="6" placeholder="ground beef&#10;bread soaked in milk&#10;a handful of pecorino"></textarea>
+  <p class="hint" style="margin:6px 0 0">
+    One per line. <b>Write the amounts the way she said them</b> — a handful, a coffee cup,
+    until it looks right. Nothing here scales a recipe, so nothing has to be a number.
+  </p>
+
+  <label for="cuVpSteps">How it is made</label>
+  <textarea id="cuVpSteps" maxlength="4000" rows="7" placeholder="mix it with your hands, not a spoon&#10;fry them first&#10;then into the sauce for an hour"></textarea>
+  <p class="hint" style="margin:6px 0 0">One step per line.</p>
+
+  <label for="cuVpTell">How you know it is right</label>
+  <textarea id="cuVpTell" maxlength="600" rows="3" placeholder="They float. And she'd smell the pan, not look at it."></textarea>
+
+  <div style="display:flex;gap:8px;margin-top:16px">
+    <button class="mini keep" id="cuVpSave">Save</button>
+    <button class="mini away" id="cuVpDrop" hidden>Take this version off</button>
+  </div>
+  <p class="msg" id="cuVpMsg" hidden style="margin:14px 0 0"></p>
+
+  <div id="cuVpCardBlock" hidden>
+    <p class="tsect">The card, in her handwriting</p>
+    <p class="hint" style="margin:0 0 10px">
+      A photograph of the card is a finished entry on its own — the typing can wait,
+      or never happen. It goes straight here and never shows up in Le Fotografie.
+    </p>
+    <div id="cuVpCard"></div>
+  </div>
+
+  <button class="mini" id="cuVpClose" style="margin-top:22px">Close</button>
 </aside>
 
 <!-- somebody on the tree -->
@@ -1515,14 +1754,16 @@ footer p{margin:0 auto;max-width:44ch}
     $('roomView').classList.add('on');
     window.scrollTo(0, 0);
 
-    /* Four rooms are built now. The rest honestly say they are not. */
+    /* Five rooms are built now. The rest honestly say they are not. */
     var foto = (slug === 'fotografie'), storia = (slug === 'storia'),
-        albero = (slug === 'albero'), soldati = (slug === 'soldati');
+        albero = (slug === 'albero'), soldati = (slug === 'soldati'),
+        cucina = (slug === 'cucina');
     $('fotoRoom').hidden = !foto;
     $('storiaRoom').hidden = !storia;
     $('alberoRoom').hidden = !albero;
     $('soldatiRoom').hidden = !soldati;
-    $('rvEmpty').hidden = foto || storia || albero || soldati;
+    $('cucinaRoom').hidden = !cucina;
+    $('rvEmpty').hidden = foto || storia || albero || soldati || cucina;
     if (foto){ fotoSay(''); pile = 'all'; setTab(); loadWall(); }
     if (storia){ storySay(''); editingPart = null; draft = null; loadStory(); }
     if (albero){
@@ -1533,6 +1774,10 @@ footer p{margin:0 auto;max-width:44ch}
     }
     if (soldati){
       sdSay(''); closeSoldato(); loadSoldati();
+    }
+    if (cucina){
+      cuSay(''); closeDishPanel(); closeVerPanel(); shutCardBig();
+      showShelf(); loadCucina();
     }
   }
 
@@ -1551,10 +1796,14 @@ footer p{margin:0 auto;max-width:44ch}
     $('oneView').classList.remove('on');
     $('treePanel').classList.remove('on');
     $('sdPanel').classList.remove('on');
+    $('cuDishPanel').classList.remove('on');
+    $('cuVerPanel').classList.remove('on');
+    $('cardBig').classList.remove('on');
     $('faceSheet').classList.remove('on');
     document.body.classList.remove('panelopen');
     releaseBlobs();
     faceUrls = {};        // those urls were just revoked
+    cuUrls = {};          // and so were these
     window.scrollTo(0, 0);
   }
 
@@ -3411,6 +3660,614 @@ footer p{margin:0 auto;max-width:44ch}
   $('sdClose').addEventListener('click', closeSoldato);
   $('sdAdd').addEventListener('click', function(){ openSoldato(null); });
   $('sdStart').addEventListener('click', function(){ openSoldato(null); });
+
+  /* ── La Cucina ───────────────────────────────────────
+     Three levels: a group, a dish, and somebody's version of that dish.
+
+     The middle one is the whole design. In L'Albero a wrong year is a mistake
+     to correct, but in a kitchen two people are both right — Caterina's
+     meatballs and Joe's meatballs are different and neither is wrong. Without
+     the dish level this room is either forty cards all saying "Meatballs" or
+     one card four people are quietly overwriting each other on, and both of
+     those end up holding one flattened recipe nobody actually cooks.
+
+     So the dish is shared and anybody may correct it; a version belongs to
+     whoever wrote it down and only they — or Tony — can change it. The server
+     is what enforces that; the page only hides buttons, which is manners.
+     ──────────────────────────────────────────────────── */
+  var cuData = null, cuDish_ = null, cuVer_ = null, cuPhotoFor = null;
+  // Which dish the dish panel is editing, or 0 when it is a new one.
+  var cuDishOpenId = 0;
+
+  /* Every save redraws the shelf, and a redraw would otherwise re-fetch every
+     picture on it and mint a fresh blob url each time. Keyed by size AND slug:
+     the shelf wants the thumbnail and a card wants the readable copy, and one
+     map keyed by slug alone hands back whichever was asked for first. */
+  var cuUrls = {};
+  function cuPicture(imgEl, size, slug){
+    var key = size + '/' + slug;
+    if (cuUrls[key]){ imgEl.src = cuUrls[key]; return; }
+    loadPicture(imgEl, size, slug, true).then(function(){
+      if (imgEl.src) cuUrls[key] = imgEl.src;
+    });
+  }
+
+  function cuSay(text, good){
+    var m = $('cuMsg');
+    m.textContent = text || ''; m.className = 'msg' + (good ? ' ok' : ''); m.hidden = !text;
+  }
+  /* Both panels get their own message line for the same reason the tree panel
+     does: on a phone the panel covers the room, so a refusal written up at the
+     top lands behind the person's thumb and nothing appears to happen. */
+  function cuDpSay(text, good){
+    var m = $('cuDpMsg');
+    m.textContent = text || ''; m.className = 'msg' + (good ? ' ok' : ''); m.hidden = !text;
+    if (text) m.scrollIntoView({ block: 'nearest' });
+  }
+  function cuVpSay(text, good){
+    var m = $('cuVpMsg');
+    m.textContent = text || ''; m.className = 'msg' + (good ? ' ok' : ''); m.hidden = !text;
+    if (text) m.scrollIntoView({ block: 'nearest' });
+  }
+  function cuDishById(id){
+    return (cuData && cuData.dishes || []).filter(function(d){ return d.id === id; })[0] || null;
+  }
+  function cuVerById(id){
+    var all = [];
+    (cuData && cuData.dishes || []).forEach(function(d){ all = all.concat(d.versions || []); });
+    return all.filter(function(v){ return v.id === id; })[0] || null;
+  }
+  // The same rule the server enforces, so the buttons match what will happen.
+  function cuMine(v){ return !!me && (me.owner || v.owner_id === me.id); }
+
+  function loadCucina(){
+    return api('/api/cucina').then(function(d){
+      cuData = d;
+      drawShelf();
+      if (cuDish_){
+        var fresh = cuDishById(cuDish_.id);
+        if (fresh){ cuDish_ = fresh; drawDish(); }
+        else showShelf();          // somebody took it off while it was open
+      }
+    }).catch(function(err){ cuSay(err.message); });
+  }
+
+  function showShelf(){
+    cuDish_ = null;
+    $('cuDishPage').classList.remove('on');
+    $('cuShelfPage').hidden = false;
+    window.scrollTo(0, 0);
+  }
+
+  /* ── the shelf ───────────────────────────────────────
+     Grouped, with the groups in the order the server sends them rather than
+     alphabetically — that order is a meal, from the antipasti to the sweets,
+     and reading it that way is worth more than being able to find "Soup"
+     quickly in a list of twelve. Empty groups are not drawn. */
+  function drawShelf(){
+    var shelf = $('cuShelf');
+    shelf.innerHTML = '';
+    var list = (cuData && cuData.dishes) || [];
+    $('cuEmpty').hidden = list.length > 0;
+    $('cuBar').hidden = list.length === 0;
+
+    ((cuData && cuData.groups) || []).forEach(function(g){
+      var here = list.filter(function(d){ return d.grp === g; });
+      if (!here.length) return;
+
+      var h = document.createElement('h3');
+      h.className = 'grpname';
+      h.textContent = g;
+      shelf.appendChild(h);
+
+      var row = document.createElement('div');
+      row.className = 'shelf';
+      here.forEach(function(d){ row.appendChild(dishCardEl(d)); });
+      shelf.appendChild(row);
+    });
+  }
+
+  function dishCardEl(d){
+    var card = document.createElement('button');
+    card.className = 'dishcard' + (d.versions.length ? '' : ' wanted');
+    card.type = 'button';
+
+    var top = document.createElement('div');
+    top.className = 'top';
+    if (d.dish_slug){
+      var im = document.createElement('img');
+      im.alt = '';
+      top.appendChild(im);
+      cuPicture(im, 'thumb', d.dish_slug);
+    }
+    var count = document.createElement('span');
+    count.className = 'count';
+    /* "Nobody has written it down" is not an error state. Somebody who knows
+       the family makes cuccidati but not how has still told the room something
+       true, and the empty card is the ask. */
+    count.textContent = d.versions.length === 0 ? 'nobody has written it down'
+      : d.versions.length === 1 ? '1 version' : d.versions.length + ' versions';
+    top.appendChild(count);
+    card.appendChild(top);
+
+    var body = document.createElement('div');
+    body.className = 'body';
+    var h = document.createElement('h4');
+    h.textContent = d.name;
+    body.appendChild(h);
+    if (d.called){
+      var c = document.createElement('p');
+      c.className = 'call';
+      c.textContent = d.called;
+      body.appendChild(c);
+    }
+    if (d.whose){
+      var w = document.createElement('p');
+      w.className = 'who';
+      w.textContent = d.whose;
+      body.appendChild(w);
+    }
+    card.appendChild(body);
+
+    card.addEventListener('click', function(){ openDish(d); });
+    return card;
+  }
+
+  /* ── one dish ────────────────────────────────────── */
+  function openDish(d){
+    cuDish_ = d;
+    cuSay('');
+    $('cuShelfPage').hidden = true;
+    $('cuDishPage').classList.add('on');
+    drawDish();
+    window.scrollTo(0, 0);
+  }
+
+  function drawDish(){
+    var d = cuDish_;
+    if (!d) return;
+    $('cuDishName').textContent = d.name;
+    $('cuDishCall').textContent = d.called || '';
+    $('cuDishCall').hidden = !d.called;
+
+    var meta = $('cuDishMeta');
+    meta.innerHTML = '';
+    [['Whose', d.whose], ['When', d.when_made], ['Put up by', d.added_by_name]]
+      .forEach(function(pair){
+        if (!pair[1]) return;
+        var s = document.createElement('span');
+        var b = document.createElement('b');
+        b.textContent = pair[0] + ': ';
+        s.appendChild(b);
+        s.appendChild(document.createTextNode(pair[1]));
+        meta.appendChild(s);
+      });
+
+    var box = $('cuVers');
+    box.innerHTML = '';
+    if (!d.versions.length){
+      var none = document.createElement('p');
+      none.className = 'hint';
+      none.textContent = 'Nobody has written this one down yet. If you know how it goes — or you '
+        + 'have the card in a drawer — that is what this is for.';
+      box.appendChild(none);
+      return;
+    }
+    d.versions.forEach(function(v){ box.appendChild(verEl(d, v)); });
+  }
+
+  function verEl(d, v){
+    var el = document.createElement('article');
+    el.className = 'ver';
+
+    var h = document.createElement('h5');
+    h.textContent = v.whose;
+    el.appendChild(h);
+
+    var by = document.createElement('p');
+    by.className = 'byline';
+    by.textContent = [v.rel, v.owner_name ? 'written down by ' + v.owner_name : '']
+      .filter(Boolean).join(' · ');
+    el.appendChild(by);
+
+    /* The card first, above the typing. It is the artefact; the transcription
+       is a convenience laid over it. Putting the typing first quietly makes
+       the photograph an illustration of the recipe rather than the recipe. */
+    if (v.card_slug){
+      var scan = document.createElement('button');
+      scan.className = 'scan';
+      scan.type = 'button';
+      var im = document.createElement('img');
+      im.alt = 'The card for ' + v.whose + '’s ' + d.name + ', in their handwriting';
+      scan.appendChild(im);
+      var tag = document.createElement('span');
+      tag.className = 'inher';
+      tag.textContent = 'in their hand — tap to read';
+      scan.appendChild(tag);
+      cuPicture(im, 'display', v.card_slug);
+      scan.addEventListener('click', function(){ openCardBig(v, d); });
+      el.appendChild(scan);
+    }
+
+    if (v.diff){
+      var diff = document.createElement('p');
+      diff.className = 'diff';
+      diff.textContent = v.diff;
+      el.appendChild(diff);
+    }
+
+    var lines = function(s){
+      return String(s || '').split('\n').map(function(x){ return x.trim(); })
+        .filter(function(x){ return x.length; });
+    };
+    var ing = lines(v.ingredients), steps = lines(v.steps);
+
+    if (ing.length){
+      var ul = document.createElement('ul');
+      ul.className = 'ilist';
+      ing.forEach(function(x){
+        var li = document.createElement('li');
+        li.textContent = x;
+        ul.appendChild(li);
+      });
+      el.appendChild(ul);
+    }
+    if (steps.length){
+      var ol = document.createElement('ol');
+      ol.className = 'steps';
+      steps.forEach(function(x){
+        var li = document.createElement('li');
+        li.textContent = x;
+        ol.appendChild(li);
+      });
+      el.appendChild(ol);
+    }
+
+    /* A photograph with nothing typed is a complete entry, and this line says
+       so without the word "draft" or a progress bar anywhere near it. If
+       getting a recipe onto this wall meant filling in eight fields, nobody
+       would ever do it. */
+    if (!ing.length && !steps.length){
+      var un = document.createElement('p');
+      un.className = 'untyped';
+      un.textContent = v.card_slug
+        ? 'Just the card, as it is. Anybody can type it up later.'
+        : 'Nothing written down yet — only whose it is.';
+      el.appendChild(un);
+    }
+
+    if (v.tell){
+      var t = document.createElement('p');
+      t.className = 'tell';
+      var b = document.createElement('b');
+      b.textContent = 'How you know: ';
+      t.appendChild(b);
+      t.appendChild(document.createTextNode(v.tell));
+      el.appendChild(t);
+    }
+
+    var tools = document.createElement('div');
+    tools.className = 'vtools';
+    if (cuMine(v)){
+      var ed = document.createElement('button');
+      ed.className = 'mini';
+      ed.textContent = 'Correct it';
+      ed.addEventListener('click', function(){ openVerPanel(d, v); });
+      tools.appendChild(ed);
+    } else {
+      var own = document.createElement('button');
+      own.className = 'mini';
+      own.textContent = 'Add your own';
+      own.addEventListener('click', function(){ openVerPanel(d, null); });
+      tools.appendChild(own);
+    }
+    el.appendChild(tools);
+    return el;
+  }
+
+  /* The card, big. No zoom control of our own: pinch is how anybody actually
+     reads handwriting on a phone, and a custom zoom would only get in the way
+     of it. */
+  function openCardBig(v, d){
+    var im = $('cardBigImg');
+    im.removeAttribute('src');
+    im.alt = 'The card for ' + v.whose + '’s ' + d.name;
+    cuPicture(im, 'display', v.card_slug);
+    $('cardBig').classList.add('on');
+  }
+  function shutCardBig(){ $('cardBig').classList.remove('on'); }
+  $('cardBigShut').addEventListener('click', shutCardBig);
+  $('cardBig').addEventListener('click', function(e){ if (e.target === $('cardBig')) shutCardBig(); });
+
+  /* ── the dish panel ────────────────────────────────── */
+  function openDishPanel(d){
+    cuDpSay('');
+    var isNew = !d;
+    cuDishOpenId = isNew ? 0 : d.id;
+    $('cuDpTitle').textContent = isNew ? 'Put up a dish' : d.name;
+    $('cuDpSub').textContent = isNew
+      ? 'Just the name is enough. The versions come after.'
+      : 'Anybody can correct this part — the dish belongs to everybody.';
+
+    var sel = $('cuDpGrp');
+    sel.innerHTML = '';
+    ((cuData && cuData.groups) || []).forEach(function(g){
+      var o = document.createElement('option');
+      o.value = g; o.textContent = g;
+      if (!isNew && g === d.grp) o.selected = true;
+      sel.appendChild(o);
+    });
+
+    $('cuDpName').value   = isNew ? '' : (d.name || '');
+    $('cuDpCalled').value = isNew ? '' : (d.called || '');
+    $('cuDpWhose').value  = isNew ? '' : (d.whose || '');
+    $('cuDpWhen').value   = isNew ? '' : (d.when_made || '');
+    $('cuDpDrop').hidden  = isNew;
+    $('cuDpPhotoBlock').hidden = isNew;
+    $('cuDpHist').hidden = isNew;
+    $('cuDpHist').open = false;
+
+    if (!isNew){
+      var box = $('cuDpPhoto');
+      box.innerHTML = '';
+      var add = document.createElement('button');
+      add.className = 'mini';
+      add.textContent = d.dish_slug ? 'Change the photograph' : 'Add a photograph';
+      add.addEventListener('click', function(){ pickPhoto({ dish: d.id }); });
+      box.appendChild(add);
+      if (d.dish_slug){
+        var off = document.createElement('button');
+        off.className = 'mini';
+        off.style.marginLeft = '8px';
+        off.textContent = 'Take it off';
+        off.addEventListener('click', function(){
+          api('/api/cucina/dishes/' + d.id + '/photo', { method: 'POST', body: { slug: null } })
+            .then(afterChange).catch(function(err){ cuDpSay(err.message); });
+        });
+        box.appendChild(off);
+      }
+      var hist = $('cuDpHist').querySelector('div');
+      hist.textContent = 'Reading…';
+      api('/api/cucina/dishes/' + d.id + '/history').then(function(h){
+        hist.innerHTML = '';
+        (h.edits || []).forEach(function(e){
+          var p = document.createElement('p');
+          p.textContent = e.who + ' — ' + e.field
+            + (e.now ? ': ' + e.now : '') + ' · ' + new Date(e.at).toLocaleDateString();
+          hist.appendChild(p);
+        });
+        if (!hist.children.length) hist.textContent = 'Nothing yet.';
+      }).catch(function(){ hist.textContent = 'Could not read it just now.'; });
+    }
+
+    cuVer_ = null;
+    $('cuVerPanel').classList.remove('on');
+    $('cuDishPanel').classList.add('on');
+    document.body.classList.add('panelopen');
+  }
+
+  function closeDishPanel(){
+    $('cuDishPanel').classList.remove('on');
+    document.body.classList.remove('panelopen');
+  }
+
+  function afterChange(d){
+    cuData = d;
+    drawShelf();
+    if (cuDish_){
+      var fresh = cuDishById(cuDish_.id);
+      if (fresh){ cuDish_ = fresh; drawDish(); } else showShelf();
+    }
+    return d;
+  }
+
+  $('cuDpSave').addEventListener('click', function(){
+    var b = $('cuDpSave'); b.disabled = true; b.textContent = 'Saving…';
+    var body = {
+      grp: $('cuDpGrp').value, name: $('cuDpName').value,
+      called: $('cuDpCalled').value, whose: $('cuDpWhose').value,
+      when_made: $('cuDpWhen').value,
+    };
+    var editing = cuDishOpenId;
+    var call = editing
+      ? api('/api/cucina/dishes/' + editing, { method: 'POST', body: body })
+      : api('/api/cucina/dishes', { method: 'POST', body: body });
+    call.then(function(d){
+      afterChange(d);
+      b.disabled = false; b.textContent = 'Saved';
+      setTimeout(function(){ b.textContent = 'Save'; }, 1400);
+      if (!editing){
+        // Straight into the dish that was just put up, because the next thing
+        // anybody wants is to write a version under it.
+        var made = cuDishById(d.id);
+        closeDishPanel();
+        if (made) openDish(made);
+      } else {
+        closeDishPanel();
+      }
+    }).catch(function(err){
+      b.disabled = false; b.textContent = 'Save';
+      /* The server refuses a second card for a dish that already exists and
+         says which one — so send them to it rather than leaving them holding
+         a name they cannot use. */
+      cuDpSay(err.message);
+      if (err.data && err.data.dish){
+        var there = cuDishById(err.data.dish);
+        if (there){
+          var go = document.createElement('button');
+          go.className = 'mini keep';
+          go.style.marginTop = '10px';
+          go.textContent = 'Open ' + there.name;
+          go.addEventListener('click', function(){ closeDishPanel(); openDish(there); });
+          $('cuDpMsg').appendChild(document.createElement('br'));
+          $('cuDpMsg').appendChild(go);
+        }
+      }
+    });
+  });
+
+  $('cuDpDrop').addEventListener('click', function(){
+    if (!cuDishOpenId) return;
+    var d = cuDishById(cuDishOpenId);
+    if (!d) return;
+    var n = (d.versions || []).length;
+    if (!confirm('Take ' + d.name + ' off?'
+      + (n ? ' The ' + n + (n === 1 ? ' version' : ' versions') + ' under it go too.' : '')
+      + ' Everything is kept and can be put back, but it stops showing.')) return;
+    api('/api/cucina/dishes/' + d.id, { method: 'DELETE' })
+      .then(function(x){ afterChange(x); closeDishPanel(); showShelf(); })
+      .catch(function(err){ cuDpSay(err.message); });
+  });
+
+  /* ── the version panel ───────────────────────────────  */
+  function openVerPanel(d, v){
+    cuVpSay('');
+    cuVer_ = v || null;
+    var isNew = !v;
+    $('cuVpTitle').textContent = isNew ? 'Add a version' : v.whose;
+    $('cuVpSub').textContent = isNew
+      ? 'Your version of ' + d.name + '. Nobody else can change it afterwards.'
+      : (cuMine(v)
+          ? (v.owner_id === (me && me.id) ? 'You wrote this one down.'
+                                          : 'Written down by ' + (v.owner_name || 'somebody else') + ' — you can correct it.')
+          : 'Written down by ' + (v.owner_name || 'somebody else') + '.');
+
+    $('cuVpWhose').value = isNew ? '' : (v.whose || '');
+    $('cuVpRel').value   = isNew ? '' : (v.rel || '');
+    $('cuVpDiff').value  = isNew ? '' : (v.diff || '');
+    $('cuVpIng').value   = isNew ? '' : (v.ingredients || '');
+    $('cuVpSteps').value = isNew ? '' : (v.steps || '');
+    $('cuVpTell').value  = isNew ? '' : (v.tell || '');
+    $('cuVpDrop').hidden = isNew;
+    $('cuVpCardBlock').hidden = isNew;
+
+    if (!isNew){
+      var box = $('cuVpCard');
+      box.innerHTML = '';
+      var add = document.createElement('button');
+      add.className = 'mini';
+      add.textContent = v.card_slug ? 'Change the photograph' : 'Photograph the card';
+      add.addEventListener('click', function(){ pickPhoto({ version: v.id }); });
+      box.appendChild(add);
+      if (v.card_slug){
+        var off = document.createElement('button');
+        off.className = 'mini';
+        off.style.marginLeft = '8px';
+        off.textContent = 'Take it off';
+        off.addEventListener('click', function(){
+          api('/api/cucina/versions/' + v.id + '/card', { method: 'POST', body: { slug: null } })
+            .then(function(x){ afterChange(x); var f = cuVerById(v.id); if (f) openVerPanel(cuDish_, f); })
+            .catch(function(err){ cuVpSay(err.message); });
+        });
+        box.appendChild(off);
+      }
+    }
+
+    closeDishPanel();
+    $('cuVerPanel').classList.add('on');
+    document.body.classList.add('panelopen');
+  }
+
+  function closeVerPanel(){
+    $('cuVerPanel').classList.remove('on');
+    document.body.classList.remove('panelopen');
+    cuVer_ = null;
+  }
+
+  $('cuVpSave').addEventListener('click', function(){
+    if (!cuDish_) return;
+    var b = $('cuVpSave'); b.disabled = true; b.textContent = 'Saving…';
+    var body = {
+      whose: $('cuVpWhose').value, rel: $('cuVpRel').value, diff: $('cuVpDiff').value,
+      ingredients: $('cuVpIng').value, steps: $('cuVpSteps').value, tell: $('cuVpTell').value,
+    };
+    var existing = cuVer_;
+    var call = existing
+      ? api('/api/cucina/versions/' + existing.id, { method: 'POST', body: body })
+      : api('/api/cucina/dishes/' + cuDish_.id + '/versions', { method: 'POST', body: body });
+    call.then(function(d){
+      afterChange(d);
+      b.disabled = false; b.textContent = 'Saved';
+      setTimeout(function(){ b.textContent = 'Save'; }, 1400);
+      // Stay open on a new one: the next thing somebody does is photograph
+      // the card, and that button only exists once the version is real.
+      var fresh = cuVerById(existing ? existing.id : d.id);
+      if (fresh) openVerPanel(cuDish_, fresh); else closeVerPanel();
+    }).catch(function(err){
+      b.disabled = false; b.textContent = 'Save';
+      cuVpSay(err.message);
+    });
+  });
+
+  $('cuVpDrop').addEventListener('click', function(){
+    if (!cuVer_) return;
+    if (!confirm('Take ' + cuVer_.whose + '’s version off? It is kept and can be put back, '
+               + 'but it stops showing.')) return;
+    api('/api/cucina/versions/' + cuVer_.id, { method: 'DELETE' })
+      .then(function(x){ afterChange(x); closeVerPanel(); })
+      .catch(function(err){ cuVpSay(err.message); });
+  });
+
+  /* ── a photograph, straight in ───────────────────────
+     Uploaded with kind=recipe, so it goes through exactly the pipeline Le
+     Fotografie uses — the EXIF stripping, the three sizes, the damaged-file
+     check — and then never appears on the album wall. One file at a time,
+     because that is how somebody photographs a card. */
+  function pickPhoto(target){
+    cuPhotoFor = target;
+    var f = $('cuFile');
+    f.value = '';
+    f.click();
+  }
+
+  $('cuFile').addEventListener('change', function(){
+    var f = this.files && this.files[0];
+    if (!f || !cuPhotoFor) return;
+    var target = cuPhotoFor;
+    var say = target.version ? cuVpSay : cuDpSay;
+    say('Sending it…', true);
+
+    fetch(API + '/api/photos?kind=recipe', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + token, 'Content-Type': f.type || 'application/octet-stream' },
+      body: f
+    }).then(function(r){
+      return r.text().then(function(txt){
+        var d = {};
+        try { d = JSON.parse(txt); } catch (e) {}
+        if (!r.ok) throw new Error(d.error || ('the server said ' + r.status));
+        return d.photo.slug;
+      });
+    }).then(function(slug){
+      var url = target.version
+        ? '/api/cucina/versions/' + target.version + '/card'
+        : '/api/cucina/dishes/' + target.dish + '/photo';
+      return api(url, { method: 'POST', body: { slug: slug } });
+    }).then(function(d){
+      afterChange(d);
+      /* Reopen first, THEN say it. Both panels clear their own message line
+         when they open, so saying it first means the panel wipes the only
+         confirmation there was and the upload looks like it did nothing. */
+      if (target.version){
+        var v = cuVerById(target.version);
+        if (v) openVerPanel(cuDish_, v);
+      } else {
+        var dd = cuDishById(target.dish);
+        if (dd) openDishPanel(dd);
+      }
+      say('On it.', true);
+    }).catch(function(err){ say(err.message); });
+  });
+
+  $('cuDpClose').addEventListener('click', closeDishPanel);
+  $('cuVpClose').addEventListener('click', closeVerPanel);
+  $('cuBack').addEventListener('click', showShelf);
+  $('cuAdd').addEventListener('click', function(){ openDishPanel(null); });
+  $('cuStart').addEventListener('click', function(){ openDishPanel(null); });
+  $('cuDishEdit').addEventListener('click', function(){ if (cuDish_) openDishPanel(cuDish_); });
+  $('cuVerAdd').addEventListener('click', function(){
+    if (cuDish_) openVerPanel(cuDish_, null);
+  });
 
   /* ── one photograph, open ────────────────────────── */
   var openPhoto = null;
