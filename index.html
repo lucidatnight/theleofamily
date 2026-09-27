@@ -1216,7 +1216,14 @@ footer p{margin:0 auto;max-width:44ch}
       body: opts.body ? JSON.stringify(opts.body) : undefined
     }).then(function(r){
       return r.json().catch(function(){ return {}; }).then(function(d){
-        if (!r.ok) throw new Error(d.error || 'Something went wrong. Try again in a moment.');
+        if (!r.ok){
+          var e = new Error(d.error || 'Something went wrong. Try again in a moment.');
+          // A refusal sometimes carries what you need to get past it — the
+          // tree sends back who would have to go with somebody. Hang it on
+          // the error so the catch can offer the way out, not just the wall.
+          e.data = d;
+          throw e;
+        }
         return d;
       });
     }, function(){
@@ -2679,19 +2686,53 @@ footer p{margin:0 auto;max-width:44ch}
     });
   });
 
-  $('tfDrop').addEventListener('click', function(){
-    if (!openPerson) return;
-    if (!confirm('Take ' + openPerson.name + ' off the tree? Everything written about them is kept, '
-               + 'and Tony can put them back — but they stop showing.')) return;
-    api('/api/tree/people/' + openPerson.id, { method: 'DELETE' })
+  function dropPerson(person, whole){
+    return api('/api/tree/people/' + person.id + (whole ? '?whole=1' : ''), { method: 'DELETE' })
       .then(function(d){
         treeData = d; buildKnots();
         $('treePanel').classList.remove('on');
         document.body.classList.remove('panelopen');
         treePick_ = null;
         treeDraw(false);
-      })
-      .catch(function(err){ panelSay(err.message); });
+      });
+  }
+
+  /* When the tree refuses because somebody is hanging below, it hands back
+     WHO. So the refusal grows a second button rather than being a dead end —
+     and that button says the names out loud, because "and 3 others" is a
+     number you click through and three names is a thing you stop and read. */
+  function offerWholeLine(person, below){
+    var b = document.createElement('button');
+    b.className = 'mini away';
+    b.style.marginTop = '10px';
+    b.textContent = 'Take ' + person.name + ' and ' + (below.length === 1
+      ? 'the one below' : 'the ' + below.length + ' below') + ' off';
+    b.addEventListener('click', function(){
+      var names = below.map(function(x){ return x.name; });
+      if (!confirm('This takes ' + [person.name].concat(names).join(', ')
+                 + ' off the tree — ' + (below.length + 1) + ' people in all.\n\n'
+                 + 'Everything written about them is kept and Tony can put them back, '
+                 + 'but they stop showing.')) return;
+      b.disabled = true; b.textContent = 'Taking them off…';
+      dropPerson(person, true).catch(function(err){
+        b.disabled = false;
+        panelSay(err.message);
+      });
+    });
+    $('tfMsg').appendChild(document.createElement('br'));
+    $('tfMsg').appendChild(b);
+  }
+
+  $('tfDrop').addEventListener('click', function(){
+    if (!openPerson) return;
+    var person = openPerson;
+    if (!confirm('Take ' + person.name + ' off the tree? Everything written about them is kept, '
+               + 'and Tony can put them back — but they stop showing.')) return;
+    dropPerson(person, false).catch(function(err){
+      panelSay(err.message);
+      var below = err.data && err.data.below;
+      if (below && below.length) offerWholeLine(person, below);
+    });
   });
 
   $('tpClose').addEventListener('click', function(){
