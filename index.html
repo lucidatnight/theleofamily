@@ -273,7 +273,7 @@ body.inside .ribbon{position:relative;z-index:2}
 }
 
 /* Signed out these are a description of the place. Signed in they become the
-   doors, and only then do the seven photographs get fetched — a stranger
+   doors, and only then do the eight photographs get fetched — a stranger
    reading the front page should not be made to download the whole house. */
 .room .art{display:none}
 .grid.open .room{padding:0 0 20px;overflow:hidden;cursor:pointer;text-align:left;
@@ -853,7 +853,7 @@ footer p{margin:0 auto;max-width:44ch}
             <p class="sub" style="margin:0" id="inSince"></p>
           </div>
         </div>
-        <p class="note" id="inRooms">Seven doors below. Most of what's behind them is still empty &mdash; that's the next part.</p>
+        <p class="note" id="inRooms">Eight doors below. Most of what's behind them is still empty &mdash; that's the next part.</p>
         <div class="alt">
           <button class="linky" data-go="signout">Sign out</button>
         </div>
@@ -1060,7 +1060,7 @@ footer p{margin:0 auto;max-width:44ch}
 
   <section class="wrap rooms" id="roomsSection">
     <h2 id="roomsHead">What is inside</h2>
-    <p class="lede" id="roomsLede">Seven rooms. Everybody can add to all of them — that is the whole point of it.</p>
+    <p class="lede" id="roomsLede">Eight rooms. Everybody can add to all of them — that is the whole point of it.</p>
 
     <div class="grid" id="grid">
 
@@ -1133,6 +1133,17 @@ footer p{margin:0 auto;max-width:44ch}
         <p class="en">Talking</p>
         <p>The whole table at once, or one person quietly. Named after the only place this family ever settled anything.</p>
       </article>
+
+      <article class="room" style="--accent:#2F5233" data-room="soldati" data-title="I Nostri Soldati">
+        <div class="art"></div>
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 4 13.9 9.4 19.6 9.5 15 13 16.7 18.5 12 15.2 7.3 18.5 9 13 4.4 9.5 10.1 9.4Z"/>
+        </svg>
+        <h3>I Nostri Soldati</h3>
+        <p class="en">Who served</p>
+        <p>Every one of them who put a uniform on — which branch, which years, where they were sent, and what they never talked about afterwards.</p>
+      </article>
+
 
     </div>
   </section>
@@ -1226,7 +1237,7 @@ footer p{margin:0 auto;max-width:44ch}
   }
 
   /* ── the courtyard ───────────────────────────────────
-     The same seven cards the front page shows to everybody, except that
+     The same eight cards the front page shows to everybody, except that
      signing in gives them their photographs and turns them into doors. One
      layout, two states, rather than a second page that has to be kept in
      step with the first. */
@@ -1237,7 +1248,8 @@ footer p{margin:0 auto;max-width:44ch}
     cucina:     'No recipes yet. Scanned in her own handwriting, typed underneath so you can search it.',
     voci:       'Nothing recorded yet. This is the room with a clock on it — ten minutes of somebody’s actual voice outlasts the rest of this website.',
     calendario: 'No dates yet. Birthdays, anniversaries, name days, and the ones we keep on the day they left.',
-    tavola:     'Nobody has said anything yet. The whole table at once, or one person quietly.'
+    tavola:     'Nobody has said anything yet. The whole table at once, or one person quietly.',
+    soldati:    'Nobody is listed yet. Names, branch, years, and where they were sent \u2014 and the photographs from Le Fotografie go beside them.'
   };
   var artLoaded = false;
 
@@ -1253,7 +1265,7 @@ footer p{margin:0 auto;max-width:44ch}
            already started and never begins another — the request shows up in
            the network panel, comes back 200, and the picture never appears.
            So: attach it, describe it, and only then give it a source. No
-           lazy loading at all — there are seven small images and they are
+           lazy loading at all — there are eight small images and they are
            the entire point of this screen. */
         var img = document.createElement('img');
         img.alt = '';
@@ -1268,7 +1280,7 @@ footer p{margin:0 auto;max-width:44ch}
     }
     grid.classList.add('open');
     $('roomsHead').textContent = 'Where do you want to go?';
-    $('roomsLede').textContent = 'Seven rooms. Everybody can add to all of them — that is the whole point of it.';
+    $('roomsLede').textContent = 'Eight rooms. Everybody can add to all of them — that is the whole point of it.';
   }
 
   function closeHouse(){
