@@ -977,6 +977,12 @@ footer p{margin:0 auto;max-width:44ch}
       <button class="mini keep" id="tfSave">Save</button>
       <button class="mini away" id="tfDrop">Take off the tree</button>
     </div>
+    <!-- Anything this panel wants to say goes HERE, not up at the top of the
+         room. On a phone the panel covers the whole screen, so a refusal
+         written to #treeMsg lands underneath it: you press "Take off the
+         tree", confirm, and nothing appears to happen at all. The reason was
+         there the whole time, behind your thumb. -->
+    <p class="msg" id="tfMsg" hidden style="margin:14px 0 0"></p>
   </div>
 
   <p class="tsect">Their face</p>
@@ -2105,6 +2111,15 @@ footer p{margin:0 auto;max-width:44ch}
     m.textContent = text || ''; m.className = 'msg' + (good ? ' ok' : ''); m.hidden = !text;
   }
 
+  /* The same thing, said inside the open panel. Everything the panel's own
+     buttons do — save, take off, add a relative, pin a face — reports here,
+     because that is where the person pressing the button is looking. */
+  function panelSay(text, good){
+    var m = $('tfMsg');
+    m.textContent = text || ''; m.className = 'msg' + (good ? ' ok' : ''); m.hidden = !text;
+    if (text) m.scrollIntoView({ block: 'nearest' });
+  }
+
   function loadTree(){
     return api('/api/tree').then(function(d){
       treeData = d;
@@ -2375,11 +2390,35 @@ footer p{margin:0 auto;max-width:44ch}
   /* Drag to move. The only subtlety: a drag must not also count as clicking
      whoever was under the finger when it started, and a two-pixel wobble must
      still count as a click. So movement is measured, and only a real drag
-     swallows the click. */
+     swallows the click.
+
+     The way it swallows the click is .stage.dragging * { pointer-events:none },
+     which means that class is a loaded gun: while it is on, NOTHING inside the
+     tree can be clicked. It used to come off on pointerup only — and pointerup
+     is not guaranteed. When the browser decides your gesture was really a
+     pinch-zoom, a pull-to-refresh or a long-press menu, it sends pointercancel
+     instead and pointerup never arrives. The class stayed on, and from then on
+     the tree looked perfectly normal and was completely dead: you couldn't
+     open anybody to take them off, and because your taps landed on nothing the
+     PREVIOUS knot stayed picked, so the next "A child" hung the new person off
+     the wrong parent. One stuck class, both symptoms.
+
+     So: pointercancel and a lost window both end the drag, and — the part that
+     actually guarantees recovery — every new press on the stage clears the
+     class before it does anything else. The stage itself is never
+     pointer-events:none (only its children are), so that press always lands,
+     which means one tap always gets the tree back. */
   (function(){
     var stage = $('stage'), down = null, moved = 0;
+
+    function endDrag(){
+      down = null;
+      stage.classList.remove('dragging');
+    }
+
     stage.addEventListener('pointerdown', function(e){
-      if (e.button !== undefined && e.button !== 0) return;
+      stage.classList.remove('dragging');        // recover from any stuck gesture
+      if (e.button !== undefined && e.button !== 0){ down = null; return; }
       down = { x: e.clientX, y: e.clientY, sl: stage.scrollLeft, st: stage.scrollTop };
       moved = 0;
     });
@@ -2394,11 +2433,16 @@ footer p{margin:0 auto;max-width:44ch}
       }
     });
     window.addEventListener('pointerup', function(){
-      if (!down) return;
+      if (!down){ stage.classList.remove('dragging'); return; }
       down = null;
+      // Deliberately a tick late: the click that follows this pointerup is the
+      // one being swallowed, and it is dispatched before timers run.
       if (moved > 4) setTimeout(function(){ stage.classList.remove('dragging'); }, 0);
       else stage.classList.remove('dragging');
     });
+    window.addEventListener('pointercancel', endDrag);
+    window.addEventListener('blur', endDrag);    // switched apps mid-drag
+    document.addEventListener('visibilitychange', function(){ if (document.hidden) endDrag(); });
   })();
 
   /* ── the four ways a family gets bigger ─────────────
@@ -2462,7 +2506,7 @@ footer p{margin:0 auto;max-width:44ch}
         if (fresh) growOne(fresh);
         treePickKnot(treeData.byId[keepId] || treeRoot);
       })
-      .catch(function(err){ treeSay(err.message); });
+      .catch(function(err){ panelSay(err.message); });
   }
 
   /* Re-drawing shifts everything a little, so lay it all out again and then
@@ -2506,6 +2550,7 @@ footer p{margin:0 auto;max-width:44ch}
   function openTreePerson(u, person){
     if (!person) return;
     openPerson = person;
+    panelSay('');                      // last person's refusal is not this one's
     $('tpName').textContent = person.name;
     $('tpSub').textContent = (years(person) || 'nobody has put a year on this yet')
       + (u.people.length === 2 ? ' · married to ' + u.people.filter(function(x){ return x.id !== person.id; })[0].name : '')
@@ -2562,7 +2607,7 @@ footer p{margin:0 auto;max-width:44ch}
         off.addEventListener('click', function(){
           api('/api/tree/people/' + p.id + '/face', { method: 'POST', body: { slug: null } })
             .then(function(d){ treeData = d; buildKnots(); treeDraw(false); treePickKnot(treeData.byId[u.id]); })
-            .catch(function(err){ treeSay(err.message); });
+            .catch(function(err){ panelSay(err.message); });
         });
         row.appendChild(off);
       }
@@ -2630,7 +2675,7 @@ footer p{margin:0 auto;max-width:44ch}
       if (uid && treeData.byId[uid]) treePickKnot(treeData.byId[uid]);
     }).catch(function(err){
       b.disabled = false; b.textContent = 'Save';
-      treeSay(err.message);
+      panelSay(err.message);
     });
   });
 
@@ -2646,7 +2691,7 @@ footer p{margin:0 auto;max-width:44ch}
         treePick_ = null;
         treeDraw(false);
       })
-      .catch(function(err){ treeSay(err.message); });
+      .catch(function(err){ panelSay(err.message); });
   });
 
   $('tpClose').addEventListener('click', function(){
@@ -2704,7 +2749,7 @@ footer p{margin:0 auto;max-width:44ch}
         }).catch(function(){});
         b.addEventListener('click', function(){ startCrop(ph); });
       });
-    }).catch(function(err){ grid.innerHTML = ''; treeSay(err.message); });
+    }).catch(function(err){ grid.innerHTML = ''; panelSay(err.message); });
   }
 
   function startCrop(ph){
@@ -2724,7 +2769,7 @@ footer p{margin:0 auto;max-width:44ch}
       $('cropZoom').value = 100;
       cropPos = { fx: 0.5, fy: 0.4, fz: 1 };
       layoutCrop();
-    }).catch(function(){ treeSay('That photograph could not be opened.'); });
+    }).catch(function(){ panelSay('That photograph could not be opened.'); });
   }
 
   /* The circle is the whole box. The photograph is laid over it at the
@@ -2785,7 +2830,7 @@ footer p{margin:0 auto;max-width:44ch}
       if (treeData.byId[uid]) treePickKnot(treeData.byId[uid]);
     }).catch(function(err){
       b.disabled = false; b.textContent = 'Pin it on';
-      treeSay(err.message);
+      panelSay(err.message);
     });
   });
 
