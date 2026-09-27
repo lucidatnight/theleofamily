@@ -595,6 +595,49 @@ path.limb{
 .appear{opacity:0;transition:opacity .7s ease}
 .appear.in{opacity:1}
 
+/* ── I Nostri Soldati: a wall of them ────────────────
+   Cards, not a table. A table of service records is a personnel system; a
+   wall is what hangs in a hallway, and the face is the point of it. */
+.sdbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 20px}
+.wallof{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(212px,1fr));
+  gap:20px;align-items:start;
+}
+.sdcard{
+  background:var(--paper);border:1px solid var(--edge);border-radius:14px;
+  padding:18px 16px 16px;text-align:center;position:relative;
+}
+.sdcard .face{
+  width:116px;height:116px;border-radius:50%;margin:0 auto 12px;position:relative;
+  overflow:hidden;background:#EFE7DA;border:2px solid rgba(0,0,0,.08);
+}
+.sdcard .face img{position:absolute;display:block;max-width:none}
+.sdcard .face .initial{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-size:42px;color:var(--wine);opacity:.5;
+}
+.sdcard h4{font-family:var(--serif);font-weight:400;font-size:20px;margin:0 0 10px;color:var(--ink)}
+/* One line per hitch. Somebody who did the Marines and then the Army gets two
+   lines, which is the whole reason this room has two tables behind it. */
+.sdcard .hitch{font-size:14px;line-height:1.5;color:var(--ink-soft);margin:0 0 6px}
+.sdcard .hitch b{display:block;color:var(--ink);font-weight:600}
+.sdcard .hitch .yrs{font-variant-numeric:tabular-nums}
+.sdcard .sdnote{font-size:13.5px;line-height:1.55;color:var(--ink-soft);margin:12px 0 0;text-align:left}
+.sdcard .edit{
+  position:absolute;top:9px;right:9px;border:0;background:none;cursor:pointer;
+  font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);padding:5px 6px;
+}
+.sdcard .edit:hover{color:var(--wine)}
+.svcrow{border:1px solid var(--edge);border-radius:11px;padding:12px 13px;margin:0 0 10px;background:rgba(0,0,0,.02)}
+.svcrow .two{display:flex;gap:9px}
+.svcrow .two > *{flex:1;min-width:0}
+.svcrow .drop{text-align:right;margin-top:7px}
+.svcrow .drop button{border:0;background:none;cursor:pointer;font-size:12.5px;color:#8A3E23}
+.treepanel select{
+  width:100%;padding:10px 11px;border:1px solid var(--edge);border-radius:9px;
+  background:#fff;font:inherit;font-size:15.5px;color:var(--ink);
+}
+
 .panelhold{
   position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:40;
 }
@@ -952,12 +995,66 @@ footer p{margin:0 auto;max-width:44ch}
       </div>
     </div>
 
+    <!-- I Nostri Soldati -->
+    <div id="soldatiRoom" hidden>
+      <p class="msg" id="sdMsg" hidden></p>
+
+      <div class="soon" id="sdEmpty" hidden>
+        <p>Nobody is on the wall yet. Put up whoever you like — a grandfather, an uncle,
+           yourself. Their face comes out of Le Fotografie, and underneath it goes the
+           last rank they held, which service, and the years. The Army and the Marines,
+           and the fire department and the police the same.</p>
+        <button class="mini keep" id="sdStart" style="margin-top:14px">Put somebody up</button>
+      </div>
+
+      <div class="sdbar" id="sdBar" hidden>
+        <button class="mini keep" id="sdAdd">Put somebody up</button>
+        <span class="hint">Served twice? Add a second service to the same person — the Marines and then the Army, or the Guard and then the fire department.</span>
+      </div>
+
+      <div class="wallof" id="sdWall"></div>
+    </div>
+
     <button class="backlink" data-back>&larr; Back to the courtyard</button>
   </section>
 
 
-<!-- somebody on the tree -->
+<!-- somebody who served -->
 <div class="panelhold">
+<aside class="treepanel" id="sdPanel" aria-label="Somebody who served">
+  <h3 id="sdTitle">Put somebody up</h3>
+  <p class="sub" id="sdSub"></p>
+
+  <label for="sdName">Who served</label>
+  <input id="sdName" maxlength="70" placeholder="Joseph C. Leo">
+
+  <p class="tsect">Their service</p>
+  <div id="sdServices"></div>
+  <button class="mini" id="sdAnother" style="margin-top:2px">Add another service</button>
+
+  <label for="sdNote" style="margin-top:18px">What we know</label>
+  <textarea id="sdNote" maxlength="1200" placeholder="Where they were sent, what they did, what they never talked about afterwards."></textarea>
+  <p class="hint" style="margin:8px 0 0">
+    Nothing about where anybody is <b>right now</b> — no current unit, no duty station,
+    no deployment in progress. And no discharge papers, ever: those carry a social
+    security number and a home address.
+  </p>
+
+  <div style="display:flex;gap:8px;margin-top:14px">
+    <button class="mini keep" id="sdSave">Save</button>
+    <button class="mini away" id="sdDrop" hidden>Take off the wall</button>
+  </div>
+  <p class="msg" id="sdPanelMsg" hidden style="margin:14px 0 0"></p>
+
+  <div id="sdFaceBlock" hidden>
+    <p class="tsect">Their face</p>
+    <div id="sdFaces"></div>
+  </div>
+
+  <button class="mini" id="sdClose" style="margin-top:22px">Close</button>
+</aside>
+
+<!-- somebody on the tree -->
 <aside class="treepanel" id="treePanel" aria-label="Somebody on the tree">
   <h3 id="tpName"></h3>
   <p class="sub" id="tpSub"></p>
@@ -1147,7 +1244,7 @@ footer p{margin:0 auto;max-width:44ch}
         </svg>
         <h3>I Nostri Soldati</h3>
         <p class="en">Who served</p>
-        <p>Every one of them who put a uniform on — which branch, which years, where they were sent, and what they never talked about afterwards.</p>
+        <p>Every one of them who put a uniform on — the service, the years, the last rank they held, and what they never talked about afterwards. Soldiers, and the firefighters and police too.</p>
       </article>
 
 
@@ -1262,7 +1359,7 @@ footer p{margin:0 auto;max-width:44ch}
     voci:       'Nothing recorded yet. This is the room with a clock on it — ten minutes of somebody’s actual voice outlasts the rest of this website.',
     calendario: 'No dates yet. Birthdays, anniversaries, name days, and the ones we keep on the day they left.',
     tavola:     'Nobody has said anything yet. The whole table at once, or one person quietly.',
-    soldati:    'Nobody is listed yet. Names, branch, years, and where they were sent \u2014 and the photographs from Le Fotografie go beside them.'
+    soldati:    'Nobody is listed yet.'
   };
   var artLoaded = false;
 
@@ -1418,12 +1515,14 @@ footer p{margin:0 auto;max-width:44ch}
     $('roomView').classList.add('on');
     window.scrollTo(0, 0);
 
-    /* Two rooms are built now. The rest honestly say they are not. */
-    var foto = (slug === 'fotografie'), storia = (slug === 'storia'), albero = (slug === 'albero');
+    /* Four rooms are built now. The rest honestly say they are not. */
+    var foto = (slug === 'fotografie'), storia = (slug === 'storia'),
+        albero = (slug === 'albero'), soldati = (slug === 'soldati');
     $('fotoRoom').hidden = !foto;
     $('storiaRoom').hidden = !storia;
     $('alberoRoom').hidden = !albero;
-    $('rvEmpty').hidden = foto || storia || albero;
+    $('soldatiRoom').hidden = !soldati;
+    $('rvEmpty').hidden = foto || storia || albero || soldati;
     if (foto){ fotoSay(''); pile = 'all'; setTab(); loadWall(); }
     if (storia){ storySay(''); editingPart = null; draft = null; loadStory(); }
     if (albero){
@@ -1431,6 +1530,9 @@ footer p{margin:0 auto;max-width:44ch}
       $('treePanel').classList.remove('on');
       document.body.classList.remove('panelopen');
       loadTree().then(function(){ setTimeout(fitTree, 200); });
+    }
+    if (soldati){
+      sdSay(''); closeSoldato(); loadSoldati();
     }
   }
 
@@ -1448,6 +1550,7 @@ footer p{margin:0 auto;max-width:44ch}
     $('roomView').classList.remove('on');
     $('oneView').classList.remove('on');
     $('treePanel').classList.remove('on');
+    $('sdPanel').classList.remove('on');
     $('faceSheet').classList.remove('on');
     document.body.classList.remove('panelopen');
     releaseBlobs();
@@ -2807,8 +2910,8 @@ footer p{margin:0 auto;max-width:44ch}
      photograph, then drag it until the right face is in the hole. */
   var cropFor = null, cropSlug = null, cropNat = null, cropPos = null;
 
-  function chooseFace(u, person){
-    cropFor = { union: u, person: person };
+  function chooseFace(u, person, kind){
+    cropFor = { union: u, person: person, kind: kind || 'tree' };
     $('faceWho').textContent = person.name;
     $('cropStep').hidden = true;
     $('faceGrid').hidden = false;
@@ -2906,24 +3009,408 @@ footer p{margin:0 auto;max-width:44ch}
     $('faceHelp').textContent = 'From Le Fotografie. Pick one, then drag it so the right face sits in the circle.';
   });
 
+  /* One picker, two rooms. cropFor.kind says which wall the face is going on,
+     because the album, the circle and the drag-to-crop are identical either
+     way and a second copy of them would rot the moment one was fixed. */
   $('cropSave').addEventListener('click', function(){
     if (!cropFor || !cropSlug) return;
     var b = $('cropSave'); b.disabled = true; b.textContent = 'Pinning…';
-    api('/api/tree/people/' + cropFor.person.id + '/face', { method: 'POST', body: {
+    var soldato = (cropFor.kind === 'soldato');
+    var path = soldato
+      ? '/api/soldati/' + cropFor.person.id + '/face'
+      : '/api/tree/people/' + cropFor.person.id + '/face';
+
+    api(path, { method: 'POST', body: {
       slug: cropSlug, fx: cropPos.fx, fy: cropPos.fy, fz: cropPos.fz
     } }).then(function(d){
+      b.disabled = false; b.textContent = 'Pin it on';
+      $('faceSheet').classList.remove('on');
+      if (soldato){
+        sdData = d; drawSoldati();
+        var fresh = sdById(cropFor.person.id);
+        if (fresh) openSoldato(fresh);
+        return;
+      }
       var uid = cropFor.union.id;
       treeData = d; buildKnots(); treeDraw(false);
-      $('faceSheet').classList.remove('on');
-      b.disabled = false; b.textContent = 'Pin it on';
       if (treeData.byId[uid]) treePickKnot(treeData.byId[uid]);
     }).catch(function(err){
       b.disabled = false; b.textContent = 'Pin it on';
-      panelSay(err.message);
+      (soldato ? sdSay : panelSay)(err.message);
     });
   });
 
   $('faceClose').addEventListener('click', function(){ $('faceSheet').classList.remove('on'); });
+
+  /* ────────────────────────────────────────────────────
+     I NOSTRI SOLDATI — a wall of the ones who served.
+
+     The shape that matters: a person has MANY services, not one. Tony did the
+     Marines and then the Army, with a different rank and different years in
+     each. One branch per person would have made him pick which half of his
+     own service to write down, so the panel builds a stack of service rows
+     and "Add another service" pushes a new one on.
+     ──────────────────────────────────────────────────── */
+  var sdData = null, openSoldato_ = null, sdRows = [];
+
+  function sdSay(text, good){
+    var m = $('sdMsg');
+    m.textContent = text || ''; m.className = 'msg' + (good ? ' ok' : ''); m.hidden = !text;
+  }
+  function sdPanelSay(text, good){
+    var m = $('sdPanelMsg');
+    m.textContent = text || ''; m.className = 'msg' + (good ? ' ok' : ''); m.hidden = !text;
+    if (text) m.scrollIntoView({ block: 'nearest' });
+  }
+  function sdById(id){
+    return (sdData && sdData.soldati || []).filter(function(s){ return s.id === id; })[0] || null;
+  }
+
+  function loadSoldati(){
+    return api('/api/soldati').then(function(d){
+      sdData = d;
+      drawSoldati();
+    }).catch(function(err){ sdSay(err.message); });
+  }
+
+  /* The face, in a circle, cropped by the same three numbers the tree uses —
+     so a photograph is uploaded once and serves both rooms. */
+  function sdFace(box, p){
+    box.innerHTML = '';
+    var init = document.createElement('span');
+    init.className = 'initial';
+    init.textContent = (p.name || '?').trim().charAt(0).toUpperCase();
+    box.appendChild(init);
+    if (!p.photo_slug) return;
+
+    var D = 116, w = p.photo_w || 1, h = p.photo_h || 1;
+    var scale = Math.max(D / w, D / h) * (p.fz || 1);
+    var im = document.createElement('img');
+    im.alt = '';
+    im.style.width  = (w * scale) + 'px';
+    im.style.height = (h * scale) + 'px';
+    im.style.left = (D / 2 - (p.fx == null ? 0.5 : p.fx) * w * scale) + 'px';
+    im.style.top  = (D / 2 - (p.fy == null ? 0.4 : p.fy) * h * scale) + 'px';
+    box.appendChild(im);
+
+    if (faceUrls[p.photo_slug]){ im.src = faceUrls[p.photo_slug]; return; }
+    fetch(API + '/photos/thumb/' + p.photo_slug + '.jpg', {
+      headers: token ? { Authorization: 'Bearer ' + token } : {}
+    }).then(function(r){ if (!r.ok) throw new Error('gone'); return r.blob(); })
+      .then(function(b){
+        var url = URL.createObjectURL(b);
+        blobs.push(url); faceUrls[p.photo_slug] = url;
+        im.src = url;
+      })
+      .catch(function(){ im.remove(); });   // the initial is still underneath
+  }
+
+  function yearsOf(s){
+    if (!s.from_year && !s.to_year) return '';
+    if (s.from_year && s.to_year) return s.from_year + '–' + s.to_year;
+    return s.from_year || s.to_year;
+  }
+
+  function drawSoldati(){
+    var wall = $('sdWall');
+    wall.innerHTML = '';
+    var list = (sdData && sdData.soldati) || [];
+    $('sdEmpty').hidden = list.length > 0;
+    $('sdBar').hidden = list.length === 0;
+
+    list.forEach(function(p){
+      var card = document.createElement('article');
+      card.className = 'sdcard';
+
+      var face = document.createElement('div');
+      face.className = 'face';
+      sdFace(face, p);
+      card.appendChild(face);
+
+      var h = document.createElement('h4');
+      h.textContent = p.name;
+      card.appendChild(h);
+
+      /* One line per hitch. Two branches, two lines. */
+      p.services.forEach(function(s){
+        var row = document.createElement('p');
+        row.className = 'hitch';
+        var r = document.createElement('b');
+        r.textContent = s.last_rank || '—';
+        row.appendChild(r);
+        var y = yearsOf(s);
+        row.appendChild(document.createTextNode(s.branch));
+        if (s.unit){
+          row.appendChild(document.createElement('br'));
+          var un = document.createElement('span');
+          un.textContent = s.unit;
+          row.appendChild(un);
+        }
+        if (y){
+          row.appendChild(document.createElement('br'));
+          var sp = document.createElement('span');
+          sp.className = 'yrs';
+          sp.textContent = y;
+          row.appendChild(sp);
+        }
+        card.appendChild(row);
+      });
+
+      if (p.note){
+        var n = document.createElement('p');
+        n.className = 'sdnote';
+        n.textContent = p.note;
+        card.appendChild(n);
+      }
+
+      var e = document.createElement('button');
+      e.className = 'edit';
+      e.textContent = 'Edit';
+      e.addEventListener('click', function(){ openSoldato(p); });
+      card.appendChild(e);
+
+      wall.appendChild(card);
+    });
+  }
+
+  /* ── the panel ───────────────────────────────────────
+     sdRows is the live list of service blocks on screen. A row with an id is
+     one the server already has; a row without one is new and gets posted
+     separately, because "add another service" has to work before the person
+     exists as much as after. */
+  function svcRowEl(s, i){
+    var box = document.createElement('div');
+    box.className = 'svcrow';
+
+    var lb = document.createElement('label');
+    lb.textContent = 'Service';
+    box.appendChild(lb);
+
+    /* Grouped, because a wall of the ones who served is not only the military.
+       A firefighter uncle and a soldier grandfather belong in the same room. */
+    var sel = document.createElement('select');
+    var groups = (sdData && sdData.branchGroups)
+      || [{ group: '', options: (sdData && sdData.branches) || ['Army'] }];
+    groups.forEach(function(g){
+      var parent = sel;
+      if (g.group){
+        parent = document.createElement('optgroup');
+        parent.label = g.group;
+        sel.appendChild(parent);
+      }
+      g.options.forEach(function(b){
+        var o = document.createElement('option');
+        o.value = b; o.textContent = b;
+        if (b === s.branch) o.selected = true;
+        parent.appendChild(o);
+      });
+    });
+    sel.addEventListener('change', function(){ s.branch = sel.value; });
+    if (!s.branch) s.branch = sel.value;
+    box.appendChild(sel);
+
+    /* Which department. "Fire Department" on its own says nothing — the town
+       is the part the family remembers. Optional, and the same for a long-
+       retired soldier who wants his division on there. */
+    var lu = document.createElement('label');
+    lu.textContent = 'Department or unit (optional)';
+    box.appendChild(lu);
+    var unit = document.createElement('input');
+    unit.maxLength = 70; unit.placeholder = 'St. Louis City Fire Department';
+    unit.value = s.unit || '';
+    unit.addEventListener('input', function(){ s.unit = unit.value; });
+    box.appendChild(unit);
+
+    var lr = document.createElement('label');
+    lr.textContent = 'Last rank';
+    box.appendChild(lr);
+    var rank = document.createElement('input');
+    rank.maxLength = 40; rank.placeholder = 'Sergeant';
+    rank.value = s.last_rank || '';
+    rank.addEventListener('input', function(){ s.last_rank = rank.value; });
+    box.appendChild(rank);
+
+    var two = document.createElement('div');
+    two.className = 'two';
+    [['from_year', 'From', '2003'], ['to_year', 'To', '2007']].forEach(function(f){
+      var w = document.createElement('div');
+      var l = document.createElement('label');
+      l.textContent = f[1];
+      var inp = document.createElement('input');
+      inp.maxLength = 24; inp.placeholder = f[2];
+      inp.value = s[f[0]] || '';
+      inp.addEventListener('input', function(){ s[f[0]] = inp.value; });
+      w.appendChild(l); w.appendChild(inp);
+      two.appendChild(w);
+    });
+    box.appendChild(two);
+
+    // The first row of a brand-new person has nothing to drop back to.
+    if (sdRows.length > 1){
+      var d = document.createElement('div');
+      d.className = 'drop';
+      var btn = document.createElement('button');
+      btn.textContent = 'Remove this service';
+      btn.addEventListener('click', function(){ dropService(s); });
+      d.appendChild(btn);
+      box.appendChild(d);
+    }
+    return box;
+  }
+
+  function drawServices(){
+    var box = $('sdServices');
+    box.innerHTML = '';
+    sdRows.forEach(function(s, i){ box.appendChild(svcRowEl(s, i)); });
+  }
+
+  function dropService(s){
+    if (!s.id){                              // never saved — just take it off screen
+      sdRows = sdRows.filter(function(x){ return x !== s; });
+      drawServices();
+      return;
+    }
+    if (!confirm('Remove this service from ' + (openSoldato_ ? openSoldato_.name : 'them') + '?')) return;
+    api('/api/soldati/services/' + s.id, { method: 'DELETE' })
+      .then(function(d){
+        sdData = d; drawSoldati();
+        var fresh = sdById(openSoldato_.id);
+        if (fresh) openSoldato(fresh);
+      })
+      .catch(function(err){ sdPanelSay(err.message); });
+  }
+
+  function openSoldato(p){
+    openSoldato_ = p || null;
+    sdPanelSay('');
+    var isNew = !p;
+    $('sdTitle').textContent = isNew ? 'Put somebody up' : p.name;
+    $('sdSub').textContent = isNew
+      ? 'Their face comes out of Le Fotografie once they are saved.'
+      : ((p.services || []).length === 1 ? 'One service on the wall' : (p.services || []).length + ' services on the wall');
+    $('sdName').value = isNew ? '' : (p.name || '');
+    $('sdNote').value = isNew ? '' : (p.note || '');
+    $('sdDrop').hidden = isNew;
+    $('sdFaceBlock').hidden = isNew;
+
+    sdRows = isNew
+      ? [{ branch: '', unit: '', last_rank: '', from_year: '', to_year: '' }]
+      : (p.services || []).map(function(s){
+          return { id: s.id, branch: s.branch, unit: s.unit, last_rank: s.last_rank,
+                   from_year: s.from_year, to_year: s.to_year };
+        });
+    if (!sdRows.length) sdRows = [{ branch: '', unit: '', last_rank: '', from_year: '', to_year: '' }];
+    drawServices();
+
+    if (!isNew){
+      var faces = $('sdFaces');
+      faces.innerHTML = '';
+      var row = document.createElement('div');
+      row.style.cssText = 'display:flex;align-items:center;gap:10px';
+      var b = document.createElement('button');
+      b.className = 'mini';
+      b.textContent = p.photo_slug ? 'Change the photograph' : 'Pin a photograph';
+      b.addEventListener('click', function(){ chooseFace(null, p, 'soldato'); });
+      row.appendChild(b);
+      if (p.photo_slug){
+        var off = document.createElement('button');
+        off.className = 'mini';
+        off.textContent = 'Take off';
+        off.addEventListener('click', function(){
+          api('/api/soldati/' + p.id + '/face', { method: 'POST', body: { slug: null } })
+            .then(function(d){ sdData = d; drawSoldati(); var f = sdById(p.id); if (f) openSoldato(f); })
+            .catch(function(err){ sdPanelSay(err.message); });
+        });
+        row.appendChild(off);
+      }
+      faces.appendChild(row);
+    }
+
+    $('sdPanel').classList.add('on');
+    document.body.classList.add('panelopen');
+  }
+
+  function closeSoldato(){
+    $('sdPanel').classList.remove('on');
+    document.body.classList.remove('panelopen');
+    openSoldato_ = null;
+  }
+
+  $('sdAnother').addEventListener('click', function(){
+    sdRows.push({ branch: '', unit: '', last_rank: '', from_year: '', to_year: '' });
+    drawServices();
+  });
+
+  $('sdSave').addEventListener('click', function(){
+    var b = $('sdSave'); b.disabled = true; b.textContent = 'Saving…';
+    var name = $('sdName').value, note = $('sdNote').value;
+    var done = function(d){
+      sdData = d; drawSoldati();
+      b.disabled = false; b.textContent = 'Saved';
+      setTimeout(function(){ b.textContent = 'Save'; }, 1400);
+    };
+    var failed = function(err){
+      b.disabled = false; b.textContent = 'Save';
+      sdPanelSay(err.message);
+    };
+
+    if (!openSoldato_){
+      // New: the person and their first service go up together, then any
+      // further services they typed before saving.
+      var first = sdRows[0] || {};
+      api('/api/soldati', { method: 'POST', body: {
+        name: name, note: note, branch: first.branch, unit: first.unit,
+        last_rank: first.last_rank, from_year: first.from_year, to_year: first.to_year
+      } }).then(function(d){
+        var id = d.id;
+        var rest = sdRows.slice(1).filter(function(s){ return s.branch; });
+        return rest.reduce(function(chain, s){
+          return chain.then(function(){
+            return api('/api/soldati/' + id + '/service', { method: 'POST', body: s });
+          });
+        }, Promise.resolve(d)).then(function(last){
+          done(last && last.soldati ? last : d);
+          var fresh = sdById(id);
+          if (fresh) openSoldato(fresh);
+        });
+      }).catch(failed);
+      return;
+    }
+
+    // Existing: name and note, then each service by its own route.
+    var id = openSoldato_.id;
+    api('/api/soldati/' + id, { method: 'POST', body: { name: name, note: note } })
+      .then(function(d){
+        return sdRows.reduce(function(chain, s){
+          return chain.then(function(){
+            if (!s.branch) return null;
+            return s.id
+              ? api('/api/soldati/services/' + s.id, { method: 'POST', body: s })
+              : api('/api/soldati/' + id + '/service', { method: 'POST', body: s });
+          });
+        }, Promise.resolve(d));
+      })
+      .then(function(){ return api('/api/soldati'); })
+      .then(function(d){
+        done(d);
+        var fresh = sdById(id);
+        if (fresh) openSoldato(fresh);
+      })
+      .catch(failed);
+  });
+
+  $('sdDrop').addEventListener('click', function(){
+    if (!openSoldato_) return;
+    if (!confirm('Take ' + openSoldato_.name + ' off the wall? Everything written about them '
+               + 'is kept and they can be put back, but they stop showing.')) return;
+    api('/api/soldati/' + openSoldato_.id, { method: 'DELETE' })
+      .then(function(d){ sdData = d; drawSoldati(); closeSoldato(); })
+      .catch(function(err){ sdPanelSay(err.message); });
+  });
+
+  $('sdClose').addEventListener('click', closeSoldato);
+  $('sdAdd').addEventListener('click', function(){ openSoldato(null); });
+  $('sdStart').addEventListener('click', function(){ openSoldato(null); });
 
   /* ── one photograph, open ────────────────────────── */
   var openPhoto = null;
