@@ -2686,8 +2686,8 @@ footer p{margin:0 auto;max-width:44ch}
     });
   });
 
-  function dropPerson(person, whole){
-    return api('/api/tree/people/' + person.id + (whole ? '?whole=1' : ''), { method: 'DELETE' })
+  function dropPerson(person, how){
+    return api('/api/tree/people/' + person.id + (how ? '?' + how + '=1' : ''), { method: 'DELETE' })
       .then(function(d){
         treeData = d; buildKnots();
         $('treePanel').classList.remove('on');
@@ -2697,30 +2697,77 @@ footer p{margin:0 auto;max-width:44ch}
       });
   }
 
-  /* When the tree refuses because somebody is hanging below, it hands back
-     WHO. So the refusal grows a second button rather than being a dead end —
-     and that button says the names out loud, because "and 3 others" is a
-     number you click through and three names is a thing you stop and read. */
-  function offerWholeLine(person, below){
+  /* When the tree refuses, it hands back what you need to get past it. So the
+     refusal grows a second button rather than being a dead end. */
+  function offerButton(label, go){
     var b = document.createElement('button');
     b.className = 'mini away';
     b.style.marginTop = '10px';
-    b.textContent = 'Take ' + person.name + ' and ' + (below.length === 1
-      ? 'the one below' : 'the ' + below.length + ' below') + ' off';
+    b.textContent = label;
     b.addEventListener('click', function(){
-      var names = below.map(function(x){ return x.name; });
-      if (!confirm('This takes ' + [person.name].concat(names).join(', ')
-                 + ' off the tree — ' + (below.length + 1) + ' people in all.\n\n'
-                 + 'Everything written about them is kept and Tony can put them back, '
-                 + 'but they stop showing.')) return;
-      b.disabled = true; b.textContent = 'Taking them off…';
-      dropPerson(person, true).catch(function(err){
-        b.disabled = false;
-        panelSay(err.message);
-      });
+      if (!go(b)) return;
+      b.disabled = true; b.textContent = 'Doing it…';
     });
     $('tfMsg').appendChild(document.createElement('br'));
     $('tfMsg').appendChild(b);
+    return b;
+  }
+
+  /* Taking somebody off together with everybody descended from them.
+
+     NOT "the N below". The tree is drawn growing upward, so the people who
+     hang off somebody in the data are the people drawn ABOVE them on the
+     screen. A button offering to remove "the 37 below" gets read as the 37
+     people lower down the picture, which is a different set entirely — and
+     that is a terrible thing to be vague about on a button that removes
+     thirty-eight people. */
+  function offerWholeLine(person, below){
+    var n = below.length + 1;
+    var what = below.length === 1
+      ? 'and the one descended from them'
+      : 'and all ' + below.length + ' descended from them';
+    offerButton('Take ' + person.name + ' ' + what + ' off', function(b){
+      var names = below.map(function(x){ return x.name; });
+      var shown = names.slice(0, 12).join(', ') + (names.length > 12
+        ? ' and ' + (names.length - 12) + ' more' : '');
+      if (!confirm('This takes ' + n + ' people off the tree:\n\n'
+                 + person.name + ', ' + shown + '\n\n'
+                 + 'Everything written about them is kept and they can be put back, '
+                 + 'but they stop showing.')) return false;
+      /* A confirm box is too cheap for a number this size. Above a handful,
+         type the name — the point is not security, it is making you look at
+         who it is one more time. */
+      if (n > 5){
+        var typed = prompt('That is ' + n + ' people — most of the tree.\n\n'
+                         + 'Type ' + person.name + ' to go ahead.');
+        if (typed === null) return false;
+        if (typed.trim().toLowerCase() !== person.name.trim().toLowerCase()){
+          panelSay('That did not match, so nothing was taken off.');
+          return false;
+        }
+      }
+      dropPerson(person, 'whole').catch(function(err){
+        b.disabled = false; panelSay(err.message);
+      });
+      return true;
+    });
+  }
+
+  /* The bottom of the tree, where exactly one knot grows out of one person.
+     Taking them off costs nobody anything: the knot above drops into their
+     place. This is the undo of "their mother and father", and the only way
+     back from a typo on that move. */
+  function offerPromote(person, info){
+    offerButton('Take ' + person.name + ' off and leave the other '
+                + info.keeps + ' where they are', function(b){
+      if (!confirm('This takes ' + person.name + ' off the bottom of the tree.\n\n'
+                 + info.to + ' goes to the bottom instead, and the other '
+                 + info.keeps + ' people do not move.')) return false;
+      dropPerson(person, 'promote').catch(function(err){
+        b.disabled = false; panelSay(err.message);
+      });
+      return true;
+    });
   }
 
   $('tfDrop').addEventListener('click', function(){
@@ -2728,10 +2775,11 @@ footer p{margin:0 auto;max-width:44ch}
     var person = openPerson;
     if (!confirm('Take ' + person.name + ' off the tree? Everything written about them is kept, '
                + 'and Tony can put them back — but they stop showing.')) return;
-    dropPerson(person, false).catch(function(err){
+    dropPerson(person, null).catch(function(err){
       panelSay(err.message);
-      var below = err.data && err.data.below;
-      if (below && below.length) offerWholeLine(person, below);
+      var d = err.data || {};
+      if (d.below && d.below.length) offerWholeLine(person, d.below);
+      else if (d.promote) offerPromote(person, d.promote);
     });
   });
 
