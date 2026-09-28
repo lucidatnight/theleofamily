@@ -732,6 +732,94 @@ path.limb{
   position:absolute;top:14px;right:16px;border:0;background:rgba(255,253,248,.9);
   border-radius:999px;padding:9px 15px;font:inherit;font-size:14px;cursor:pointer;color:var(--ink);
 }
+/* ── Le Voci: a shelf of radios ──────────────────────
+   Each recording is a radio. The needle on the shelf sits somewhere different
+   on every one, which is what stops eight identical cabinets reading as
+   wallpaper — same radio, not the same station.
+
+   Opened, the radio does the work: the left knob plays, and the tuning dial IS
+   the progress bar, the needle travelling the frequency scale as the recording
+   runs. The printed needle has been painted out of the image itself so there
+   is exactly one on screen and it is the one that moves.
+
+   What is deliberately NOT a knob is the cleaned-up switch. A control nobody
+   can find is worse than a plain labelled button, and the people most likely
+   to want to hear a dead relative are the least likely to go hunting for a
+   twist control on a photograph. Metaphor for the obvious, buttons for the rest. */
+.vcbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 22px}
+.voices{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:26px}
+.voice{background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer;
+       text-align:center;display:block;width:100%}
+.vset{position:relative;transition:transform .18s ease}
+.voice:hover .vset{transform:translateY(-3px)}
+.vset img{width:100%;display:block;filter:drop-shadow(0 10px 18px rgba(43,33,24,.22))}
+.vset .needle{
+  position:absolute;top:57.2%;height:18.5%;width:2px;border-radius:2px;opacity:.85;
+  background:linear-gradient(#FF6A3D,#C0392B);pointer-events:none;
+}
+/* The dial warms up when it is playing. A flat play triangle stuck on a
+   photorealistic radio looks like a sticker; its own dial lighting up is the
+   same information without the sticker. */
+.vset .glow{
+  position:absolute;left:13%;right:13%;top:55%;height:29%;border-radius:5px;
+  background:radial-gradient(ellipse at 50% 50%, rgba(255,186,90,.50), rgba(255,150,40,0) 72%);
+  opacity:0;transition:opacity .45s ease;pointer-events:none;
+}
+.voice.on .vset .glow,.vopen.playing .vset .glow{opacity:1}
+/* A label stuck on the bottom lip, the way somebody marks a tape. It started
+   across the dial, which buried the needle — the one thing that makes each
+   radio that person's. They were fighting for the same 20% of the cabinet. */
+.vset .vlabel{
+  position:absolute;left:50%;bottom:1%;transform:translateX(-50%) translateY(42%) rotate(-1.2deg);
+  background:#FBF3DE;border:1px solid rgba(90,60,30,.22);border-radius:2px;
+  padding:4px 13px;font-family:var(--hand);font-size:16px;color:#3A2B1E;
+  box-shadow:0 2px 5px rgba(0,0,0,.18);white-space:nowrap;max-width:76%;overflow:hidden;
+  text-overflow:ellipsis;
+}
+.vunder{margin:20px 0 0}
+.vunder h4{font-family:var(--serif);font-weight:400;font-size:20px;margin:0 0 1px;color:var(--ink)}
+.vunder .rel{font-size:13.5px;color:var(--ink-soft);margin:0}
+.vunder .len{font-size:12.5px;color:var(--ink-soft);margin:5px 0 0;font-variant-numeric:tabular-nums}
+.voice.on .vunder .len{color:var(--terracotta)}
+/* Still being worked on, or it fell over. Said plainly rather than hidden —
+   a tape that vanished for two minutes with no explanation gets uploaded
+   again, and then it is on the wall twice. */
+.voice.busy .vset img{filter:grayscale(.65) opacity(.5)}
+.voice.busy .vunder .len{color:var(--amalfi)}
+.voice.broke .vset img{filter:grayscale(1) opacity(.34)}
+.voice.broke .vunder .len{color:#8A3E23}
+
+.vopen{text-align:center;margin:0}
+.vopen .vset{max-width:560px;margin:0 auto;user-select:none}
+.vopen .vset img{filter:drop-shadow(0 16px 30px rgba(43,33,24,.26))}
+.vopen .needle{width:3px;opacity:1;box-shadow:0 0 7px rgba(255,106,61,.9);transition:left .2s linear}
+.vopen.scrubbing .needle{transition:none}
+.vknob{
+  position:absolute;left:16.5%;top:61%;width:11%;height:17%;border-radius:50%;
+  border:0;background:none;cursor:pointer;padding:0;
+}
+.vknob:focus-visible{outline:3px solid var(--amalfi);outline-offset:3px}
+.vknob span{position:absolute;inset:0;border-radius:50%;box-shadow:0 0 0 0 rgba(255,190,90,0);transition:box-shadow .3s}
+.vopen.playing .vknob span{box-shadow:0 0 22px 5px rgba(255,190,90,.40)}
+/* The scrub strip sits exactly over the printed scale — 29% to 72%, measured
+   off the image, which is where the numbers actually start and stop. */
+.vscrub{position:absolute;left:29%;width:43%;top:56%;height:22%;cursor:pointer;
+        background:none;border:0;padding:0}
+.vclock{display:flex;justify-content:center;gap:9px;margin:15px 0 0;
+        font-variant-numeric:tabular-nums;font-size:14px;color:var(--ink-soft)}
+.vhead{margin:20px 0 0}
+.vhead h3{font-family:var(--serif);font-weight:400;font-size:26px;margin:0 0 2px;color:var(--ink)}
+.vhead .who{font-size:14px;color:var(--ink-soft);margin:0}
+.vpaper{background:var(--paper);border:1px solid var(--edge);border-radius:16px;
+        padding:20px 24px;margin:22px auto 0;max-width:660px;text-align:left}
+.vpick{display:flex;border:1px solid var(--edge);border-radius:999px;overflow:hidden;width:fit-content}
+.vpick button{border:0;background:none;font:inherit;font-size:14px;padding:8px 17px;cursor:pointer;color:var(--ink-soft)}
+.vpick button.on{background:var(--wine);color:#FFF9EF}
+.vpick button[disabled]{opacity:.45;cursor:default}
+.vsaid{border-left:2px solid var(--edge);padding-left:15px;margin:18px 0 0;font-size:15.5px;
+       line-height:1.7;white-space:pre-line}
+.vsaid b{display:block;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;
+         color:var(--wine);margin:0 0 6px;font-weight:600}
 .svcrow{border:1px solid var(--edge);border-radius:11px;padding:12px 13px;margin:0 0 10px;background:rgba(0,0,0,.02)}
 .svcrow .two{display:flex;gap:9px}
 .svcrow .two > *{flex:1;min-width:0}
@@ -1164,8 +1252,74 @@ footer p{margin:0 auto;max-width:44ch}
       </div>
     </div>
 
+    <div id="vociRoom" hidden>
+      <p class="msg" id="vcMsg" hidden></p>
+      <!-- A tape goes straight in as bytes. The words can all be filled in
+           afterwards: what matters is getting the voice off the cassette and
+           onto a disk that gets backed up, and a form standing between
+           somebody and that is a form that loses recordings. -->
+      <input type="file" id="vcFile" accept="audio/*,video/*,.m4a,.mp3,.wav,.aif,.aiff,.amr,.3gp" hidden>
+
+      <div id="vcShelfPage">
+        <div class="soon" id="vcEmpty" hidden>
+          <p>Nothing here yet. Ten minutes of somebody's actual voice outlasts everything
+             else on this website — a photograph tells you what a face looked like, a tape
+             tells you how he said the name of the town he left.</p>
+          <p style="margin-top:12px">Put up whatever you have. A cassette, a voicemail you
+             never deleted, a phone left running in the kitchen at Christmas. It does not
+             have to be tidy.</p>
+          <button class="mini keep" id="vcStart" style="margin-top:14px">Put up a recording</button>
+        </div>
+
+        <div class="vcbar" id="vcBar" hidden>
+          <button class="mini keep" id="vcAdd">Put up a recording</button>
+          <span class="hint">Long tapes are fine. It takes a minute to get one ready, and you can close this while it works.</span>
+        </div>
+
+        <div class="voices" id="vcWall"></div>
+      </div>
+
+      <div class="dishsheet" id="vcOnePage">
+        <button class="backlink" id="vcBack" style="margin:0 0 18px">&larr; Back to the shelf</button>
+
+        <div class="vopen" id="vcOpen">
+          <div class="vset">
+            <img id="vcImg" alt="">
+            <div class="glow"></div>
+            <div class="needle" id="vcNeedle" style="left:29%"></div>
+            <button class="vscrub" id="vcScrub" aria-label="Move through the recording"></button>
+            <button class="vknob" id="vcKnob" aria-label="Play or pause"><span></span></button>
+          </div>
+
+          <p class="vclock"><span id="vcAt">0:00</span> <span>/</span> <span id="vcLen">0:00</span></p>
+
+          <div class="vhead">
+            <h3 id="vcWhose"></h3>
+            <p class="who" id="vcWho"></p>
+          </div>
+
+          <div class="vpaper">
+            <div class="vpick">
+              <button id="vcClean">Cleaned up</button>
+              <button id="vcPlain">As recorded</button>
+            </div>
+            <p class="hint" id="vcPickNote" style="margin:10px 0 0"></p>
+            <div class="vsaid" id="vcSaid" hidden></div>
+            <div style="display:flex;gap:8px;margin-top:18px;flex-wrap:wrap">
+              <button class="mini" id="vcEdit">Write down what is on it</button>
+              <button class="mini away" id="vcDrop" hidden>Take it off the wall</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <button class="backlink" data-back>&larr; Back to the courtyard</button>
   </section>
+
+<!-- One player for the whole site. It is deliberately outside every room so
+     that redrawing a shelf never restarts what somebody is listening to. -->
+<audio id="vcAudio" preload="none"></audio>
 
 <!-- the photograph of a card, big enough to read -->
 <div class="cardbig" id="cardBig">
@@ -1291,6 +1445,42 @@ footer p{margin:0 auto;max-width:44ch}
   </div>
 
   <button class="mini" id="cuVpClose" style="margin-top:22px">Close</button>
+</aside>
+
+<!-- what is on a recording -->
+<aside class="treepanel" id="vcPanel" aria-label="A recording">
+  <h3 id="vcPTitle">What is on it</h3>
+  <p class="sub" id="vcPSub"></p>
+
+  <label for="vcPWhose">Whose voice</label>
+  <input id="vcPWhose" maxlength="80" placeholder="Pasquale Leo">
+
+  <label for="vcPLabel">What it says on the tape</label>
+  <input id="vcPLabel" maxlength="40" placeholder="Nonno Pasquale">
+  <p class="hint" style="margin:6px 0 0">However it is actually written on the label, spelling and all.</p>
+
+  <label for="vcPRel">Who they were</label>
+  <input id="vcPRel" maxlength="120" placeholder="the trunk of the tree">
+
+  <label for="vcPRec">How it was recorded</label>
+  <input id="vcPRec" maxlength="140" placeholder="on a cassette, about 1979">
+
+  <label for="vcPSaid">What they are talking about</label>
+  <textarea id="vcPSaid" maxlength="2000" rows="7" placeholder="Coming over, and the brother who went back. He says the name of the town twice and the second time is clearer. Around 3:10 somebody off to the side corrects him about the year."></textarea>
+  <p class="hint" style="margin:6px 0 0">
+    Anything worth knowing, and the times of the good bits. Nobody listens to
+    twenty minutes on the chance there is something in it — but everybody listens
+    to 3:10 if you tell them what happens at 3:10.
+  </p>
+
+  <div style="display:flex;gap:8px;margin-top:16px">
+    <button class="mini keep" id="vcPSave">Save</button>
+  </div>
+  <p class="msg" id="vcPMsg" hidden style="margin:14px 0 0"></p>
+
+  <details class="thist" id="vcPHist"><summary>Every change to this recording</summary><div></div></details>
+
+  <button class="mini" id="vcPClose" style="margin-top:22px">Close</button>
 </aside>
 
 <!-- somebody on the tree -->
@@ -1754,16 +1944,17 @@ footer p{margin:0 auto;max-width:44ch}
     $('roomView').classList.add('on');
     window.scrollTo(0, 0);
 
-    /* Five rooms are built now. The rest honestly say they are not. */
+    /* Six rooms are built now. The rest honestly say they are not. */
     var foto = (slug === 'fotografie'), storia = (slug === 'storia'),
         albero = (slug === 'albero'), soldati = (slug === 'soldati'),
-        cucina = (slug === 'cucina');
+        cucina = (slug === 'cucina'), voci = (slug === 'voci');
     $('fotoRoom').hidden = !foto;
     $('storiaRoom').hidden = !storia;
     $('alberoRoom').hidden = !albero;
     $('soldatiRoom').hidden = !soldati;
     $('cucinaRoom').hidden = !cucina;
-    $('rvEmpty').hidden = foto || storia || albero || soldati || cucina;
+    $('vociRoom').hidden = !voci;
+    $('rvEmpty').hidden = foto || storia || albero || soldati || cucina || voci;
     if (foto){ fotoSay(''); pile = 'all'; setTab(); loadWall(); }
     if (storia){ storySay(''); editingPart = null; draft = null; loadStory(); }
     if (albero){
@@ -1778,6 +1969,9 @@ footer p{margin:0 auto;max-width:44ch}
     if (cucina){
       cuSay(''); closeDishPanel(); closeVerPanel(); shutCardBig();
       showShelf(); loadCucina();
+    }
+    if (voci){
+      vcSay(''); closePanel(); vcShelf(); loadVoci();
     }
   }
 
@@ -1798,7 +1992,14 @@ footer p{margin:0 auto;max-width:44ch}
     $('sdPanel').classList.remove('on');
     $('cuDishPanel').classList.remove('on');
     $('cuVerPanel').classList.remove('on');
+    $('vcPanel').classList.remove('on');
     $('cardBig').classList.remove('on');
+    /* Stop the tape on the way out. Letting it play on while somebody wanders
+       into the photographs sounds lovely and is a trap: the controls are in a
+       room they have just left, and the only way to stop a dead relative
+       talking is to guess. */
+    if (vcAudio && !vcAudio.paused) vcAudio.pause();
+    if (vcPoll){ clearTimeout(vcPoll); vcPoll = null; }
     $('faceSheet').classList.remove('on');
     document.body.classList.remove('panelopen');
     releaseBlobs();
@@ -4267,6 +4468,355 @@ footer p{margin:0 auto;max-width:44ch}
   $('cuDishEdit').addEventListener('click', function(){ if (cuDish_) openDishPanel(cuDish_); });
   $('cuVerAdd').addEventListener('click', function(){
     if (cuDish_) openVerPanel(cuDish_, null);
+  });
+
+  /* ── Le Voci ─────────────────────────────────────────
+     Recordings, and the one room where the work does not finish while you
+     wait. A 21-minute tape is about 47 seconds of ffmpeg on the machine at
+     Tony's — far longer than a phone on a bad connection will hold a request
+     open. So the upload hands over the bytes, the server says "got it", and
+     the recording becomes playable a moment later. Which means this page has
+     to be honest about four different states instead of one, and a tape that
+     silently vanishes for two minutes gets uploaded again by somebody who
+     assumed it failed.
+
+     The player is a single <audio> that lives outside every room, so redrawing
+     the shelf never restarts what somebody is listening to.
+     ──────────────────────────────────────────────────── */
+  var vcData = null, vcOpen_ = null, vcWant = 'clean', vcPoll = null;
+  var vcAudio = $('vcAudio');
+  var L = 29, R = 72;     // where the printed dial actually starts and stops
+
+  function vcSay(text, good){
+    var m = $('vcMsg');
+    m.textContent = text || ''; m.className = 'msg' + (good ? ' ok' : ''); m.hidden = !text;
+  }
+  function vcPSay(text, good){
+    var m = $('vcPMsg');
+    m.textContent = text || ''; m.className = 'msg' + (good ? ' ok' : ''); m.hidden = !text;
+    if (text) m.scrollIntoView({ block: 'nearest' });
+  }
+  function vcById(id){
+    return (vcData && vcData.voci || []).filter(function(v){ return v.id === id; })[0] || null;
+  }
+  function mmss(s){
+    if (!isFinite(s) || s < 0) s = 0;
+    var m = Math.floor(s / 60); s = Math.floor(s % 60);
+    return m + ':' + (s < 10 ? '0' : '') + s;
+  }
+  /* Every radio on the shelf is tuned somewhere different. Derived from the id
+     so it never moves, and never lands on the same spot twice in a row. */
+  function tuneOf(v){ return L + ((v.id * 37) % (R - L)); }
+
+  function loadVoci(){
+    return api('/api/voci').then(function(d){
+      vcData = d;
+      drawVoci();
+      if (vcOpen_){
+        var fresh = vcById(vcOpen_.id);
+        if (fresh){ vcOpen_ = fresh; drawOpen(); } else vcShelf();
+      }
+      /* Poll only while something is actually being worked on, and stop the
+         moment nothing is. A page that polls forever is a page that keeps a
+         laptop fan running all evening. */
+      var busy = (d.voci || []).some(function(v){ return v.state === 'working' || (v.state === 'ready' && !v.cleanUrl); });
+      // "Got it, it takes a minute" is true until it isn't. Leaving it up after
+      // everything is ready makes the room look like it is still thinking.
+      if (!busy && /\bok\b/.test($('vcMsg').className)) vcSay('');
+      if (vcPoll){ clearTimeout(vcPoll); vcPoll = null; }
+      if (busy && !$('vociRoom').hidden) vcPoll = setTimeout(loadVoci, 3000);
+    }).catch(function(err){ vcSay(err.message); });
+  }
+
+  function vcShelf(){
+    vcOpen_ = null;
+    $('vcOnePage').classList.remove('on');
+    $('vcShelfPage').hidden = false;
+    window.scrollTo(0, 0);
+  }
+
+  function radioEl(v, big){
+    var set = document.createElement('div');
+    set.className = 'vset';
+    var im = document.createElement('img');
+    im.alt = '';
+    im.src = 'img/radio.webp';
+    set.appendChild(im);
+    var glow = document.createElement('div');
+    glow.className = 'glow';
+    set.appendChild(glow);
+    var nd = document.createElement('div');
+    nd.className = 'needle';
+    nd.style.left = (big ? L : tuneOf(v)) + '%';
+    set.appendChild(nd);
+    if (!big && v.label){
+      var lb = document.createElement('div');
+      lb.className = 'vlabel';
+      lb.textContent = v.label;
+      set.appendChild(lb);
+    }
+    return set;
+  }
+
+  function drawVoci(){
+    var wall = $('vcWall');
+    wall.innerHTML = '';
+    var list = (vcData && vcData.voci) || [];
+    $('vcEmpty').hidden = list.length > 0;
+    $('vcBar').hidden = list.length === 0;
+
+    list.forEach(function(v){
+      var card = document.createElement('button');
+      card.type = 'button';
+      card.className = 'voice'
+        + (v.state === 'working' ? ' busy' : '')
+        + (v.state === 'failed' ? ' broke' : '')
+        + (vcOpen_ && vcOpen_.id === v.id && !vcAudio.paused ? ' on' : '');
+      card.appendChild(radioEl(v, false));
+
+      var u = document.createElement('div');
+      u.className = 'vunder';
+      var h = document.createElement('h4');
+      h.textContent = v.whose || 'Nobody has said whose it is';
+      u.appendChild(h);
+      if (v.rel){
+        var r = document.createElement('p');
+        r.className = 'rel';
+        r.textContent = v.rel;
+        u.appendChild(r);
+      }
+      var len = document.createElement('p');
+      len.className = 'len';
+      /* Four states, all said out loud. "Still getting it ready" is the one
+         that matters: without it a long tape looks like a failed upload. */
+      len.textContent = v.state === 'working' ? 'still getting it ready…'
+        : v.state === 'failed' ? 'this one would not play'
+        : (vcOpen_ && vcOpen_.id === v.id && !vcAudio.paused ? '▸ playing · ' : '') + mmss(v.seconds);
+      u.appendChild(len);
+      card.appendChild(u);
+
+      card.addEventListener('click', function(){ openVoce(v); });
+      wall.appendChild(card);
+    });
+  }
+
+  function openVoce(v){
+    vcSay('');
+    var changed = !vcOpen_ || vcOpen_.id !== v.id;
+    vcOpen_ = v;
+    $('vcShelfPage').hidden = true;
+    $('vcOnePage').classList.add('on');
+    var host = $('vcOpen');
+    var old = host.querySelector('.vset');
+    var fresh = radioEl(v, true);
+    fresh.appendChild($('vcScrub'));
+    fresh.appendChild($('vcKnob'));
+    host.replaceChild(fresh, old);
+    // The needle element is rebuilt with the radio, so re-find it each time.
+    fresh.querySelector('.needle').id = 'vcNeedle';
+
+    if (changed){
+      vcWant = v.cleanUrl ? 'clean' : 'plain';
+      loadInto(v, 0, false);
+    }
+    drawOpen();
+    window.scrollTo(0, 0);
+  }
+
+  function drawOpen(){
+    var v = vcOpen_;
+    if (!v) return;
+    $('vcWhose').textContent = v.whose || 'Nobody has said whose it is';
+    $('vcWho').textContent = [v.recorded, v.added_by_name ? 'put up by ' + v.added_by_name : '']
+      .filter(Boolean).join(' · ');
+    $('vcLen').textContent = mmss(v.seconds);
+
+    var clean = $('vcClean'), plain = $('vcPlain');
+    clean.disabled = !v.cleanUrl;
+    plain.disabled = v.state !== 'ready';
+    clean.classList.toggle('on', vcWant === 'clean' && !!v.cleanUrl);
+    plain.classList.toggle('on', vcWant === 'plain' || !v.cleanUrl);
+
+    $('vcPickNote').textContent =
+      v.state === 'working'
+        ? 'Still getting it ready. It plays as soon as the first copy is done — you can close this and come back.'
+      : v.state === 'failed'
+        ? v.fail_why
+      : !v.cleanUrl
+        ? 'The tape is playable. The cleaned-up copy is still being made.'
+      : 'The tape is kept exactly as it arrived and is always one tap away. Cleaning up takes out '
+        + 'the hiss and the hum from the recorder — it cannot put back anything the tape never '
+        + 'caught, and on a bad one it can leave a voice sounding thin. That is why you can go back.';
+
+    $('vcSaid').hidden = !v.said;
+    if (v.said){
+      $('vcSaid').innerHTML = '';
+      var b = document.createElement('b');
+      b.textContent = 'What is on it';
+      $('vcSaid').appendChild(b);
+      $('vcSaid').appendChild(document.createTextNode(v.said));
+    }
+    $('vcDrop').hidden = !(me && (me.owner || v.added_by === me.id));
+    paintNeedle();
+  }
+
+  /* Swapping between the cleaned copy and the tape keeps your place and keeps
+     playing. Somebody two minutes into a story wants to hear THAT sentence
+     both ways — dumping them back at the start is the difference between a
+     comparison and a nuisance. */
+  function loadInto(v, at, play){
+    var url = (vcWant === 'clean' && v.cleanUrl) ? v.cleanUrl : v.plainUrl;
+    if (!url) return;
+    vcAudio.src = API + url;
+    vcAudio.addEventListener('loadedmetadata', function once(){
+      vcAudio.removeEventListener('loadedmetadata', once);
+      if (at) try { vcAudio.currentTime = at; } catch (e) {}
+      if (play) vcAudio.play().catch(function(){});
+    });
+    vcAudio.load();
+  }
+
+  function paintNeedle(){
+    var nd = $('vcNeedle');
+    if (!nd || !vcOpen_) return;
+    var dur = isFinite(vcAudio.duration) && vcAudio.duration ? vcAudio.duration : (vcOpen_.seconds || 0);
+    var at = vcAudio.currentTime || 0;
+    var frac = dur ? Math.min(1, at / dur) : 0;
+    nd.style.left = (L + frac * (R - L)).toFixed(2) + '%';
+    $('vcAt').textContent = mmss(at);
+    if (dur) $('vcLen').textContent = mmss(dur);
+  }
+
+  vcAudio.addEventListener('timeupdate', paintNeedle);
+  vcAudio.addEventListener('play',  function(){ $('vcOpen').classList.add('playing'); drawVoci(); });
+  vcAudio.addEventListener('pause', function(){ $('vcOpen').classList.remove('playing'); drawVoci(); });
+  vcAudio.addEventListener('ended', function(){ $('vcOpen').classList.remove('playing'); paintNeedle(); drawVoci(); });
+  vcAudio.addEventListener('error', function(){
+    if (vcOpen_ && vcAudio.src) vcSay('That recording would not play just now. Try opening the room again.');
+  });
+
+  $('vcKnob').addEventListener('click', function(){
+    if (!vcOpen_ || vcOpen_.state !== 'ready') return;
+    if (vcAudio.paused) vcAudio.play().catch(function(){});
+    else vcAudio.pause();
+  });
+
+  $('vcScrub').addEventListener('click', function(e){
+    if (!vcOpen_ || vcOpen_.state !== 'ready') return;
+    var r = this.getBoundingClientRect();
+    var frac = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+    var dur = isFinite(vcAudio.duration) && vcAudio.duration ? vcAudio.duration : vcOpen_.seconds;
+    if (dur) { try { vcAudio.currentTime = frac * dur; } catch (err) {} paintNeedle(); }
+  });
+
+  function switchTo(which){
+    if (!vcOpen_ || vcWant === which) return;
+    if (which === 'clean' && !vcOpen_.cleanUrl) return;
+    vcWant = which;
+    loadInto(vcOpen_, vcAudio.currentTime || 0, !vcAudio.paused);
+    drawOpen();
+  }
+  $('vcClean').addEventListener('click', function(){ switchTo('clean'); });
+  $('vcPlain').addEventListener('click', function(){ switchTo('plain'); });
+
+  /* ── putting one up ──────────────────────────────────
+     Straight in as bytes, with whatever words are already known riding on the
+     query string. The server answers 202 immediately — accepted, being worked
+     on — rather than holding the connection open for a minute. */
+  $('vcAdd').addEventListener('click', function(){ $('vcFile').value = ''; $('vcFile').click(); });
+  $('vcStart').addEventListener('click', function(){ $('vcFile').value = ''; $('vcFile').click(); });
+
+  $('vcFile').addEventListener('change', function(){
+    var f = this.files && this.files[0];
+    if (!f) return;
+    var mb = (f.size / 1048576).toFixed(1);
+    vcSay('Sending ' + mb + 'MB…', true);
+
+    fetch(API + '/api/voci?name=' + encodeURIComponent(f.name || 'tape'), {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + token, 'Content-Type': f.type || 'application/octet-stream' },
+      body: f
+    }).then(function(r){
+      return r.text().then(function(txt){
+        var d = {};
+        try { d = JSON.parse(txt); } catch (e) {}
+        if (!r.ok) throw new Error(d.error || ('the server said ' + r.status));
+        return d;
+      });
+    }).then(function(d){
+      vcData = d; drawVoci();
+      vcSay('Got it. It takes a minute to get ready — you can close this and come back.', true);
+      loadVoci();
+      var made = vcById(d.id);
+      if (made) openPanel(made);
+    }).catch(function(err){ vcSay(err.message); });
+  });
+
+  /* ── the words ─────────────────────────────────────── */
+  function openPanel(v){
+    vcPSay('');
+    $('vcPTitle').textContent = v.whose || 'What is on it';
+    $('vcPSub').textContent = v.state === 'working'
+      ? 'Still being got ready — you can write this down while it works.'
+      : 'Anybody can correct any of this. The person who knows which uncle is talking is very often not the person who found the tape.';
+    $('vcPWhose').value = v.whose || '';
+    $('vcPLabel').value = v.label || '';
+    $('vcPRel').value   = v.rel || '';
+    $('vcPRec').value   = v.recorded || '';
+    $('vcPSaid').value  = v.said || '';
+    $('vcPanel').setAttribute('data-id', v.id);
+
+    var hist = $('vcPHist').querySelector('div');
+    hist.textContent = 'Reading…';
+    api('/api/voci/' + v.id + '/history').then(function(h){
+      hist.innerHTML = '';
+      (h.edits || []).forEach(function(e){
+        var p = document.createElement('p');
+        p.textContent = e.who + ' — ' + e.field + (e.now ? ': ' + e.now : '')
+          + ' · ' + new Date(e.at).toLocaleDateString();
+        hist.appendChild(p);
+      });
+      if (!hist.children.length) hist.textContent = 'Nothing yet.';
+    }).catch(function(){ hist.textContent = 'Could not read it just now.'; });
+
+    $('vcPanel').classList.add('on');
+    document.body.classList.add('panelopen');
+  }
+  function closePanel(){
+    $('vcPanel').classList.remove('on');
+    document.body.classList.remove('panelopen');
+  }
+
+  $('vcPSave').addEventListener('click', function(){
+    var id = Number($('vcPanel').getAttribute('data-id'));
+    if (!id) return;
+    var b = $('vcPSave'); b.disabled = true; b.textContent = 'Saving…';
+    api('/api/voci/' + id, { method: 'POST', body: {
+      whose: $('vcPWhose').value, label: $('vcPLabel').value, rel: $('vcPRel').value,
+      recorded: $('vcPRec').value, said: $('vcPSaid').value
+    } }).then(function(d){
+      vcData = d; drawVoci();
+      if (vcOpen_){ var fresh = vcById(vcOpen_.id); if (fresh){ vcOpen_ = fresh; drawOpen(); } }
+      b.disabled = false; b.textContent = 'Saved';
+      setTimeout(function(){ b.textContent = 'Save'; }, 1400);
+      closePanel();
+    }).catch(function(err){
+      b.disabled = false; b.textContent = 'Save';
+      vcPSay(err.message);
+    });
+  });
+
+  $('vcEdit').addEventListener('click', function(){ if (vcOpen_) openPanel(vcOpen_); });
+  $('vcPClose').addEventListener('click', closePanel);
+  $('vcBack').addEventListener('click', vcShelf);
+
+  $('vcDrop').addEventListener('click', function(){
+    if (!vcOpen_) return;
+    if (!confirm('Take this recording off the wall? It is kept — the tape itself is never '
+               + 'deleted — but it stops showing.')) return;
+    api('/api/voci/' + vcOpen_.id, { method: 'DELETE' })
+      .then(function(d){ vcData = d; vcAudio.pause(); drawVoci(); vcShelf(); })
+      .catch(function(err){ vcSay(err.message); });
   });
 
   /* ── one photograph, open ────────────────────────── */
