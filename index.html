@@ -820,6 +820,120 @@ path.limb{
        line-height:1.7;white-space:pre-line}
 .vsaid b{display:block;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;
          color:var(--wine);margin:0 0 6px;font-weight:600}
+/* ── the strip on the courtyard ──────────────────────
+   Not a marquee. Scrolling text cannot be read — the eye needs a line to sit
+   still — which is why the only places marquees survive are stock tickers and
+   news crawls, where the content is glanceable numbers rather than sentences.
+   One thing at a time, cross-faded.
+
+   It sits below the door card at full width rather than inside it. Measured:
+   inside the 520px card the text column is 335px and the detail line wraps to
+   two; below it the column is 833px and it reads in one go. */
+.soonstrip{
+  display:flex;align-items:stretch;width:100%;text-align:left;font:inherit;color:inherit;
+  background:var(--paper);border:1px solid var(--edge);border-left:5px solid var(--terracotta);
+  border-radius:13px;overflow:hidden;padding:0;cursor:pointer;
+  max-width:1000px;margin:16px auto 0;position:relative;z-index:2;
+  box-shadow:0 8px 22px rgba(90,50,30,.16);
+  transition:transform .18s ease, box-shadow .18s ease;
+}
+.soonstrip:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(90,50,30,.22)}
+.soonstrip:focus-visible{outline:3px solid var(--amalfi);outline-offset:3px}
+.soonstrip .when{
+  flex:none;width:74px;padding:12px 0;text-align:center;
+  /* Solid, not the maiolica tile: at this size the pattern lands straight on
+     the numerals and the date becomes unreadable. */
+  background:var(--terracotta);color:#FFF9EF;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.soonstrip .when b{display:block;font-family:var(--serif);font-weight:400;font-size:22px;line-height:1}
+.soonstrip .when i{display:block;font-style:normal;font-size:10px;letter-spacing:.11em;
+                   text-transform:uppercase;margin-top:3px}
+.soonstrip .lines{flex:1;min-width:0;padding:12px 17px;position:relative;
+                  min-height:60px;display:flex;align-items:center}
+.soonstrip .ln{position:absolute;left:17px;right:17px;opacity:0;transition:opacity .55s ease}
+.soonstrip .ln.on{opacity:1;position:relative;left:0;right:0}
+.soonstrip .ln b{display:block;font-family:var(--serif);font-weight:400;font-size:18px;line-height:1.3}
+.soonstrip .ln span{display:block;font-size:13.5px;color:var(--ink-soft);margin-top:1px}
+.soonstrip .pips{flex:none;display:flex;gap:6px;align-items:center;padding:0 15px 0 6px}
+.soonstrip .pips i{width:6px;height:6px;border-radius:50%;background:rgba(43,33,24,.2);display:block}
+.soonstrip .pips i.on{background:var(--terracotta)}
+/* The quiet day. When today is the anniversary of somebody leaving, the strip
+   carries that alone — no birthdays, no dinners, none of the cheerful colour.
+   A banner that went "Christmas Eve at Tony's!" straight into "the day Nonna
+   left" would be the worst thing on the website, every year. */
+.soonstrip.quiet{border-left-color:var(--wine);background:rgba(123,45,59,.05)}
+.soonstrip.quiet .when{background:var(--wine)}
+.soonstrip.quiet .ln b{color:var(--wine)}
+@media (prefers-reduced-motion: reduce){
+  .soonstrip .ln{position:relative;opacity:1;left:0;right:0}
+  .soonstrip .ln + .ln{margin-top:8px;padding-top:8px;border-top:1px dashed var(--edge)}
+  .soonstrip .lines{display:block}
+  .soonstrip .pips{display:none}
+}
+
+/* ── Il Calendario ───────────────────────────────────
+   Three sections, and the order is not decorative: it is how much each kind
+   of date asks of you. Something to do, somebody to ring, and the ones that
+   ask nothing except that you notice. */
+.calsect{margin:0 0 40px}
+.calsect > h3{font-family:var(--serif);font-weight:400;font-size:23px;margin:0 0 2px}
+.calsect > .sub{font-size:14px;color:var(--ink-soft);margin:0 0 16px}
+.calsect.one   > h3{color:var(--terracotta)}
+.calsect.two   > h3{color:var(--olive)}
+.calsect.three > h3{color:var(--wine)}
+.calbar{display:flex;align-items:center;gap:11px;flex-wrap:wrap;margin:0 0 16px}
+
+.evcard{background:var(--paper);border:1px solid var(--edge);border-left:4px solid var(--terracotta);
+        border-radius:15px;padding:19px 21px;margin:0 0 15px}
+.evcard .top{display:flex;gap:15px;align-items:flex-start;flex-wrap:wrap}
+.daytag{flex:none;width:56px;text-align:center;line-height:1.1}
+.daytag b{display:block;font-family:var(--serif);font-weight:400;font-size:27px;color:var(--ink)}
+.daytag span{display:block;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+             color:var(--ink-soft);margin-top:2px}
+.evcard h4{font-family:var(--serif);font-weight:400;font-size:21px;margin:0 0 2px;color:var(--ink)}
+.evcard .where{font-size:14.5px;color:var(--ink-soft);margin:0}
+.evcard .said{font-size:15px;margin:8px 0 0;max-width:58ch;white-space:pre-line}
+.evgrow{flex:1;min-width:210px}
+.evrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:15px 0 0;
+       padding-top:13px;border-top:1px dashed var(--edge)}
+.evrow .count{font-size:14px;color:var(--ink-soft)}
+.bringbox{margin:15px 0 0;padding-top:13px;border-top:1px dashed var(--edge)}
+.bringbox h5{font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--wine);
+             margin:0 0 9px;font-weight:600}
+.bslot{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:15px;padding:6px 0;
+       border-bottom:1px solid rgba(43,33,24,.06)}
+.bslot:last-child{border-bottom:0}
+.bslot .dish{flex:1;min-width:140px}
+.bslot .by{color:var(--ink-soft);font-size:14px}
+/* An unclaimed row is the whole point. "Nobody has claimed the bread" is an
+   ask; "bring something" is not, and that is the difference between fourteen
+   desserts and no bread. */
+.bslot.open .dish{color:var(--ink-soft);font-style:italic}
+.invitebox{background:#FBF6EC;border:1px solid var(--edge);border-radius:11px;
+           padding:15px 17px;margin:12px 0 0;white-space:pre-line;font-size:15px;line-height:1.6}
+.invitebox .cap{display:block;font-size:11px;letter-spacing:.09em;text-transform:uppercase;
+                color:var(--ink-soft);margin:0 0 8px;font-weight:600}
+
+.calrow{display:flex;gap:14px;align-items:center;background:var(--paper);border:1px solid var(--edge);
+        border-left:4px solid var(--olive);border-radius:12px;padding:11px 16px;margin:0 0 9px}
+.calrow .what{flex:1;min-width:0}
+.calrow h4{font-family:var(--serif);font-weight:400;font-size:18px;margin:0;color:var(--ink)}
+.calrow .kind{font-size:13.5px;color:var(--ink-soft);margin:0}
+.calrow .daytag b{font-size:23px}
+.calrow.anniversary{border-left-color:var(--terracotta)}
+.calrow.nameday{border-left-color:var(--amalfi)}
+/* The day somebody left is in the same list but must not look like a party. */
+.calrow.gone{border-left-color:var(--wine);background:rgba(123,45,59,.045)}
+.calrow.gone h4{color:var(--wine)}
+.calrow .edit{border:0;background:none;cursor:pointer;font-size:11.5px;letter-spacing:.06em;
+              text-transform:uppercase;color:var(--ink-soft);padding:5px 6px}
+.calrow .edit:hover{color:var(--wine)}
+/* A date nobody is sure of. Said in the family's own hand rather than hidden. */
+.noyear{font-family:var(--hand);font-size:15.5px;color:var(--terracotta);margin-left:6px}
+.sugbox{background:rgba(31,111,139,.07);border-left:3px solid var(--amalfi);
+        padding:13px 16px;border-radius:0 9px 9px 0;margin:16px 0 0;font-size:15px}
+.sugbox .r{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-top:9px}
 .svcrow{border:1px solid var(--edge);border-radius:11px;padding:12px 13px;margin:0 0 10px;background:rgba(0,0,0,.02)}
 .svcrow .two{display:flex;gap:9px}
 .svcrow .two > *{flex:1;min-width:0}
@@ -1088,7 +1202,12 @@ footer p{margin:0 auto;max-width:44ch}
             <p class="sub" style="margin:0" id="inSince"></p>
           </div>
         </div>
-        <p class="note" id="inRooms">Eight doors below. Most of what's behind them is still empty &mdash; that's the next part.</p>
+        <!-- Deliberately no count of how many rooms are finished. The first
+             draft said "six of them open" and was wrong within the week —
+             a number in a sentence nobody thinks to reread is a number that
+             goes stale and then quietly lies. Eight is safe because eight is
+             the house, not the progress. -->
+        <p class="note" id="inRooms">Eight doors below. What's behind them is whatever the family has put there.</p>
         <div class="alt">
           <button class="linky" data-go="signout">Sign out</button>
         </div>
@@ -1113,6 +1232,19 @@ footer p{margin:0 auto;max-width:44ch}
         </span>
       </a>
     </div>
+
+    <!-- What is coming, below the door card rather than inside it. Inside, the
+         text column is 335px and the useful half of the line wraps; out here it
+         is 833px and reads in one go. Measured, not guessed. It is drawn only
+         when there is something on it — an empty strip saying "no upcoming
+         events" is a reproach, and it teaches people to stop looking at that
+         part of the screen, which is the one habit you do not want for the day
+         something IS on it. -->
+    <button class="soonstrip" id="soonStrip" hidden>
+      <span class="when"><b id="soonDay"></b><i id="soonMon"></i></span>
+      <span class="lines" id="soonLines"></span>
+      <span class="pips" id="soonPips"></span>
+    </button>
   </section>
 
   <section class="wrap roomview" id="roomView">
@@ -1250,6 +1382,44 @@ footer p{margin:0 auto;max-width:44ch}
 
         <div class="vers" id="cuVers"></div>
       </div>
+    </div>
+
+    <div id="calRoom" hidden>
+      <p class="msg" id="calMsg" hidden></p>
+
+      <!-- 1 · the ones that need something from you -->
+      <section class="calsect one">
+        <h3>What's happening</h3>
+        <p class="sub">Say if you're coming, and put your name against what you're bringing.</p>
+        <div class="calbar">
+          <button class="mini keep" id="calEvAdd">Put something on</button>
+          <span class="hint">A dinner, a christening, the reunion — anything people have to turn up to.</span>
+        </div>
+        <div id="calEvents"></div>
+      </section>
+
+      <!-- 2 · a nudge, not a task -->
+      <section class="calsect two">
+        <h3>Birthdays</h3>
+        <p class="sub">Nobody has to do anything. But somebody should ring.</p>
+        <div class="calbar">
+          <button class="mini keep" id="calBdayAdd">Add a birthday</button>
+        </div>
+        <div id="calBirthdays"></div>
+      </section>
+
+      <!-- 3 · the ones that ask nothing -->
+      <section class="calsect three">
+        <h3>The ones we keep</h3>
+        <p class="sub">Anniversaries, name days, and the days people left. These ask nothing —
+           they are here so they are not forgotten.</p>
+        <div class="calbar">
+          <button class="mini keep" id="calKeepAdd">Add a date</button>
+          <span class="hint">Name days work themselves out from the names already on the tree.</span>
+        </div>
+        <div id="calKeep"></div>
+        <div id="calSug"></div>
+      </section>
     </div>
 
     <div id="vociRoom" hidden>
@@ -1481,6 +1651,87 @@ footer p{margin:0 auto;max-width:44ch}
   <details class="thist" id="vcPHist"><summary>Every change to this recording</summary><div></div></details>
 
   <button class="mini" id="vcPClose" style="margin-top:22px">Close</button>
+</aside>
+
+<!-- a gathering -->
+<aside class="treepanel" id="evPanel" aria-label="A gathering">
+  <h3 id="evPTitle">Put something on</h3>
+  <p class="sub" id="evPSub"></p>
+
+  <label for="evPName">What is it</label>
+  <input id="evPName" maxlength="80" placeholder="La Vigilia — Christmas Eve">
+
+  <label for="evPDate">What day</label>
+  <input id="evPDate" type="date">
+
+  <label for="evPWhen">What time, in your own words</label>
+  <input id="evPWhen" maxlength="60" placeholder="from 4 o'clock">
+  <p class="hint" style="margin:6px 0 0">However you would say it out loud. The calendar file uses the day and a sensible hour.</p>
+
+  <label for="evPPlace">Where</label>
+  <input id="evPPlace" maxlength="120" placeholder="At Tony and Rosa's">
+
+  <label for="evPNote">Anything worth saying</label>
+  <textarea id="evPNote" maxlength="600" rows="4" placeholder="Come hungry, park on the street, and if you are bringing something hot, ring first — there is one oven."></textarea>
+
+  <label for="evPBring">What is needed</label>
+  <textarea id="evPBring" maxlength="900" rows="5" placeholder="Bread&#10;Something sweet&#10;Folding chairs"></textarea>
+  <p class="hint" style="margin:6px 0 0">
+    One per line, and <b>list the gaps, not the whole meal</b>. An empty row saying
+    "nobody has claimed the bread" is an ask; "bring something" is not.
+  </p>
+
+  <div style="display:flex;gap:8px;margin-top:16px">
+    <button class="mini keep" id="evPSave">Save</button>
+    <button class="mini away" id="evPDrop" hidden>Take it off</button>
+  </div>
+  <p class="msg" id="evPMsg" hidden style="margin:14px 0 0"></p>
+
+  <button class="mini" id="evPClose" style="margin-top:22px">Close</button>
+</aside>
+
+<!-- a date that comes round every year -->
+<aside class="treepanel" id="dtPanel" aria-label="A date">
+  <h3 id="dtPTitle">Add a date</h3>
+  <p class="sub" id="dtPSub"></p>
+
+  <label for="dtPKind">What kind</label>
+  <select id="dtPKind">
+    <option value="birthday">A birthday</option>
+    <option value="anniversary">An anniversary</option>
+    <option value="gone">The day somebody left</option>
+  </select>
+
+  <label for="dtPWho">Whose day</label>
+  <input id="dtPWho" maxlength="80" placeholder="Pasquale Leo">
+
+  <div class="svcrow" style="margin-top:14px">
+    <div class="two">
+      <div><label for="dtPDay" style="margin-top:0">Day</label>
+        <input id="dtPDay" inputmode="numeric" maxlength="2" placeholder="14"></div>
+      <div><label for="dtPMon" style="margin-top:0">Month</label>
+        <select id="dtPMon"></select></div>
+    </div>
+    <label for="dtPYr">Year</label>
+    <input id="dtPYr" inputmode="numeric" maxlength="4" placeholder="leave empty if nobody knows">
+    <!-- The whole room turns on this field being allowed to stay empty. -->
+    <p class="hint" style="margin:7px 0 0">
+      <b>Leave the year empty if nobody is sure.</b> The day still works, and there will be
+      no age on the card — which is the truth. A year invented now gets repeated as fact
+      for forty years.
+    </p>
+  </div>
+
+  <label for="dtPNote">Anything worth saying</label>
+  <input id="dtPNote" maxlength="600" placeholder="Married in Nicastro">
+
+  <div style="display:flex;gap:8px;margin-top:16px">
+    <button class="mini keep" id="dtPSave">Save</button>
+    <button class="mini away" id="dtPDrop" hidden>Take it off</button>
+  </div>
+  <p class="msg" id="dtPMsg" hidden style="margin:14px 0 0"></p>
+
+  <button class="mini" id="dtPClose" style="margin-top:22px">Close</button>
 </aside>
 
 <!-- somebody on the tree -->
@@ -1773,6 +2024,7 @@ footer p{margin:0 auto;max-width:44ch}
     $('inSince').textContent = me.owner ? 'You look after this place.' : 'Good to see you.';
     show('in');
     openHouse();
+    loadSoon();
   }
 
   /* ── the courtyard ───────────────────────────────────
@@ -1944,17 +2196,19 @@ footer p{margin:0 auto;max-width:44ch}
     $('roomView').classList.add('on');
     window.scrollTo(0, 0);
 
-    /* Six rooms are built now. The rest honestly say they are not. */
+    /* Seven rooms are built now. The rest honestly say they are not. */
     var foto = (slug === 'fotografie'), storia = (slug === 'storia'),
         albero = (slug === 'albero'), soldati = (slug === 'soldati'),
-        cucina = (slug === 'cucina'), voci = (slug === 'voci');
+        cucina = (slug === 'cucina'), voci = (slug === 'voci'),
+        cal = (slug === 'calendario');
     $('fotoRoom').hidden = !foto;
     $('storiaRoom').hidden = !storia;
     $('alberoRoom').hidden = !albero;
     $('soldatiRoom').hidden = !soldati;
     $('cucinaRoom').hidden = !cucina;
     $('vociRoom').hidden = !voci;
-    $('rvEmpty').hidden = foto || storia || albero || soldati || cucina || voci;
+    $('calRoom').hidden = !cal;
+    $('rvEmpty').hidden = foto || storia || albero || soldati || cucina || voci || cal;
     if (foto){ fotoSay(''); pile = 'all'; setTab(); loadWall(); }
     if (storia){ storySay(''); editingPart = null; draft = null; loadStory(); }
     if (albero){
@@ -1972,6 +2226,9 @@ footer p{margin:0 auto;max-width:44ch}
     }
     if (voci){
       vcSay(''); closePanel(); vcShelf(); loadVoci();
+    }
+    if (cal){
+      calSay(''); closeEvPanel(); closeDtPanel(); loadCal();
     }
   }
 
@@ -1993,6 +2250,8 @@ footer p{margin:0 auto;max-width:44ch}
     $('cuDishPanel').classList.remove('on');
     $('cuVerPanel').classList.remove('on');
     $('vcPanel').classList.remove('on');
+    $('evPanel').classList.remove('on');
+    $('dtPanel').classList.remove('on');
     $('cardBig').classList.remove('on');
     /* Stop the tape on the way out. Letting it play on while somebody wanders
        into the photographs sounds lovely and is a trap: the controls are in a
@@ -4819,6 +5078,466 @@ footer p{margin:0 auto;max-width:44ch}
       .catch(function(err){ vcSay(err.message); });
   });
 
+  /* ── the strip on the courtyard ──────────────────────
+     Fetched before anybody has chosen a room, so it is its own small endpoint
+     rather than the whole calendar. Cross-fades one line at a time; a marquee
+     would be unreadable, because the eye needs a line to sit still.
+     ──────────────────────────────────────────────────── */
+  var soonTimer = null;
+
+  function loadSoon(){
+    if (!token) return;
+    api('/api/cal/soon').then(drawSoon).catch(function(){ /* never block the courtyard */ });
+  }
+
+  function drawSoon(d){
+    var strip = $('soonStrip'), lines = $('soonLines'), pips = $('soonPips');
+    if (soonTimer){ clearInterval(soonTimer); soonTimer = null; }
+    var items = (d && d.items) || [];
+    // Nothing coming: the strip is not drawn at all.
+    strip.hidden = items.length === 0;
+    if (!items.length) return;
+
+    strip.classList.toggle('quiet', !!d.quiet);
+    $('soonDay').textContent = items[0].day;
+    $('soonMon').textContent = (items[0].monthName || '').slice(0, 3);
+    lines.innerHTML = ''; pips.innerHTML = '';
+
+    items.forEach(function(it, i){
+      var ln = document.createElement('span');
+      ln.className = 'ln' + (i === 0 ? ' on' : '');
+      var b = document.createElement('b'); b.textContent = it.head; ln.appendChild(b);
+      if (it.sub){ var s = document.createElement('span'); s.textContent = it.sub; ln.appendChild(s); }
+      lines.appendChild(ln);
+      if (items.length > 1){
+        var p = document.createElement('i');
+        if (i === 0) p.className = 'on';
+        pips.appendChild(p);
+      }
+    });
+
+    /* Somebody who has asked their machine for less motion gets all the lines
+       at once and no animation. People with vertigo and migraine do set that,
+       and nothing here is worth making somebody ill over. */
+    var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (items.length < 2 || d.quiet || still) return;
+
+    var at = 0;
+    soonTimer = setInterval(function(){
+      var ln = lines.children, pp = pips.children;
+      ln[at].classList.remove('on'); if (pp[at]) pp[at].classList.remove('on');
+      at = (at + 1) % ln.length;
+      ln[at].classList.add('on'); if (pp[at]) pp[at].classList.add('on');
+      $('soonDay').textContent = items[at].day;
+      $('soonMon').textContent = (items[at].monthName || '').slice(0, 3);
+    }, 4600);
+  }
+
+  $('soonStrip').addEventListener('click', function(){
+    var card = document.querySelector('.room[data-room="calendario"]');
+    if (card){ openHouse(); enterRoom(card); }
+  });
+
+  /* ── Il Calendario ───────────────────────────────────
+     Three sections, ordered by how much each kind of date asks of you.
+     ──────────────────────────────────────────────────── */
+  var calData = null, evOpen_ = null, dtOpen_ = null;
+  var MONTHS = ['January','February','March','April','May','June',
+                'July','August','September','October','November','December'];
+
+  function calSay(t, good){
+    var m = $('calMsg');
+    m.textContent = t || ''; m.className = 'msg' + (good ? ' ok' : ''); m.hidden = !t;
+  }
+  function evSay(t, good){
+    var m = $('evPMsg');
+    m.textContent = t || ''; m.className = 'msg' + (good ? ' ok' : ''); m.hidden = !t;
+    if (t) m.scrollIntoView({ block: 'nearest' });
+  }
+  function dtSay(t, good){
+    var m = $('dtPMsg');
+    m.textContent = t || ''; m.className = 'msg' + (good ? ' ok' : ''); m.hidden = !t;
+    if (t) m.scrollIntoView({ block: 'nearest' });
+  }
+
+  function loadCal(){
+    return api('/api/cal').then(function(d){ calData = d; drawCal(); loadSoon(); })
+      .catch(function(err){ calSay(err.message); });
+  }
+
+  function tagEl(day, monName){
+    var t = document.createElement('div');
+    t.className = 'daytag';
+    var b = document.createElement('b'); b.textContent = day; t.appendChild(b);
+    var s = document.createElement('span'); s.textContent = (monName || '').slice(0, 3); t.appendChild(s);
+    return t;
+  }
+  function btn(label, cls, fn){
+    var b = document.createElement('button');
+    b.className = 'mini' + (cls ? ' ' + cls : '');
+    b.textContent = label;
+    b.addEventListener('click', fn);
+    return b;
+  }
+
+  function drawCal(){
+    var d = calData; if (!d) return;
+
+    /* ── events ── */
+    var box = $('calEvents'); box.innerHTML = '';
+    if (!d.events.length){
+      var none = document.createElement('p');
+      none.className = 'hint';
+      none.textContent = 'Nothing on yet. A dinner, a christening, the reunion — anything '
+        + 'people have to turn up to.';
+      box.appendChild(none);
+    }
+    d.events.forEach(function(e){ box.appendChild(eventEl(e)); });
+
+    /* ── birthdays ── */
+    var bb = $('calBirthdays'); bb.innerHTML = '';
+    if (!d.birthdays.length){
+      var nb = document.createElement('p');
+      nb.className = 'hint';
+      nb.textContent = 'No birthdays yet.';
+      bb.appendChild(nb);
+    }
+    d.birthdays.forEach(function(x){ bb.appendChild(dateEl(x)); });
+
+    /* ── the ones we keep ── */
+    var kb = $('calKeep'); kb.innerHTML = '';
+    if (!d.keep.length){
+      var nk = document.createElement('p');
+      nk.className = 'hint';
+      nk.textContent = 'Nothing here yet.';
+      kb.appendChild(nk);
+    }
+    d.keep.forEach(function(x){ kb.appendChild(dateEl(x)); });
+
+    drawSuggestions();
+  }
+
+  function eventEl(e){
+    var card = document.createElement('article');
+    card.className = 'evcard';
+
+    var top = document.createElement('div');
+    top.className = 'top';
+    top.appendChild(tagEl(e.day, e.monthName));
+    var grow = document.createElement('div');
+    grow.className = 'evgrow';
+    var h = document.createElement('h4'); h.textContent = e.title; grow.appendChild(h);
+    var w = document.createElement('p'); w.className = 'where';
+    w.textContent = [e.place, e.at_text].filter(Boolean).join(' · ');
+    grow.appendChild(w);
+    if (e.note){ var n = document.createElement('p'); n.className = 'said'; n.textContent = e.note; grow.appendChild(n); }
+    top.appendChild(grow);
+    card.appendChild(top);
+
+    /* who is coming */
+    var row = document.createElement('div');
+    row.className = 'evrow';
+    [['yes', "I'm coming"], ['no', "Can't make it"], ['maybe', 'Not sure yet']].forEach(function(p){
+      var b = btn(p[1], e.mine === p[0] ? 'on keep' : '', function(){
+        api('/api/cal/events/' + e.id + '/rsvp', { method: 'POST',
+          body: { answer: e.mine === p[0] ? '' : p[0] } })
+          .then(function(d){ calData = d; drawCal(); loadSoon(); })
+          .catch(function(err){ calSay(err.message); });
+      });
+      row.appendChild(b);
+    });
+    var c = document.createElement('span');
+    c.className = 'count';
+    c.textContent = [e.yes ? e.yes + ' coming' : '', e.maybe ? e.maybe + ' not sure' : '',
+                     e.no ? e.no + " can't" : ''].filter(Boolean).join(' · ')
+                    || 'Nobody has said yet.';
+    row.appendChild(c);
+    card.appendChild(row);
+
+    /* what to bring */
+    if (e.bring.length){
+      var bx = document.createElement('div');
+      bx.className = 'bringbox';
+      var h5 = document.createElement('h5');
+      h5.textContent = 'What to bring · ' + (e.bring.length - e.open) + ' of ' + e.bring.length + ' spoken for';
+      bx.appendChild(h5);
+      e.bring.forEach(function(b){
+        var s = document.createElement('div');
+        s.className = 'bslot' + (b.claimed_by ? '' : ' open');
+        var what = document.createElement('span');
+        what.className = 'dish';
+        what.textContent = b.claimed_by ? b.what : b.what + ' — nobody yet';
+        s.appendChild(what);
+        if (b.claimed_by){
+          var by = document.createElement('span'); by.className = 'by'; by.textContent = b.claimed_name || '';
+          s.appendChild(by);
+          var mineRow = me && (b.claimed_by === me.id || e.added_by === me.id || me.owner);
+          if (mineRow) s.appendChild(btn('Not me after all', '', function(){
+            api('/api/cal/bring/' + b.id, { method: 'POST', body: { claim: false } })
+              .then(function(d){ calData = d; drawCal(); loadSoon(); })
+              .catch(function(err){ calSay(err.message); });
+          }));
+        } else {
+          s.appendChild(btn("I'll bring it", '', function(){
+            api('/api/cal/bring/' + b.id, { method: 'POST', body: {} })
+              .then(function(d){ calData = d; drawCal(); loadSoon(); })
+              .catch(function(err){ calSay(err.message); });
+          }));
+        }
+        bx.appendChild(s);
+      });
+      card.appendChild(bx);
+    }
+
+    /* getting it to people who are not on this website */
+    var share = document.createElement('div');
+    share.className = 'evrow';
+    var shown = false;
+    share.appendChild(btn('Copy the invite', 'keep', function(){
+      copyText(e.invite, function(ok){ calSay(ok ? 'Copied — paste it wherever your family is.'
+                                                : 'Could not reach the clipboard. It is written out below.', ok); });
+      if (!shown){ shown = true; card.appendChild(inviteEl(e.invite)); }
+    }));
+    share.appendChild(btn('Add to your calendar', '', function(){ downloadIcs(e); }));
+    var hint = document.createElement('span');
+    hint.className = 'count';
+    hint.textContent = 'Paste it into Messenger, the family group, or a text.';
+    share.appendChild(hint);
+    if (me && (e.added_by === me.id || me.owner)){
+      share.appendChild(btn('Correct it', '', function(){ openEvPanel(e); }));
+    }
+    card.appendChild(share);
+    return card;
+  }
+
+  function inviteEl(text){
+    var box = document.createElement('div');
+    box.className = 'invitebox';
+    var cap = document.createElement('span');
+    cap.className = 'cap';
+    cap.textContent = 'What gets copied';
+    box.appendChild(cap);
+    box.appendChild(document.createTextNode(text));
+    return box;
+  }
+
+  function copyText(text, done){
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(function(){ done(true); }, function(){ done(false); });
+      return;
+    }
+    done(false);
+  }
+
+  /* The calendar file comes down behind the sign-in like everything else, so it
+     is fetched with the token and handed to the browser as a blob. It is a few
+     hundred bytes, so there is nothing to stream. */
+  function downloadIcs(e){
+    fetch(API + '/api/cal/events/' + e.id + '/ics', {
+      headers: { Authorization: 'Bearer ' + token }
+    }).then(function(r){
+      if (!r.ok) throw new Error('that would not download just now');
+      return r.blob();
+    }).then(function(b){
+      var url = URL.createObjectURL(b);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = (e.title || 'event').replace(/[^A-Za-z0-9]+/g, '-').toLowerCase() + '.ics';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+      calSay('Saved. Open it and it goes into your own calendar.', true);
+    }).catch(function(err){ calSay(err.message); });
+  }
+
+  function dateEl(x){
+    var row = document.createElement('div');
+    row.className = 'calrow ' + x.kind;
+    row.appendChild(tagEl(x.day, x.monthName));
+    var what = document.createElement('div');
+    what.className = 'what';
+    var h = document.createElement('h4'); h.textContent = x.who; what.appendChild(h);
+    var k = document.createElement('p'); k.className = 'kind';
+    var label = x.kind === 'birthday' ? '' :
+                x.kind === 'gone' ? (x.day === undefined ? '' : 'The day they left') :
+                x.kind === 'nameday' ? '' : '';
+    var bits = [];
+    if (x.kind === 'gone') bits.push('The day they left.');
+    if (x.note) bits.push(x.note);
+    if (x.say) bits.push(x.say);
+    k.textContent = bits.join(' ');
+    /* A date with no year says so in the family's own hand rather than hiding
+       it or inventing one. */
+    if (!x.yr && x.kind === 'birthday'){
+      var soft = document.createElement('span');
+      soft.className = 'noyear';
+      soft.textContent = '— the year is anybody\'s guess';
+      k.appendChild(soft);
+    }
+    what.appendChild(k);
+    row.appendChild(what);
+    // Name days are worked out, not stored, so there is nothing to edit.
+    if (x.kind !== 'nameday'){
+      row.appendChild(btn('Edit', 'edit', function(){ openDtPanel(x); }));
+    }
+    return row;
+  }
+
+  function drawSuggestions(){
+    var box = $('calSug'); box.innerHTML = '';
+    var sug = (calData && calData.suggestions) || [];
+    if (!sug.length) return;
+    var d = document.createElement('div');
+    d.className = 'sugbox';
+    var b = document.createElement('b');
+    b.textContent = 'Suggested from L\'Albero — never put up by itself.';
+    d.appendChild(b);
+    d.appendChild(document.createTextNode(
+      ' The tree holds born and died as free text on purpose, so anything it is not '
+      + 'sure of is left alone. These are the ones it can read exactly.'));
+    sug.forEach(function(s){
+      var r = document.createElement('div');
+      r.className = 'r';
+      var t = document.createElement('span');
+      t.textContent = s.who + ' — ' + (s.kind === 'gone' ? 'left' : 'born') + ' ' + s.from;
+      r.appendChild(t);
+      r.appendChild(btn('Put it up', 'keep', function(){
+        api('/api/cal/dates', { method: 'POST', body: {
+          kind: s.kind, who: s.who, mon: s.mon, day: s.day, yr: s.yr, person_id: s.person_id
+        } }).then(function(x){ calData = x; drawCal(); loadSoon(); })
+          .catch(function(err){ calSay(err.message); });
+      }));
+      d.appendChild(r);
+    });
+    box.appendChild(d);
+  }
+
+  /* ── the event panel ─────────────────────────────── */
+  function openEvPanel(e){
+    evSay('');
+    evOpen_ = e || null;
+    var isNew = !e;
+    $('evPTitle').textContent = isNew ? 'Put something on' : e.title;
+    $('evPSub').textContent = isNew ? 'A dinner, a christening, the reunion.'
+      : 'Anybody coming can answer; only you or Tony can change the event itself.';
+    $('evPName').value = isNew ? '' : (e.title || '');
+    $('evPWhen').value = isNew ? '' : (e.at_text || '');
+    $('evPPlace').value = isNew ? '' : (e.place || '');
+    $('evPNote').value = isNew ? '' : (e.note || '');
+    $('evPDate').value = isNew ? '' : new Date(e.at).toISOString().slice(0, 10);
+    $('evPBring').value = isNew ? '' : (e.bring || []).filter(function(b){ return !b.claimed_by; })
+      .map(function(b){ return b.what; }).join('\n');
+    $('evPBring').disabled = !isNew;
+    $('evPDrop').hidden = isNew;
+    closeDtPanel();
+    $('evPanel').classList.add('on');
+    document.body.classList.add('panelopen');
+  }
+  function closeEvPanel(){
+    $('evPanel').classList.remove('on');
+    document.body.classList.remove('panelopen');
+  }
+
+  $('evPSave').addEventListener('click', function(){
+    var b = $('evPSave'); b.disabled = true; b.textContent = 'Saving…';
+    var day = $('evPDate').value;
+    if (!day){ b.disabled = false; b.textContent = 'Save'; return evSay('What day is it?'); }
+    // Midday rather than midnight, so a timezone nudge never moves the date.
+    var at = new Date(day + 'T12:00:00').getTime();
+    var body = {
+      title: $('evPName').value, at: at, at_text: $('evPWhen').value,
+      place: $('evPPlace').value, note: $('evPNote').value
+    };
+    if (!evOpen_){
+      body.bring = $('evPBring').value.split('\n').map(function(x){ return x.trim(); })
+        .filter(function(x){ return x.length; });
+    }
+    var call = evOpen_
+      ? api('/api/cal/events/' + evOpen_.id, { method: 'POST', body: body })
+      : api('/api/cal/events', { method: 'POST', body: body });
+    call.then(function(d){
+      calData = d; drawCal(); loadSoon();
+      b.disabled = false; b.textContent = 'Saved';
+      setTimeout(function(){ b.textContent = 'Save'; }, 1400);
+      closeEvPanel();
+    }).catch(function(err){ b.disabled = false; b.textContent = 'Save'; evSay(err.message); });
+  });
+
+  $('evPDrop').addEventListener('click', function(){
+    if (!evOpen_) return;
+    if (!confirm('Take ' + evOpen_.title + ' off? Everything said about it is kept, but it stops showing.')) return;
+    api('/api/cal/events/' + evOpen_.id, { method: 'DELETE' })
+      .then(function(d){ calData = d; drawCal(); loadSoon(); closeEvPanel(); })
+      .catch(function(err){ evSay(err.message); });
+  });
+  $('evPClose').addEventListener('click', closeEvPanel);
+  $('calEvAdd').addEventListener('click', function(){ openEvPanel(null); });
+
+  /* ── the date panel ──────────────────────────────── */
+  function fillMonths(){
+    var sel = $('dtPMon');
+    if (sel.children.length) return;
+    MONTHS.forEach(function(m, i){
+      var o = document.createElement('option');
+      o.value = String(i + 1); o.textContent = m;
+      sel.appendChild(o);
+    });
+  }
+
+  function openDtPanel(x, kind){
+    dtSay(''); fillMonths();
+    dtOpen_ = (x && x.id && x.kind !== 'nameday') ? x : null;
+    var isNew = !dtOpen_;
+    $('dtPTitle').textContent = isNew ? 'Add a date' : x.who;
+    $('dtPSub').textContent = isNew
+      ? 'Anybody can add one, and anybody can correct it.'
+      : 'Anybody can correct this.';
+    $('dtPKind').value = isNew ? (kind || 'birthday') : x.kind;
+    $('dtPWho').value = isNew ? '' : (x.who || '');
+    $('dtPDay').value = isNew ? '' : x.day;
+    $('dtPMon').value = isNew ? String(new Date().getMonth() + 1) : String(x.mon);
+    $('dtPYr').value = isNew ? '' : (x.yr == null ? '' : x.yr);
+    $('dtPNote').value = isNew ? '' : (x.note || '');
+    $('dtPDrop').hidden = isNew;
+    closeEvPanel();
+    $('dtPanel').classList.add('on');
+    document.body.classList.add('panelopen');
+  }
+  function closeDtPanel(){
+    $('dtPanel').classList.remove('on');
+    document.body.classList.remove('panelopen');
+  }
+
+  $('dtPSave').addEventListener('click', function(){
+    var b = $('dtPSave'); b.disabled = true; b.textContent = 'Saving…';
+    var body = {
+      kind: $('dtPKind').value, who: $('dtPWho').value,
+      mon: Number($('dtPMon').value), day: Number($('dtPDay').value),
+      // An empty year stays empty. It is never turned into a number here.
+      yr: $('dtPYr').value.trim() === '' ? '' : Number($('dtPYr').value),
+      note: $('dtPNote').value
+    };
+    var call = dtOpen_
+      ? api('/api/cal/dates/' + dtOpen_.id, { method: 'POST', body: body })
+      : api('/api/cal/dates', { method: 'POST', body: body });
+    call.then(function(d){
+      calData = d; drawCal(); loadSoon();
+      b.disabled = false; b.textContent = 'Saved';
+      setTimeout(function(){ b.textContent = 'Save'; }, 1400);
+      closeDtPanel();
+    }).catch(function(err){ b.disabled = false; b.textContent = 'Save'; dtSay(err.message); });
+  });
+
+  $('dtPDrop').addEventListener('click', function(){
+    if (!dtOpen_) return;
+    if (!confirm('Take ' + dtOpen_.who + ' off the calendar?')) return;
+    api('/api/cal/dates/' + dtOpen_.id, { method: 'DELETE' })
+      .then(function(d){ calData = d; drawCal(); loadSoon(); closeDtPanel(); })
+      .catch(function(err){ dtSay(err.message); });
+  });
+  $('dtPClose').addEventListener('click', closeDtPanel);
+  $('calBdayAdd').addEventListener('click', function(){ openDtPanel(null, 'birthday'); });
+  $('calKeepAdd').addEventListener('click', function(){ openDtPanel(null, 'anniversary'); });
+
   /* ── one photograph, open ────────────────────────── */
   var openPhoto = null;
 
@@ -4940,6 +5659,9 @@ footer p{margin:0 auto;max-width:44ch}
       try { localStorage.removeItem(KEY); } catch (err) {}
       leaveRoom();
       closeHouse();
+      // What is coming is family business. It goes away with the sign-in.
+      $('soonStrip').hidden = true;
+      if (soonTimer){ clearInterval(soonTimer); soonTimer = null; }
       show('signin');
       say('Signed out. See you soon.', true);
       return;
