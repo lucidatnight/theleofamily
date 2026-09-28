@@ -33,6 +33,18 @@
 }
 
 *{box-sizing:border-box}
+/* The hidden attribute has to beat the layout.
+ *
+ * [hidden] is display:none from the BROWSER's stylesheet, and any display in
+ * ours outranks it — so an element with display:flex sits there in full view
+ * with its hidden property reading true. That is exactly what the courtyard
+ * strip did: the flag said hidden, the box was on screen, and the test agreed
+ * with the flag because it asked the property instead of asking whether the
+ * thing could actually be seen.
+ *
+ * Tony found it. One rule fixes every instance, present and future, which is
+ * why it is here rather than four times further down. */
+[hidden]{display:none !important}
 html{-webkit-text-size-adjust:100%}
 body{
   margin:0;
