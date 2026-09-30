@@ -1519,6 +1519,21 @@ footer p{margin:0 auto;max-width:44ch}
       <span class="lines" id="soonLines"></span>
       <span class="pips" id="soonPips"></span>
     </button>
+
+    <!-- The last thing said at the table.
+         Its own line rather than another turn in the events strip above: that
+         strip is one button that rotates, and today it does not matter which
+         line is showing because every one goes to Il Calendario. Put the table
+         in the rotation and the destination changes under somebody's thumb.
+         One line, one place it goes, no rotation, no timestamp — when is the
+         least interesting thing about the last thing said, and the box above
+         is already full of dates. Not drawn at all when the table has been
+         quiet, and never showing a message that has been flagged. -->
+    <button class="tavolaline" id="tvLine" hidden>
+      <span class="face" id="tvLineFace"></span>
+      <span class="txt"><span class="one"><b id="tvLineWho"></b><span id="tvLineSaid"></span></span></span>
+      <span class="go">At the table &rsaquo;</span>
+    </button>
   </section>
 
   <section class="wrap roomview" id="roomView">
@@ -2343,21 +2358,6 @@ footer p{margin:0 auto;max-width:44ch}
 
 
     </div>
-
-    <!-- The last thing said at the table.
-         Its own line rather than another turn in the events strip above: that
-         strip is one button that rotates, and today it does not matter which
-         line is showing because every one goes to Il Calendario. Put the table
-         in the rotation and the destination changes under somebody's thumb.
-         One line, one place it goes, no rotation, no timestamp — when is the
-         least interesting thing about the last thing said, and the box above
-         is already full of dates. Not drawn at all when the table has been
-         quiet, and never showing a message that has been flagged. -->
-    <button class="tavolaline" id="tvLine" hidden>
-      <span class="face" id="tvLineFace"></span>
-      <span class="txt"><span class="one"><b id="tvLineWho"></b><span id="tvLineSaid"></span></span></span>
-      <span class="go">At the table &rsaquo;</span>
-    </button>
 
     <!-- Not a ninth door.
          The greeting says eight, and a service entrance is not a room in a
