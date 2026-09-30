@@ -331,6 +331,106 @@ body.inside .ribbon{position:relative;z-index:2}
 }
 .backlink:hover{border-color:var(--wine)}
 
+/* ── La Tavola ──────────────────────────────────────
+   Deliberately the least decorated room in the house. Seven rooms are dressed
+   because what is in them is finished and worth framing; this one is people
+   talking, and talking does not want a frame around it. */
+.around{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--paper);
+  border:1px solid var(--edge);border-radius:13px;padding:10px 15px;margin:0 0 16px}
+.around .lab{font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-soft);flex:none}
+.around .said{font-size:13.5px;color:var(--ink-soft)}
+.faces{display:flex}
+.face{width:30px;height:30px;border-radius:50%;background:var(--olive);color:var(--cream);
+  display:grid;place-items:center;font-family:var(--serif);font-size:15px;
+  border:2px solid var(--paper);margin-left:-7px;flex:none}
+.face:first-child{margin-left:0}
+/* The colour is picked from the name so somebody is the same colour every
+   time, without a colour ever being stored against a person. */
+.face.c1{background:var(--olive)} .face.c2{background:var(--amalfi)}
+.face.c3{background:var(--terracotta)} .face.c4{background:var(--wine)}
+.face.c5{background:#8a6d3b}
+
+.ttable{background:var(--paper);border:1px solid var(--edge);border-radius:15px;
+  padding:6px 0 0;box-shadow:0 6px 18px rgba(90,50,30,.08)}
+.tvmore{margin:12px 20px 2px}
+.tvday{display:flex;align-items:center;gap:12px;margin:16px 20px 10px;color:var(--ink-soft);
+  font-size:12px;letter-spacing:.09em;text-transform:uppercase}
+.tvday:before,.tvday:after{content:'';flex:1;height:1px;background:var(--edge)}
+
+.tvsaid{display:flex;gap:12px;padding:7px 20px;position:relative}
+.tvsaid .who{flex:none;width:34px}
+.tvsaid .who .face{width:34px;height:34px;margin:0;font-size:16px}
+.tvsaid .what{flex:1;min-width:0}
+.tvsaid .nm{font-family:var(--serif);font-size:16.5px;margin-right:8px}
+.tvsaid .tm{font-size:12px;color:var(--ink-soft)}
+.tvsaid p{margin:1px 0 0;font-size:16.5px;line-height:1.5;white-space:pre-wrap;word-wrap:break-word}
+/* A run from one person is one person talking, not three announcements. */
+.tvsaid.run{padding-top:1px}
+.tvsaid.run .who{visibility:hidden;height:0}
+.tvsaid.run .line{display:none}
+
+.tvquote{border-left:3px solid var(--edge);padding:2px 0 2px 10px;margin:3px 0 5px;
+  color:var(--ink-soft);font-size:14.5px}
+.tvquote b{font-weight:600;color:var(--ink)}
+
+.tvtools{position:absolute;right:16px;top:4px;display:flex;gap:4px;opacity:0;transition:opacity .13s}
+.tvsaid:hover .tvtools,.tvsaid:focus-within .tvtools{opacity:1}
+.tvtools button{background:var(--cream);border:1px solid var(--edge);border-radius:8px;
+  font-size:12px;padding:3px 9px;color:var(--ink-soft);cursor:pointer}
+.tvtools button:hover{border-color:var(--terracotta);color:var(--terracotta)}
+
+.tvkept{margin:4px 0 2px;display:inline-flex;align-items:center;gap:7px;
+  background:rgba(110,140,74,.12);border:1px solid rgba(110,140,74,.3);
+  border-radius:9px;padding:5px 11px;font-size:13px;color:#3f5225}
+.tvkept svg{width:13px;height:13px;fill:currentColor;flex:none}
+
+.tvpic{margin:6px 0 2px;border-radius:11px;overflow:hidden;border:1px solid var(--edge);
+  max-width:330px;display:block;background:var(--cream)}
+.tvpic img{display:block;width:100%;height:auto}
+
+.tvsay{display:flex;gap:10px;align-items:flex-end;padding:13px 16px 15px;
+  border-top:1px solid var(--edge);margin-top:10px;background:var(--cream);border-radius:0 0 14px 14px}
+.tvbox{flex:1;min-width:0;border:1px solid var(--edge);border-radius:12px;background:var(--paper);
+  padding:4px 4px 0}
+.tvbox textarea{width:100%;font:inherit;font-size:16.5px;padding:8px 10px 10px;border:none;
+  background:none;color:inherit;resize:none;min-height:42px;max-height:170px;line-height:1.45}
+.tvbox textarea:focus{outline:none}
+.tvreply{display:flex;align-items:center;gap:8px;margin:5px 6px 0;padding:5px 10px;
+  background:var(--cream);border-radius:9px;font-size:13.5px;color:var(--ink-soft)}
+.tvreply button,.tvshot button{background:none;border:none;font-size:18px;line-height:1;
+  color:var(--ink-soft);cursor:pointer;padding:0 2px}
+.tvshot{position:relative;margin:6px 6px 0;max-width:180px}
+.tvshot img{display:block;width:100%;border-radius:9px}
+.tvshot button{position:absolute;top:3px;right:3px;background:rgba(43,33,24,.7);color:#fff;
+  border-radius:50%;width:22px;height:22px}
+.tvsay .clip{flex:none;background:none;border:1px solid var(--edge);border-radius:11px;
+  padding:11px 13px;cursor:pointer;color:var(--ink-soft)}
+.tvsay .clip svg{width:19px;height:19px;fill:currentColor;display:block}
+.tvgo{flex:none;border-radius:11px;padding:12px 20px}
+.tvnote,.tvempty{color:var(--ink-soft);font-size:13.5px;max-width:74ch;margin:16px 0 0;line-height:1.6}
+
+/* the line in the courtyard */
+.tavolaline{display:flex;align-items:center;width:100%;text-align:left;font:inherit;color:inherit;
+  background:var(--paper);border:1px solid var(--edge);border-left:5px solid var(--amalfi);
+  border-radius:13px;overflow:hidden;padding:0;cursor:pointer;max-width:1000px;margin:9px auto 0;
+  box-shadow:0 5px 14px rgba(90,50,30,.10);position:relative;z-index:2}
+.tavolaline .face{margin:0 0 0 13px;background:var(--amalfi);border-color:var(--paper)}
+.tavolaline .txt{flex:1;min-width:0;padding:10px 14px;overflow:hidden}
+.tavolaline .one{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;font-size:15.5px}
+.tavolaline .one b{font-weight:600;margin-right:6px}
+.tavolaline .one span{color:var(--ink-soft)}
+.tavolaline .go{flex:none;font-size:11px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--amalfi);padding:0 15px 0 4px}
+.tavolaline:hover{border-color:var(--amalfi)}
+
+@media(max-width:700px){
+  .tvsaid{padding-left:14px;padding-right:14px}
+  .tvtools{opacity:1;position:static;margin-top:5px;justify-content:flex-start}
+  .tvsay{padding:11px}
+  .tvgo{padding:12px 15px}
+  .tavolaline .go{display:none}
+}
+
 /* ── the key, and what is behind it ─────────────────
    Deliberately the plainest thing on the site. No maiolica, no photograph, no
    accent colour of its own. Every room in this house is dressed because a room
@@ -1651,6 +1751,51 @@ footer p{margin:0 auto;max-width:44ch}
       </div>
     </div>
 
+    <!-- ── La Tavola ────────────────────────────────────
+         One stream, everybody at it, nothing taken aside. The important
+         control in here is not "Say it" — it is "Keep this", which copies a
+         message into the room it belongs to. The other seven rooms hold what
+         the family has settled; this one is where settling happens, and
+         without keeping, the best thing anybody works out scrolls away at a
+         rate of one screen a week. -->
+    <div id="tavolaRoom" hidden>
+      <div class="around" id="tvAround" hidden>
+        <span class="lab">Around today</span>
+        <span class="faces" id="tvFaces"></span>
+        <span class="said" id="tvWho"></span>
+      </div>
+      <p class="msg" id="tvMsg" hidden></p>
+
+      <div class="ttable">
+        <button class="ghostbtn tvmore" id="tvMore" hidden>Further back</button>
+        <div id="tvSaid"></div>
+
+        <div class="tvsay">
+          <button class="clip" id="tvClip" aria-label="Put a photograph on the table">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 6v11a4.5 4.5 0 0 1-9 0V5a3 3 0 0 1 6 0v11a1.5 1.5 0 0 1-3 0V6H9v10a3 3 0 0 0 6 0V5a4.5 4.5 0 0 0-9 0v12a6 6 0 0 0 12 0V6z"/></svg>
+          </button>
+          <input type="file" id="tvFile" accept="image/*" hidden>
+          <div class="tvbox">
+            <div class="tvreply" id="tvReply" hidden>
+              <span id="tvReplyTo"></span>
+              <button id="tvReplyX" aria-label="Not a reply">&times;</button>
+            </div>
+            <div class="tvshot" id="tvShot" hidden>
+              <img id="tvShotImg" alt="">
+              <button id="tvShotX" aria-label="Take the photograph off">&times;</button>
+            </div>
+            <textarea id="tvText" rows="1" maxlength="2000"
+              placeholder="Say something to the whole table"></textarea>
+          </div>
+          <button class="btn tvgo" id="tvSay">Say it</button>
+        </div>
+      </div>
+
+      <p class="tvnote" id="tvWhyOne">Everybody in the house is at this table and there is nowhere to take
+        somebody aside — so nothing here is private from anybody, and nobody has to wonder.
+        A photograph put on the table also goes into Le Fotografie.</p>
+    </div>
+
     <button class="backlink" data-back>&larr; Back to the courtyard</button>
   </section>
 
@@ -2192,6 +2337,21 @@ footer p{margin:0 auto;max-width:44ch}
 
     </div>
 
+    <!-- The last thing said at the table.
+         Its own line rather than another turn in the events strip above: that
+         strip is one button that rotates, and today it does not matter which
+         line is showing because every one goes to Il Calendario. Put the table
+         in the rotation and the destination changes under somebody's thumb.
+         One line, one place it goes, no rotation, no timestamp — when is the
+         least interesting thing about the last thing said, and the box above
+         is already full of dates. Not drawn at all when the table has been
+         quiet, and never showing a message that has been flagged. -->
+    <button class="tavolaline" id="tvLine" hidden>
+      <span class="face" id="tvLineFace"></span>
+      <span class="txt"><span class="one"><b id="tvLineWho"></b><span id="tvLineSaid"></span></span></span>
+      <span class="go">At the table &rsaquo;</span>
+    </button>
+
     <!-- Not a ninth door.
          The greeting says eight, and a service entrance is not a room in a
          family's house — a card with maiolica tile on it, sitting beside La
@@ -2303,6 +2463,7 @@ footer p{margin:0 auto;max-width:44ch}
     openHouse();
     loadSoon();
     khCheck();
+    tvLineCheck();
   }
 
   /* ── the courtyard ───────────────────────────────────
@@ -2478,7 +2639,7 @@ footer p{margin:0 auto;max-width:44ch}
     var foto = (slug === 'fotografie'), storia = (slug === 'storia'),
         albero = (slug === 'albero'), soldati = (slug === 'soldati'),
         cucina = (slug === 'cucina'), voci = (slug === 'voci'),
-        cal = (slug === 'calendario');
+        cal = (slug === 'calendario'), tavola = (slug === 'tavola');
     $('fotoRoom').hidden = !foto;
     $('storiaRoom').hidden = !storia;
     $('alberoRoom').hidden = !albero;
@@ -2486,7 +2647,11 @@ footer p{margin:0 auto;max-width:44ch}
     $('cucinaRoom').hidden = !cucina;
     $('vociRoom').hidden = !voci;
     $('calRoom').hidden = !cal;
-    $('rvEmpty').hidden = foto || storia || albero || soldati || cucina || voci || cal;
+    $('tavolaRoom').hidden = !tavola;
+    /* All eight. The house is finished — which is the first time that sentence
+       has been true, and the reason there is no longer a "coming soon" panel
+       that anybody will ever see. */
+    $('rvEmpty').hidden = foto || storia || albero || soldati || cucina || voci || cal || tavola;
     if (foto){ fotoSay(''); pile = 'all'; setTab(); loadWall(); }
     if (storia){ storySay(''); editingPart = null; draft = null; loadStory(); }
     if (albero){
@@ -2495,6 +2660,7 @@ footer p{margin:0 auto;max-width:44ch}
       document.body.classList.remove('panelopen');
       loadTree().then(function(){ setTimeout(fitTree, 200); });
     }
+    if (tavola){ tvStart(); }
     if (soldati){
       sdSay(''); closeSoldato(); loadSoldati();
     }
@@ -2537,6 +2703,8 @@ footer p{margin:0 auto;max-width:44ch}
        room they have just left, and the only way to stop a dead relative
        talking is to guess. */
     if (vcAudio && !vcAudio.paused) vcAudio.pause();
+    tvStop();
+    tvLineCheck();
     /* Whatever happened in the room just left may have put something in the
        queue — writing an address into La Storia does exactly that. So the
        corner is asked again on the way out rather than at the next sign-in,
@@ -5430,6 +5598,264 @@ footer p{margin:0 auto;max-width:44ch}
     if (card){ openHouse(); enterRoom(card); }
   });
 
+  /* ── La Tavola — the table ───────────────────────────
+     One stream, everybody at it. The room refreshes itself while it is open
+     and stops the moment somebody leaves, because a family site should not be
+     polling a machine in Tony's house all day from a phone in a pocket.
+     ──────────────────────────────────────────────────── */
+  var tvData = null, tvReplyTo = null, tvPhoto = null, tvTimer = null, tvOldest = 0;
+
+  function tvSay_(t, good){
+    var m = $('tvMsg');
+    m.textContent = t || ''; m.className = 'msg' + (good ? ' ok' : ''); m.hidden = !t;
+  }
+
+  /* Same person, same colour, every time — worked out from the name rather
+     than stored against anybody, so nobody's colour is a thing the database
+     has an opinion about. */
+  function tvColour(name){
+    var n = 0, s = String(name || '?');
+    for (var i = 0; i < s.length; i++) n = (n * 31 + s.charCodeAt(i)) % 997;
+    return 'c' + (n % 5 + 1);
+  }
+  function tvFace(name){
+    return '<span class="face ' + tvColour(name) + '">'
+      + esc(String(name || '?').trim().charAt(0).toUpperCase()) + '</span>';
+  }
+
+  function loadTavola(before){
+    return api('/api/tavola' + (before ? '?before=' + before : '')).then(function(d){
+      if (before){
+        // Older ones go on the front; everything already on screen stays put.
+        var seen = {};
+        tvData.said.forEach(function(m){ seen[m.id] = 1; });
+        tvData.said = d.said.filter(function(m){ return !seen[m.id]; }).concat(tvData.said);
+        tvData.total = d.total; tvData.around = d.around;
+      } else {
+        tvData = d;
+      }
+      drawTavola(!before);
+    });
+  }
+
+  function drawTavola(toBottom){
+    var d = tvData; if (!d) return;
+
+    var faces = $('tvFaces'), around = d.around || [];
+    $('tvAround').hidden = !around.length;
+    faces.innerHTML = around.map(function(p){ return tvFace(p.name); }).join('');
+    $('tvWho').textContent = around.length
+      ? around.map(function(p){ return p.name.split(' ')[0]; }).join(', ') + ' — in today.'
+      : '';
+
+    tvOldest = d.said.length ? d.said[0].said_at : 0;
+    $('tvMore').hidden = d.said.length >= d.total;
+
+    var box = $('tvSaid'), html = [], lastDay = '', lastWho = null, lastAt = 0;
+    d.said.forEach(function(m){
+      var day = new Date(m.said_at).toDateString();
+      if (day !== lastDay){
+        html.push('<div class="tvday">' + esc(tvDayName(m.said_at)) + '</div>');
+        lastDay = day; lastWho = null;
+      }
+      // A run is the same person inside five minutes, and only when they are
+      // not answering somebody in between.
+      var run = lastWho === m.who && !m.reply_to && (m.said_at - lastAt) < 300000;
+      lastWho = m.who; lastAt = m.said_at;
+
+      var mine = me && m.user_id === me.id;
+      var tools = ['<button data-tvreply="' + m.id + '">Reply</button>'];
+      if (!m.kept_at) tools.push('<button data-tvkeep="' + m.id + '">Keep this</button>');
+      if (mine || (me && me.owner)) tools.push('<button data-tvdrop="' + m.id + '">Take it back</button>');
+
+      html.push('<div class="tvsaid' + (run ? ' run' : '') + '" data-said="' + m.id + '">'
+        + '<span class="who">' + tvFace(m.who) + '</span>'
+        + '<span class="what">'
+        + '<span class="line"><span class="nm">' + esc(m.who || 'Somebody') + '</span>'
+        + '<span class="tm">' + esc(tvClock(m.said_at)) + '</span></span>'
+        + (m.reply_to && m.to_body !== null
+            ? '<div class="tvquote"><b>' + esc(m.to_who || 'Somebody') + ':</b> '
+              + esc(String(m.to_body).replace(/\s+/g, ' ').slice(0, 90))
+              + (String(m.to_body).length > 90 ? '…' : '') + '</div>'
+            : '')
+        + (m.body ? '<p>' + esc(m.body) + '</p>' : '')
+        /* No src here on purpose. Photographs are served behind the token,
+           so a plain <img src> would 401 and show a broken frame — they are
+           fetched by loadPicture once the row is on the page, the same way
+           every other picture in the house is. */
+        + (m.photo_slug
+            ? '<a class="tvpic" data-tvpic="' + esc(m.photo_slug) + '"><img alt=""></a>'
+            : '')
+        + (m.kept_at
+            ? '<div class="tvkept"><svg viewBox="0 0 24 24" aria-hidden="true">'
+              + '<path d="M5 3h14a2 2 0 0 1 2 2v16l-9-4-9 4V5a2 2 0 0 1 2-2z"/></svg>'
+              + esc((m.kept_by_name || 'Somebody') + ' kept this — it is '
+                + (m.kept_to === 'photo' ? 'under the photograph in Le Fotografie'
+                                         : 'a note in La Storia')) + '</div>'
+            : '')
+        + '<span class="tvtools">' + tools.join('') + '</span>'
+        + '</span></div>');
+    });
+    if (!d.said.length){
+      html.push('<p class="tvempty" style="padding:16px 20px">Nobody has said anything yet. '
+        + 'Whoever goes first sets the tone — it does not have to be important.</p>');
+    }
+    box.innerHTML = html.join('');
+    Array.prototype.forEach.call(box.querySelectorAll('[data-tvpic] img'), function(img){
+      loadPicture(img, 'display', img.parentElement.getAttribute('data-tvpic'));
+    });
+    if (toBottom) box.scrollIntoView({ block: 'end' });
+  }
+
+  function tvDayName(ms){
+    var d = new Date(ms), t = new Date();
+    if (d.toDateString() === t.toDateString()) return 'Today';
+    t.setDate(t.getDate() - 1);
+    if (d.toDateString() === t.toDateString()) return 'Yesterday';
+    if (Date.now() - ms < 6 * 86400000) return d.toLocaleDateString(undefined, { weekday: 'long' });
+    return d.toLocaleDateString(undefined, { day: 'numeric', month: 'long' });
+  }
+  function tvClock(ms){
+    return new Date(ms).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })
+      .replace(' ', '').toLowerCase();
+  }
+
+  function tvStart(){
+    tvReplyTo = null; tvPhoto = null;
+    $('tvReply').hidden = true; $('tvShot').hidden = true; $('tvText').value = '';
+    tvSay_('');
+    loadTavola(0);
+    if (tvTimer) clearInterval(tvTimer);
+    /* Fifteen seconds while the room is open, and nothing at all once it is
+       not. Nobody's phone should be asking a machine in Tony's house for news
+       it is not looking at. */
+    tvTimer = setInterval(function(){ if (!$('tavolaRoom').hidden) loadTavola(0); }, 15000);
+  }
+  function tvStop(){ if (tvTimer){ clearInterval(tvTimer); tvTimer = null; } }
+
+  function tvPost(){
+    var text = $('tvText').value.trim();
+    if (!text && !tvPhoto) return tvSay_('Say something first.');
+    var b = $('tvSay'); b.disabled = true; b.textContent = 'Saying';
+    api('/api/tavola', { method: 'POST', body: {
+      body: text, reply_to: tvReplyTo, photo_id: tvPhoto
+    }}).then(function(d){
+      tvData = d; tvReplyTo = null; tvPhoto = null;
+      $('tvText').value = ''; $('tvReply').hidden = true; $('tvShot').hidden = true;
+      $('tvText').style.height = '';
+      tvSay_(''); drawTavola(true);
+    }).catch(function(err){ tvSay_(err.message); })
+      .then(function(){ b.disabled = false; b.textContent = 'Say it'; });
+  }
+
+  $('tvSay').addEventListener('click', tvPost);
+  $('tvMore').addEventListener('click', function(){ loadTavola(tvOldest); });
+  $('tvReplyX').addEventListener('click', function(){ tvReplyTo = null; $('tvReply').hidden = true; });
+  $('tvShotX').addEventListener('click', function(){ tvPhoto = null; $('tvShot').hidden = true; });
+
+  $('tvText').addEventListener('input', function(){
+    this.style.height = 'auto';
+    this.style.height = Math.min(170, this.scrollHeight) + 'px';
+  });
+  $('tvText').addEventListener('keydown', function(e){
+    /* Enter says it; shift-enter is a new line. On a phone the key is Return
+       and people expect it to send, and anybody writing a paragraph will find
+       shift by themselves. */
+    if (e.key === 'Enter' && !e.shiftKey && !e.ctrlKey && !e.metaKey){
+      e.preventDefault(); tvPost();
+    }
+  });
+
+  $('tvClip').addEventListener('click', function(){ $('tvFile').click(); });
+  $('tvFile').addEventListener('change', function(){
+    var f = this.files && this.files[0];
+    this.value = '';
+    if (!f) return;
+    tvSay_('Putting it on the table…');
+    /* Straight into Le Fotografie, the same upload every photograph uses. It
+       is a family photograph that arrived in a conversation, not a chat
+       attachment, and it must not be stuck in here. */
+    fetch(API + '/api/photos', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + token,
+                 'Content-Type': f.type || 'application/octet-stream',
+                 'X-Filename': encodeURIComponent(f.name || '') },
+      body: f
+    }).then(function(r){ return r.json().then(function(d){
+        if (!r.ok) throw new Error(d.error || 'It would not go up.');
+        return d; }); })
+      .then(function(d){
+        tvPhoto = d.photo.id;
+        loadPicture($('tvShotImg'), 'thumb', d.photo.slug);
+        $('tvShot').hidden = false;
+        tvSay_('');
+      })
+      .catch(function(err){ tvSay_(err.message); });
+  });
+
+  $('tavolaRoom').addEventListener('click', function(e){
+    if (!e.target.closest) return;
+    var r = e.target.closest('[data-tvreply]');
+    if (r){
+      var id = Number(r.getAttribute('data-tvreply'));
+      var m = null;
+      tvData.said.forEach(function(x){ if (x.id === id) m = x; });
+      if (!m) return;
+      tvReplyTo = id;
+      $('tvReplyTo').textContent = 'Answering ' + (m.who || 'somebody') + ': '
+        + String(m.body || 'a photograph').replace(/\s+/g, ' ').slice(0, 60);
+      $('tvReply').hidden = false;
+      $('tvText').focus();
+      return;
+    }
+    var k = e.target.closest('[data-tvkeep]');
+    if (k){
+      k.disabled = true;
+      api('/api/tavola/' + k.getAttribute('data-tvkeep') + '/keep', { method: 'POST' })
+        .then(function(d){ tvData = d; drawTavola(false); tvSay_('Kept. It is in the room it belongs to now.', true); })
+        .catch(function(err){ tvSay_(err.message); });
+      return;
+    }
+    var x = e.target.closest('[data-tvdrop]');
+    if (x){
+      x.disabled = true;
+      api('/api/tavola/' + x.getAttribute('data-tvdrop'), { method: 'DELETE' })
+        .then(function(d){ tvData = d; drawTavola(false); })
+        .catch(function(err){ tvSay_(err.message); });
+      return;
+    }
+    var pic = e.target.closest('[data-tvpic]');
+    if (pic){
+      /* Opening it means opening it where photographs live, not in a lightbox
+         bolted onto a chat room. */
+      var slug = pic.getAttribute('data-tvpic');
+      var card = document.querySelector('.room[data-room="fotografie"]');
+      if (card){ leaveRoom(); openHouse(); enterRoom(card); }
+      return;
+    }
+  });
+
+  /* The one line in the courtyard. Fails quietly: if it does not come back,
+     the right outcome is a courtyard without it, not a courtyard with an
+     error on it. */
+  function tvLineCheck(){
+    $('tvLine').hidden = true;
+    if (!token) return;
+    api('/api/tavola/last').then(function(d){
+      if (!d.said) return;
+      $('tvLineFace').className = 'face ' + tvColour(d.said.who);
+      $('tvLineFace').textContent = d.said.who.charAt(0).toUpperCase();
+      $('tvLineWho').textContent = d.said.who;
+      $('tvLineSaid').textContent = d.said.body;
+      $('tvLine').hidden = false;
+    }).catch(function(){ /* quiet */ });
+  }
+
+  $('tvLine').addEventListener('click', function(){
+    var card = document.querySelector('.room[data-room="tavola"]');
+    if (card){ openHouse(); enterRoom(card); }
+  });
+
   /* ── Tenere la casa — keeping the house ──────────────
      The key in the corner, and the page behind it.
 
@@ -6385,6 +6811,8 @@ footer p{margin:0 auto;max-width:44ch}
       // What is coming is family business. It goes away with the sign-in.
       $('soonStrip').hidden = true;
       $('keyLine').hidden = true;
+      $('tvLine').hidden = true;
+      tvStop();
       if (soonTimer){ clearInterval(soonTimer); soonTimer = null; }
       show('signin');
       say('Signed out. See you soon.', true);
