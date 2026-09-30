@@ -381,12 +381,34 @@ body.inside .ribbon{position:relative;z-index:2}
   border-radius:999px;padding:2px 8px;font-weight:600;vertical-align:2px}
 .khpill.key{background:rgba(244,194,67,.32);color:#6b4d05}
 .khpill.you{background:rgba(31,111,139,.13);color:var(--amalfi)}
+.khpill.shut{background:rgba(123,45,59,.13);color:var(--wine)}
+/* Still legible, still there, plainly not active. Not struck through: these
+   are people, and everything they wrote is still in the house. */
+.khshut td .nm{opacity:.6}
 .khacts{display:flex;gap:8px;flex-wrap:wrap}
 .khrowacts{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
 .btn.ghost{background:none;color:var(--amalfi);border:1px solid var(--edge);padding:7px 12px;font-size:13px}
 .btn.quiet{background:none;color:var(--ink-soft);border:1px solid var(--edge);padding:7px 12px;font-size:13px}
 .btn.warn{background:none;color:var(--wine);border:1px solid rgba(123,45,59,.3);padding:7px 12px;font-size:13px}
 
+/* Past about twenty lines the ledger stops being a list and becomes a wall,
+   and every visit costs a long scroll past history nobody came to read. So it
+   gets its own box with its own scrollbar, and only once there is enough in it
+   to be worth one — a scrolling region holding six rows is just a smaller list
+   with a worse way to read it.
+
+   The chips stay OUTSIDE the box on purpose. Filtering to one room is the fast
+   way out of a long ledger, and putting the way out inside the thing you are
+   trying to escape is a joke at the reader's expense.
+
+   Height is capped in vh as well as pixels so a phone does not hand over its
+   whole screen to it, and scroll chaining is left alone: when you reach the
+   bottom the page carries on, rather than the box swallowing the swipe and
+   feeling stuck. */
+.khscroll{max-height:min(58vh,620px);overflow-y:auto;-webkit-overflow-scrolling:touch;
+  border:1px solid var(--edge);border-radius:11px;padding:2px 13px;background:var(--cream)}
+.khscroll .khled:last-child{border-bottom:none}
+.khmore{margin:0 0 9px;font-size:12.5px;color:var(--ink-soft)}
 .khchips{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 12px}
 .khchips button{background:none;border:1px solid var(--edge);border-radius:999px;padding:4px 11px;
   font-family:var(--sans);font-size:12.5px;color:var(--ink-soft);cursor:pointer}
@@ -1650,6 +1672,27 @@ footer p{margin:0 auto;max-width:44ch}
       <p class="khwhy">Everybody who can get in, when they got here, and who let them in.</p>
       <div class="khbody">
         <div class="khtablewrap"><table class="khtable" id="khPeople"></table></div>
+
+        <div class="khpanel" style="margin-top:16px">
+          <h4>Let somebody in</h4>
+          <p class="lead">A code, with their name on it so you both remember who it was for. They
+            make their own account with it — their own name, their own email, a password nobody
+            here ever sees.</p>
+          <div class="khform">
+            <input type="text" id="khInviteFor" maxlength="80" placeholder="Aunt Carmela" autocomplete="off">
+            <button class="btn" id="khInviteBtn">Make a code</button>
+          </div>
+          <div class="khmade" id="khMade" hidden>
+            <div class="khlab">A code for</div>
+            <div class="khfor" id="khFor"></div>
+            <div class="khcode" id="khCode"></div>
+            <div class="khacts">
+              <button class="btn ghost" id="khCopy">Copy it</button>
+              <button class="btn quiet" id="khHide">Done</button>
+            </div>
+          </div>
+        </div>
+
         <div id="khCodes"></div>
       </div>
     </div>
@@ -1661,6 +1704,7 @@ footer p{margin:0 auto;max-width:44ch}
         it and when. The rooms have always written this down; this is the first place it can be read.</p>
       <div class="khbody">
         <div class="khchips" id="khChips"></div>
+        <p class="khmore" id="khLedgerNote" hidden></p>
         <div id="khLedger"></div>
       </div>
     </div>
@@ -1689,43 +1733,13 @@ footer p{margin:0 auto;max-width:44ch}
         cannot hand the key to anybody else — otherwise it stops being something you gave and
         becomes something that spread.</p>
       <div class="khbody">
-        <div class="khpanel" id="khMake">
-          <h4>Give somebody the key</h4>
-          <p class="lead">Type the name the way the family says it. They put the key in on their own
-            phone or their own computer — it is not tied to the one you are holding.</p>
-          <div class="khform">
-            <input type="text" id="khName" maxlength="80" placeholder="Rosa Leo" autocomplete="off">
-            <button class="btn" id="khMakeBtn">Make a key</button>
-          </div>
-          <ul class="khgrant">
-            <li>Everything on this page — the house, the ledger, what's flagged, how it's holding up</li>
-            <li>Can clear a flag, or ask whoever put it up about it</li>
-            <li class="no">Cannot edit the family history — that stays with you</li>
-            <li class="no">Cannot take a line out of a room</li>
-            <li class="no">Cannot make another key, or let new people in</li>
-            <li class="no">Cannot take the house down, cancel your key, or close your door</li>
-          </ul>
-          <div class="khmade" id="khMade" hidden>
-            <div class="khlab">A key for</div>
-            <div class="khfor" id="khFor"></div>
-            <div class="khcode" id="khCode"></div>
-            <ul>
-              <li>Works on a phone or a computer — whichever they sign in on.</li>
-              <li>Good for 24 hours, then it stops working and you make another.</li>
-              <li>Works once. If somebody reads it over their shoulder, it is already spent.</li>
-              <li>It is in the ledger already, and goes in again when they use it.</li>
-            </ul>
-            <div class="khacts">
-              <button class="btn ghost" id="khCopy">Copy it</button>
-              <button class="btn quiet" id="khHide">Done</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="khnokey" id="khNotYours" hidden>
-          <h4>Only Tony can hand out a key</h4>
-          <p>You can keep the house — you just cannot let somebody else in to keep it with you.</p>
-        </div>
+        <ul class="khgrant" id="khGrant">
+          <li>Everything on this page — the house, the ledger, what's flagged, how it's holding up</li>
+          <li>Can hand out an invite code, and cancel one</li>
+          <li>Can close somebody's door, and open it again</li>
+          <li>Can clear a flag, or ask whoever put it up about it</li>
+          <li class="no">Cannot give anybody a key. That is yours alone.</li>
+        </ul>
 
         <h4 class="khhead">Who has a key</h4>
         <div id="khHolders"></div>
@@ -5432,9 +5446,15 @@ footer p{margin:0 auto;max-width:44ch}
      swallowed: a ledger that quietly drops a line it does not recognise is
      worse than one that prints something ugly. */
   var KH_DID = {
-    'key.made': 'made a key', 'key.used': 'used the key', 'key.taken': 'took the key back',
-    'key.cancelled': 'cancelled a key', 'flag.left': 'looked at something flagged and left it',
-    'flag.asked': 'asked about something flagged', 'flag.removed': 'took something out after a flag'
+    'key.given': 'gave a key', 'key.taken': 'took a key back',
+    'invite.made': 'made an invite code', 'invite.cancelled': 'cancelled an invite code',
+    'door.closed': 'closed a door', 'door.opened': 'opened a door again',
+    'flag.left': 'looked at something flagged and left it',
+    'flag.asked': 'asked about something flagged',
+    'flag.removed': 'took something out after a flag',
+    /* Kept so old rows still read as English. Keys used to be codes that had
+       to be made, carried and typed; they are one click now. */
+    'key.made': 'made a key', 'key.used': 'used the key', 'key.cancelled': 'cancelled a key'
   };
 
   function khSay(t, good){
@@ -5487,21 +5507,36 @@ footer p{margin:0 auto;max-width:44ch}
     var owner = d.you.is_owner;
 
     /* who is in the house */
-    var ppl = d.house.people, codes = d.house.keys;
-    $('khWhoCount').textContent = ppl.length + (ppl.length === 1 ? ' person' : ' people')
-      + (codes.length ? ' · ' + codes.length + ' key' + (codes.length === 1 ? '' : 's') + ' out there' : '');
+    var ppl = d.house.people, codes = d.house.invites || [];
+    var inHouse = ppl.filter(function(p){ return !p.closed; }).length;
+    $('khWhoCount').textContent = inHouse + (inHouse === 1 ? ' person' : ' people')
+      + (ppl.length > inHouse ? ' · ' + (ppl.length - inHouse) + ' closed' : '')
+      + (codes.length ? ' · ' + codes.length + ' code' + (codes.length === 1 ? '' : 's') + ' out there' : '');
 
     var rows = ['<thead><tr><th>Who</th><th>Came in</th><th>Last here</th><th></th></tr></thead><tbody>'];
     ppl.forEach(function(p){
       var tags = (p.is_you ? ' <span class="khpill you">You</span>' : '')
-               + (p.has_key && !p.is_owner ? ' <span class="khpill key">Has the key</span>' : '');
+               + (p.has_key && !p.is_owner ? ' <span class="khpill key">Has a key</span>' : '')
+               + (p.closed ? ' <span class="khpill shut">Door closed</span>' : '');
       var acts = [];
-      if (owner && !p.is_owner){
-        if (p.has_key) acts.push('<button class="btn warn" data-khtake="' + p.id + '">Take the key back</button>');
-        else acts.push('<button class="btn ghost" data-khgive="' + esc(p.name) + '">Give the key</button>');
+      /* Giving and taking a key is Tony's alone. Closing a door is any
+         keyholder's — that is the other half of moderating. Neither is offered
+         against Tony himself, and the server refuses both anyway. */
+      if (owner && !p.is_owner && !p.closed){
+        acts.push(p.has_key
+          ? '<button class="btn warn" data-khtake="' + p.id + '">Take the key back</button>'
+          : '<button class="btn ghost" data-khgive="' + p.id + '">Give a key</button>');
       }
-      rows.push('<tr><td><span class="nm">' + esc(p.name) + '</span>' + tags
+      if (!p.is_owner && !p.is_you){
+        acts.push(p.closed
+          ? '<button class="btn ghost" data-khopen="' + p.id + '">Open it again</button>'
+          : '<button class="btn quiet" data-khclose="' + p.id + '">Close the door</button>');
+      }
+      rows.push('<tr' + (p.closed ? ' class="khshut"' : '') + '><td><span class="nm">'
+        + esc(p.name) + '</span>' + tags
         + (p.is_owner ? '<span class="khqu">Started the house</span>' : '')
+        + (p.closed ? '<span class="khqu">Cannot sign in. Everything they wrote is still here, '
+                    + 'with their name on it.</span>' : '')
         + '</td><td>' + new Date(p.joined_at).toLocaleDateString()
         + '</td><td>' + (p.seen_at ? when(p.seen_at) : 'Never signed in')
         + '</td><td><div class="khrowacts">' + acts.join('') + '</div></td></tr>');
@@ -5512,13 +5547,16 @@ footer p{margin:0 auto;max-width:44ch}
     var cbox = $('khCodes');
     if (!codes.length) cbox.innerHTML = '';
     else {
-      cbox.innerHTML = '<h4 class="khhead">Keys made and not used yet</h4>'
+      cbox.innerHTML = '<h4 class="khhead">Codes out there, not used yet</h4>'
         + codes.map(function(k){
-            return '<div class="khholder"><div class="hh"><div><div class="nm">' + esc(k.for_name)
-              + '</div><div class="em">' + esc(k.code) + ' · made ' + when(k.made_at)
-              + ' · runs out ' + new Date(k.expires_at).toLocaleString() + '</div></div>'
-              + (owner ? '<button class="btn warn" data-khcancel="' + k.id + '">Cancel it</button>' : '')
-              + '</div></div>';
+            var bits = [esc(k.code), 'made ' + when(k.created_at)];
+            if (k.max_uses > 1) bits.push(k.uses + ' of ' + k.max_uses + ' used');
+            if (k.expires_at) bits.push('runs out ' + new Date(k.expires_at).toLocaleDateString());
+            return '<div class="khholder"><div class="hh"><div><div class="nm">'
+              + esc(k.note || 'No name on it') + '</div><div class="em">' + bits.join(' · ')
+              + '</div></div>'
+              + '<button class="btn warn" data-khcancel="' + encodeURIComponent(k.code)
+              + '">Cancel it</button></div></div>';
           }).join('');
     }
 
@@ -5570,12 +5608,11 @@ footer p{margin:0 auto;max-width:44ch}
     khDrawHealth(d.health);
 
     /* the key */
-    $('khMake').hidden = !owner;
-    $('khNotYours').hidden = owner;
     $('khKeyWhy').textContent = owner
-      ? 'Only you can make one. A keyholder can keep the house, but cannot hand the key to anybody '
-        + 'else — otherwise it stops being something you gave and becomes something that spread.'
-      : 'Tony makes the keys. You can keep the house; you cannot let somebody else in to keep it with you.';
+      ? 'Give one to somebody in the list above and they have it — no code, nothing to type. '
+        + 'Only you can. A keyholder does everything a moderator does and cannot make another '
+        + 'keyholder, or it stops being something you gave and becomes something that spread.'
+      : 'Tony gives the keys. You can keep the house; you cannot hand a key to anybody else.';
 
     var hold = d.keys.holders.map(function(h){ return khHolder(h, owner); });
     if (owner){
@@ -5602,9 +5639,20 @@ footer p{margin:0 auto;max-width:44ch}
       + (h.is_you ? '' : ' Only they can change these.') + '</p></div>';
   }
 
+  var KH_SCROLL_AT = 20;        // below this it is a list, above it it is a wall
+
   function khDrawLedger(rows){
-    var box = $('khLedger');
+    var box = $('khLedger'), note = $('khLedgerNote');
+    box.classList.remove('khscroll');
+    note.hidden = true;
     if (!rows.length){ box.innerHTML = '<p class="khquiet">Nothing written down here yet.</p>'; return; }
+    if (rows.length > KH_SCROLL_AT){
+      box.classList.add('khscroll');
+      note.textContent = rows.length + ' lines, newest first — scroll inside the box, '
+        + 'or pick a room above to cut it down.';
+      note.hidden = false;
+      box.scrollTop = 0;     // a filter change must land at the top, not where the last one was
+    }
     box.innerHTML = rows.map(function(r){
       var mine = r.room === 'keep';
       var said;
@@ -5699,25 +5747,29 @@ footer p{margin:0 auto;max-width:44ch}
   $('keyBtn').addEventListener('click', function(){ khOpen(); });
   $('khBack').addEventListener('click', khLeave);
 
-  $('khMakeBtn').addEventListener('click', function(){
-    var nm = $('khName').value.trim();
-    if (!nm) return khSay('Whose key is it?');
+  function khReload(){
+    return api('/api/keep').then(function(d){ khData = d; khDraw(); });
+  }
+
+  $('khInviteBtn').addEventListener('click', function(){
+    var nm = $('khInviteFor').value.trim();
+    if (!nm) return khSay('Who is it for? Put a name on it so you both remember.');
     var b = this; b.disabled = true; b.textContent = 'Making';
-    api('/api/keep/keys', { method: 'POST', body: { for_name: nm } }).then(function(d){
-      $('khFor').textContent = d.for_name;
-      $('khCode').textContent = d.code;
+    api('/api/invites', { method: 'POST', body: { note: nm, uses: 1 } }).then(function(d){
+      $('khFor').textContent = nm;
+      $('khCode').textContent = d.invite ? d.invite.code : (d.code || '');
       $('khMade').hidden = false;
-      $('khName').value = '';
+      $('khInviteFor').value = '';
       khSay('');
-      khData = d.keep; khDraw();
       $('khMade').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return khReload();
     }).catch(function(err){ khSay(err.message); })
-      .then(function(){ b.disabled = false; b.textContent = 'Make a key'; });
+      .then(function(){ b.disabled = false; b.textContent = 'Make a code'; });
   });
 
   $('khCopy').addEventListener('click', function(){
     var code = $('khCode').textContent;
-    var done = function(){ khSay('Copied. It works once, and it stops working in a day.', true); };
+    var done = function(){ khSay('Copied. Send it to them however you like.', true); };
     if (navigator.clipboard && navigator.clipboard.writeText){
       navigator.clipboard.writeText(code).then(done, function(){ khSay('Copy it by hand: ' + code); });
     } else {
@@ -5732,8 +5784,24 @@ footer p{margin:0 auto;max-width:44ch}
 
     var give = t.closest('[data-khgive]');
     if (give){
-      $('khName').value = give.getAttribute('data-khgive');
-      $('khMakeBtn').click();
+      give.disabled = true;
+      api('/api/keep/keys/held/' + give.getAttribute('data-khgive'), { method: 'POST' })
+        .then(function(d){ khData = d; khDraw(); khSay('Done. They have a key.', true); })
+        .catch(function(err){ khSay(err.message); });
+      return;
+    }
+    var shut = t.closest('[data-khclose]'), open_ = t.closest('[data-khopen]');
+    if (shut || open_){
+      var b = shut || open_;
+      b.disabled = true;
+      api('/api/keep/people/' + b.getAttribute(shut ? 'data-khclose' : 'data-khopen') + '/closed',
+          { method: 'POST', body: { closed: !!shut } })
+        .then(function(d){
+          khData = d; khDraw();
+          khSay(shut ? 'Closed. They cannot sign in. Nothing they wrote has been touched.'
+                     : 'Open again.', true);
+        })
+        .catch(function(err){ khSay(err.message); });
       return;
     }
     var take = t.closest('[data-khtake]');
@@ -5747,8 +5815,8 @@ footer p{margin:0 auto;max-width:44ch}
     var cancel = t.closest('[data-khcancel]');
     if (cancel){
       cancel.disabled = true;
-      api('/api/keep/keys/' + cancel.getAttribute('data-khcancel'), { method: 'DELETE' })
-        .then(function(d){ khData = d; khDraw(); })
+      api('/api/invites/' + cancel.getAttribute('data-khcancel'), { method: 'DELETE' })
+        .then(function(){ khSay('Cancelled. It will not let anybody in now.', true); return khReload(); })
         .catch(function(err){ khSay(err.message); });
       return;
     }
