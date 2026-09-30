@@ -5653,14 +5653,32 @@ footer p{margin:0 auto;max-width:44ch}
           : b.verified === null ? 'Compressed — the backup script checks it when it runs.'
           : 'Checked and opened cleanly.') + ' ' + mb(b.bytes)));
     }
-    cards.push(khCard('ok', 'Photographs', h.photos == null ? '—' : h.photos, 'On the disk.'));
-    cards.push(khCard('ok', 'Recordings', h.recordings == null ? '—' : h.recordings, 'On the disk.'));
+    /* Rows and files, and the card goes red when they disagree. A photograph
+       in the database with no file behind it is the one failure nobody ever
+       notices until they click on it, years later. */
+    cards.push(khCard(khAgree(h.photos, h.photo_files), 'Photographs',
+      h.photos == null ? '—' : h.photos, khFiles(h.photos, h.photo_files)));
+    cards.push(khCard(khAgree(h.recordings, h.recording_files), 'Recordings',
+      h.recordings == null ? '—' : h.recordings, khFiles(h.recordings, h.recording_files)));
     cards.push(khCard('ok', 'The database', mb(h.db_bytes), 'Everything the family has written.'));
     cards.push(khCard(h.open_flags ? 'warn' : 'ok', 'Waiting for a person',
       h.open_flags, h.open_flags ? 'Up in the queue above.' : 'Nothing.'));
     cards.push(khCard('ok', 'The house has been up', khUp(h.uptime_s),
       'Since the last time it was restarted.'));
     $('khHealth').innerHTML = cards.join('');
+  }
+
+  function khAgree(rows, files){
+    if (rows == null || files == null) return 'ok';
+    return files >= rows ? 'ok' : 'warn';
+  }
+  function khFiles(rows, files){
+    if (files == null) return 'On the disk.';
+    if (rows == null) return files + ' on the disk.';
+    if (files === rows) return 'And ' + files + ' file' + (files === 1 ? '' : 's') + ' to match.';
+    if (files > rows) return files + ' files, so ' + (files - rows)
+      + ' removed but still kept — which is right.';
+    return 'But only ' + files + ' file' + (files === 1 ? '' : 's') + ' on the disk. Tell me.';
   }
 
   function khCard(kind, k, v, s){
