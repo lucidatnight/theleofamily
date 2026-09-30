@@ -392,8 +392,9 @@ body.inside .ribbon{position:relative;z-index:2}
   border-top:1px solid var(--edge);margin-top:10px;background:var(--cream);border-radius:0 0 14px 14px}
 .tvbox{flex:1;min-width:0;border:1px solid var(--edge);border-radius:12px;background:var(--paper);
   padding:4px 4px 0}
-.tvbox textarea{width:100%;font:inherit;font-size:16.5px;padding:8px 10px 10px;border:none;
-  background:none;color:inherit;resize:none;min-height:42px;max-height:170px;line-height:1.45}
+.tvbox textarea{display:block;width:100%;font:inherit;font-size:16.5px;padding:8px 10px 10px;
+  border:none;background:none;color:inherit;resize:none;height:42px;min-height:42px;
+  max-height:170px;line-height:1.45;overflow-y:auto}
 .tvbox textarea:focus{outline:none}
 .tvreply{display:flex;align-items:center;gap:8px;margin:5px 6px 0;padding:5px 10px;
   background:var(--cream);border-radius:9px;font-size:13.5px;color:var(--ink-soft)}
@@ -406,7 +407,13 @@ body.inside .ribbon{position:relative;z-index:2}
 .tvsay .clip{flex:none;background:none;border:1px solid var(--edge);border-radius:11px;
   padding:11px 13px;cursor:pointer;color:var(--ink-soft)}
 .tvsay .clip svg{width:19px;height:19px;fill:currentColor;display:block}
-.tvgo{flex:none;border-radius:11px;padding:12px 20px}
+/* .btn is display:block and width:100% everywhere else on this site, because
+   everywhere else it is the one button at the bottom of a form. In a row beside
+   a text box that is wrong twice over: it ate 974 of the 1006 pixels, which
+   squeezed the box down to 20px wide, which made the placeholder wrap to a
+   dozen lines, which made the auto-grow code stretch it to its 170px ceiling.
+   One rule, two symptoms, and the second one looked like a bug in the growing. */
+.tvgo{flex:none;display:inline-block;width:auto;padding:13px 20px;font-size:17px}
 .tvnote,.tvempty{color:var(--ink-soft);font-size:13.5px;max-width:74ch;margin:16px 0 0;line-height:1.6}
 
 /* the line in the courtyard */
