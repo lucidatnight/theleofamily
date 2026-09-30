@@ -331,6 +331,139 @@ body.inside .ribbon{position:relative;z-index:2}
 }
 .backlink:hover{border-color:var(--wine)}
 
+/* ── the key, and what is behind it ─────────────────
+   Deliberately the plainest thing on the site. No maiolica, no photograph, no
+   accent colour of its own. Every room in this house is dressed because a room
+   is somewhere the family goes; this is a cupboard with the fuse box in it. */
+.keyline{display:flex;justify-content:flex-end;align-items:center;margin:15px 2px 0}
+.keybtn{
+  display:inline-flex;align-items:center;gap:7px;background:none;border:none;
+  color:var(--ink-soft);font-family:var(--sans);font-size:12.5px;letter-spacing:.03em;
+  cursor:pointer;padding:6px 10px;border-radius:9px;opacity:.72;
+  transition:opacity .16s ease, background .16s ease;
+}
+.keybtn:hover{opacity:1;background:rgba(43,33,24,.05)}
+.keybtn:focus-visible{outline:2px solid var(--amalfi);outline-offset:2px;opacity:1}
+.keybtn svg{width:15px;height:15px;fill:currentColor;flex:none}
+/* The only thing on the whole page allowed to pull the eye, and only when
+   something is actually waiting for a person. */
+.keybtn .dot{width:6px;height:6px;border-radius:50%;background:var(--tomato);flex:none}
+
+.keepview{padding:44px 0 40px;display:none}
+.keepview.on{display:block}
+.keepview h2{font-family:var(--serif);font-weight:400;font-size:clamp(28px,4.5vw,40px);margin:0 0 2px}
+.keepview .en{font-size:13px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;
+  color:var(--ink-soft);margin:0 0 10px}
+.khsub{color:var(--ink-soft);font-size:15px;max-width:68ch;margin:0 0 22px}
+.khsect{background:var(--paper);border:1px solid var(--edge);border-radius:14px;
+  margin:0 0 18px;overflow:hidden;box-shadow:0 5px 16px rgba(90,50,30,.07)}
+.khsect > h3{font-family:var(--serif);font-weight:400;font-size:21px;margin:0;
+  padding:15px 20px 0;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.khcount{font-family:var(--sans);font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--ink-soft);background:rgba(43,33,24,.06);border-radius:999px;padding:2px 9px}
+.khcount.hot{background:rgba(217,69,47,.12);color:var(--tomato)}
+.khwhy{margin:5px 20px 0;color:var(--ink-soft);font-size:13.5px;max-width:72ch}
+.khbody{padding:14px 20px 18px}
+.khhead{font-family:var(--serif);font-weight:400;font-size:19px;margin:22px 0 6px}
+
+.khtablewrap{overflow-x:auto}
+.khtable{width:100%;border-collapse:collapse}
+.khtable th{text-align:left;font-weight:600;font-size:11px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-soft);padding:0 10px 7px 0;border-bottom:1px solid var(--edge)}
+.khtable td{padding:10px 10px 10px 0;border-bottom:1px solid rgba(43,33,24,.07);
+  vertical-align:top;font-size:14px}
+.khtable tr:last-child td{border-bottom:none}
+.khtable .nm{font-family:var(--serif);font-size:16px}
+/* Always its own line. Inline, the reason somebody left for a change runs on
+   from the change itself and the two read as one sentence. */
+.khqu{color:var(--ink-soft);font-size:12.5px;display:block}
+.khpill{display:inline-block;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;
+  border-radius:999px;padding:2px 8px;font-weight:600;vertical-align:2px}
+.khpill.key{background:rgba(244,194,67,.32);color:#6b4d05}
+.khpill.you{background:rgba(31,111,139,.13);color:var(--amalfi)}
+.khacts{display:flex;gap:8px;flex-wrap:wrap}
+.khrowacts{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+.btn.ghost{background:none;color:var(--amalfi);border:1px solid var(--edge);padding:7px 12px;font-size:13px}
+.btn.quiet{background:none;color:var(--ink-soft);border:1px solid var(--edge);padding:7px 12px;font-size:13px}
+.btn.warn{background:none;color:var(--wine);border:1px solid rgba(123,45,59,.3);padding:7px 12px;font-size:13px}
+
+.khchips{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 12px}
+.khchips button{background:none;border:1px solid var(--edge);border-radius:999px;padding:4px 11px;
+  font-family:var(--sans);font-size:12.5px;color:var(--ink-soft);cursor:pointer}
+.khchips button.on{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+.khled{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid rgba(43,33,24,.07)}
+.khled:last-child{border-bottom:none}
+.khled .rm{flex:none;width:96px;font-size:11px;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--ink-soft);padding-top:3px}
+.khled .wh{flex:1;min-width:0}
+.khled .wh b{font-weight:600}
+.khled .wh i{font-style:normal;color:var(--ink-soft)}
+.khled .tm{flex:none;color:var(--ink-soft);font-size:12.5px;padding-top:2px;text-align:right;min-width:92px}
+/* The key room's own doings, marked so they cannot be skimmed past. */
+.khled.own{background:rgba(244,194,67,.10);border-radius:8px;padding-left:9px;padding-right:9px}
+
+.khflag{border:1px solid rgba(217,69,47,.25);border-left:4px solid var(--tomato);
+  border-radius:11px;padding:13px 15px;margin:0 0 11px;background:rgba(217,69,47,.035)}
+.khflag:last-child{margin-bottom:0}
+.khflag h4{font-family:var(--serif);font-weight:400;font-size:17px;margin:0}
+.khflag .said{margin:8px 0;padding:9px 13px;background:var(--cream);border-radius:9px;
+  font-family:var(--serif);font-size:15.5px;word-break:break-word}
+.khflag .why{color:var(--ink-soft);font-size:13px;margin:0 0 10px}
+.khsettled{color:var(--ink-soft);font-size:13px;padding:7px 0;border-bottom:1px solid rgba(43,33,24,.07)}
+.khsettled:last-child{border-bottom:none}
+.khquiet{color:var(--ink-soft);font-size:14.5px;margin:0}
+
+.khhealth{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.khcard{border:1px solid var(--edge);border-radius:11px;padding:12px 14px;background:var(--cream)}
+.khcard .k{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-soft)}
+.khcard .v{font-family:var(--serif);font-size:23px;line-height:1.2;margin:2px 0 1px}
+.khcard .s{font-size:12.5px;color:var(--ink-soft)}
+.khcard.ok{border-left:4px solid var(--olive)}
+.khcard.bad{border-left:4px solid var(--tomato);background:rgba(217,69,47,.05)}
+.khcard.bad .v{color:var(--wine)}
+
+.khpanel{border:1px dashed rgba(43,33,24,.28);border-radius:12px;padding:15px 17px;background:var(--cream)}
+.khpanel h4{font-family:var(--serif);font-weight:400;font-size:18px;margin:0 0 3px}
+.khpanel .lead{color:var(--ink-soft);font-size:13.5px;margin:0 0 12px;max-width:66ch}
+.khform{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.khform button{flex:none}
+.khform input{flex:1;min-width:190px;font:inherit;padding:10px 12px;border-radius:9px;
+  border:1px solid var(--edge);background:var(--paper);color:inherit}
+.khgrant{margin:13px 0 0;padding:0;list-style:none;font-size:13.5px;color:var(--ink-soft)}
+.khgrant li{padding:3px 0 3px 22px;position:relative}
+.khgrant li:before{content:'✓';position:absolute;left:2px;color:var(--olive);font-weight:700}
+.khgrant li.no:before{content:'✕';color:var(--wine)}
+.khmade{margin:14px 0 0;border:1px solid var(--edge);border-radius:12px;background:var(--paper);padding:15px 17px}
+.khlab{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-soft)}
+/* The label shouts; the name does not. Names are the one thing on this site
+   that never get shoved into capitals. */
+.khfor{font-family:var(--serif);font-size:19px;margin:1px 0 6px}
+.khcode{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:clamp(18px,5vw,26px);
+  letter-spacing:.06em;background:var(--cream);border:1px dashed rgba(43,33,24,.3);
+  border-radius:10px;padding:11px 15px;display:inline-block;margin:2px 0 10px;word-break:break-all}
+.khmade ul{margin:0 0 12px;padding-left:19px;color:var(--ink-soft);font-size:13.5px}
+.khnokey{text-align:center;padding:30px 18px;color:var(--ink-soft)}
+.khnokey h4{font-family:var(--serif);font-weight:400;font-size:20px;color:var(--ink);margin:0 0 5px}
+.khnokey p{margin:0}
+
+.khholder{border:1px solid var(--edge);border-radius:12px;padding:14px 16px;margin:0 0 12px;background:var(--cream)}
+.khholder:last-child{margin-bottom:0}
+.khholder .hh{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.khholder .hh .nm{font-family:var(--serif);font-size:18px}
+.khholder .hh .em{color:var(--ink-soft);font-size:13px}
+.khnotices{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:2px 16px;margin:11px 0 0}
+.khnotices label{display:flex;gap:8px;align-items:flex-start;font-size:13.5px;cursor:pointer;padding:3px 0}
+.khnotices input{margin-top:3px;accent-color:var(--terracotta);flex:none}
+.khsent{margin:10px 0 0;font-size:12.5px;color:var(--ink-soft)}
+
+@media(max-width:700px){
+  .khled{flex-wrap:wrap;gap:3px 12px}
+  .khled .rm{width:auto}
+  .khled .tm{text-align:left;min-width:0;width:100%}
+  .khrowacts{justify-content:flex-start}
+  .khtable td,.khtable th{font-size:13px}
+}
+
 /* ── Le Fotografie ────────────────────────────────── */
 .fotobar{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin:0 0 20px}
 .fotoadd{width:auto;padding:13px 22px;font-size:17px}
@@ -1499,6 +1632,109 @@ footer p{margin:0 auto;max-width:44ch}
     <button class="backlink" data-back>&larr; Back to the courtyard</button>
   </section>
 
+  <!-- ── Tenere la casa ──────────────────────────────────
+       Its own view rather than a room, because it is not one: no door, no
+       photograph on a card, no place in the grid. Everything in it is drawn
+       from one request, and everything a keyholder is not allowed to do is
+       refused by the server whether or not the button is here. -->
+  <section class="wrap keepview" id="keepView">
+    <h2>Keeping the house</h2>
+    <p class="en">Tenere la casa</p>
+    <p class="sub khsub">Nothing in here is hidden from anybody by itself. Everything done in here is
+      written down in the ledger below — including what you do. That is the point of it.</p>
+    <p class="msg" id="khMsg" hidden></p>
+
+    <!-- who is in the house -->
+    <div class="khsect">
+      <h3>Who is in the house <span class="khcount" id="khWhoCount"></span></h3>
+      <p class="khwhy">Everybody who can get in, when they got here, and who let them in.</p>
+      <div class="khbody">
+        <div class="khtablewrap"><table class="khtable" id="khPeople"></table></div>
+        <div id="khCodes"></div>
+      </div>
+    </div>
+
+    <!-- the ledger -->
+    <div class="khsect">
+      <h3>The ledger <span class="khcount">everything, all eight rooms</span></h3>
+      <p class="khwhy">Every correction, every removal, every photograph pinned to a face — who did
+        it and when. The rooms have always written this down; this is the first place it can be read.</p>
+      <div class="khbody">
+        <div class="khchips" id="khChips"></div>
+        <div id="khLedger"></div>
+      </div>
+    </div>
+
+    <!-- what is waiting -->
+    <div class="khsect">
+      <h3>Things flagged for a look <span class="khcount" id="khFlagCount"></span></h3>
+      <p class="khwhy">Nothing here has been hidden or removed. It is sitting in front of you exactly
+        as the family left it, because a machine deciding what the family may say about itself is
+        worse than an awkward afternoon.</p>
+      <div class="khbody" id="khFlags"></div>
+    </div>
+
+    <!-- how it is holding up -->
+    <div class="khsect">
+      <h3>How the house is holding up</h3>
+      <p class="khwhy">Measured now, off the disk, rather than remembered from the last time
+        somebody looked.</p>
+      <div class="khbody"><div class="khhealth" id="khHealth"></div></div>
+    </div>
+
+    <!-- the key -->
+    <div class="khsect">
+      <h3>The key</h3>
+      <p class="khwhy" id="khKeyWhy">Only you can make one. A keyholder can keep the house, but
+        cannot hand the key to anybody else — otherwise it stops being something you gave and
+        becomes something that spread.</p>
+      <div class="khbody">
+        <div class="khpanel" id="khMake">
+          <h4>Give somebody the key</h4>
+          <p class="lead">Type the name the way the family says it. They put the key in on their own
+            phone or their own computer — it is not tied to the one you are holding.</p>
+          <div class="khform">
+            <input type="text" id="khName" maxlength="80" placeholder="Rosa Leo" autocomplete="off">
+            <button class="btn" id="khMakeBtn">Make a key</button>
+          </div>
+          <ul class="khgrant">
+            <li>Everything on this page — the house, the ledger, what's flagged, how it's holding up</li>
+            <li>Can clear a flag, or ask whoever put it up about it</li>
+            <li class="no">Cannot edit the family history — that stays with you</li>
+            <li class="no">Cannot take a line out of a room</li>
+            <li class="no">Cannot make another key, or let new people in</li>
+            <li class="no">Cannot take the house down, cancel your key, or close your door</li>
+          </ul>
+          <div class="khmade" id="khMade" hidden>
+            <div class="khlab">A key for</div>
+            <div class="khfor" id="khFor"></div>
+            <div class="khcode" id="khCode"></div>
+            <ul>
+              <li>Works on a phone or a computer — whichever they sign in on.</li>
+              <li>Good for 24 hours, then it stops working and you make another.</li>
+              <li>Works once. If somebody reads it over their shoulder, it is already spent.</li>
+              <li>It is in the ledger already, and goes in again when they use it.</li>
+            </ul>
+            <div class="khacts">
+              <button class="btn ghost" id="khCopy">Copy it</button>
+              <button class="btn quiet" id="khHide">Done</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="khnokey" id="khNotYours" hidden>
+          <h4>Only Tony can hand out a key</h4>
+          <p>You can keep the house — you just cannot let somebody else in to keep it with you.</p>
+        </div>
+
+        <h4 class="khhead">Who has a key</h4>
+        <div id="khHolders"></div>
+      </div>
+    </div>
+
+    <button class="backlink" id="khBack">&larr; Back to the courtyard</button>
+  </section>
+
 <!-- One player for the whole site. It is deliberately outside every room so
      that redrawing a shelf never restarts what somebody is listening to. -->
 <audio id="vcAudio" preload="none"></audio>
@@ -1941,6 +2177,21 @@ footer p{margin:0 auto;max-width:44ch}
 
 
     </div>
+
+    <!-- Not a ninth door.
+         The greeting says eight, and a service entrance is not a room in a
+         family's house — a card with maiolica tile on it, sitting beside La
+         Cucina, would invite exactly the wrong click. So: a key in the corner,
+         quiet, the size of a footnote, and drawn at all only for the people
+         who have one. For everybody else this is not dimmed or greyed out.
+         It does not exist. -->
+    <div class="keyline" id="keyLine" hidden>
+      <button class="keybtn" id="keyBtn">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2a6 6 0 0 0-5.76 7.72L2 15.96V22h6.04l1.5-1.5v-2h2v-2h2l1.22-1.22A6 6 0 1 0 14 2zm3 5.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg>
+        <span>Keeping the house</span>
+        <span class="dot" id="keyDot" hidden></span>
+      </button>
+    </div>
   </section>
 </main>
 
@@ -2037,6 +2288,7 @@ footer p{margin:0 auto;max-width:44ch}
     show('in');
     openHouse();
     loadSoon();
+    khCheck();
   }
 
   /* ── the courtyard ───────────────────────────────────
@@ -2251,6 +2503,7 @@ footer p{margin:0 auto;max-width:44ch}
   }
 
   function leaveRoom(){
+    $('keepView').classList.remove('on');
     $('roomBack').classList.remove('on');
     document.body.classList.remove('inside');
     $('roomsSection').style.display = '';
@@ -2270,6 +2523,11 @@ footer p{margin:0 auto;max-width:44ch}
        room they have just left, and the only way to stop a dead relative
        talking is to guess. */
     if (vcAudio && !vcAudio.paused) vcAudio.pause();
+    /* Whatever happened in the room just left may have put something in the
+       queue — writing an address into La Storia does exactly that. So the
+       corner is asked again on the way out rather than at the next sign-in,
+       which could be a week later. */
+    khCheck();
     if (vcPoll){ clearTimeout(vcPoll); vcPoll = null; }
     $('faceSheet').classList.remove('on');
     document.body.classList.remove('panelopen');
@@ -2646,7 +2904,15 @@ footer p{margin:0 auto;max-width:44ch}
       var f = list.shift();
       fetch(API + '/api/photos', {
         method: 'POST',
-        headers: { Authorization: 'Bearer ' + token, 'Content-Type': f.type || 'application/octet-stream' },
+        headers: { Authorization: 'Bearer ' + token,
+                   'Content-Type': f.type || 'application/octet-stream',
+                   /* The name only. There is no OCR here and never will be —
+                      but a discharge paper is usually saved as "dd214.pdf",
+                      and this is the easiest door in the house to walk
+                      paperwork through by accident. Encoded because a header
+                      may not carry an accent, and a photograph called
+                      "Nonna_e_Nonnò.jpg" must still upload. */
+                   'X-Filename': encodeURIComponent(f.name || '') },
         body: f
       }).then(function(r){
         return r.text().then(function(txt){
@@ -5150,6 +5416,365 @@ footer p{margin:0 auto;max-width:44ch}
     if (card){ openHouse(); enterRoom(card); }
   });
 
+  /* ── Tenere la casa — keeping the house ──────────────
+     The key in the corner, and the page behind it.
+
+     Everything a keyholder may not do is refused by the server. What happens
+     here is only that the button is not drawn — a courtesy to people who were
+     never going to try, and never the rule. The rule is in keep.js.
+     ──────────────────────────────────────────────────── */
+  var khData = null, khRoom = '';
+  var KH_ROOMS = { albero:"L'Albero", fotografie:'Le Fotografie', storia:'La Storia',
+                   soldati:'I Nostri Soldati', cucina:'La Cucina', voci:'Le Voci',
+                   calendario:'Il Calendario', keep:'In here' };
+  /* What the key room's own lines say, in the family's words rather than the
+     database's. An unknown one falls through to its raw name rather than being
+     swallowed: a ledger that quietly drops a line it does not recognise is
+     worse than one that prints something ugly. */
+  var KH_DID = {
+    'key.made': 'made a key', 'key.used': 'used the key', 'key.taken': 'took the key back',
+    'key.cancelled': 'cancelled a key', 'flag.left': 'looked at something flagged and left it',
+    'flag.asked': 'asked about something flagged', 'flag.removed': 'took something out after a flag'
+  };
+
+  function khSay(t, good){
+    var m = $('khMsg');
+    m.textContent = t || ''; m.className = 'msg' + (good ? ' ok' : ''); m.hidden = !t;
+  }
+
+  /* Asked on the way into the courtyard by everybody, and it answers "no" for
+     almost everybody. Failing quietly matters here: if this request does not
+     come back, the right outcome is a courtyard with no key in it, not a
+     courtyard with an error on it. */
+  function khCheck(){
+    $('keyLine').hidden = true;
+    if (!token) return;
+    api('/api/keep/mine').then(function(d){
+      $('keyLine').hidden = !d.key;
+      $('keyDot').hidden = !d.waiting;
+      if (d.waiting){
+        $('keyDot').title = d.waiting === 1 ? 'one thing waiting' : d.waiting + ' things waiting';
+      }
+    }).catch(function(){ /* no key, or no answer — either way, nothing there */ });
+  }
+
+  function khOpen(){
+    return api('/api/keep').then(function(d){
+      khData = d;
+      document.body.classList.add('inside');
+      $('roomsSection').style.display = 'none';
+      document.querySelector('.door').parentElement.style.display = 'none';
+      $('roomView').classList.remove('on');
+      $('keepView').classList.add('on');
+      window.scrollTo(0, 0);
+      khDraw();
+    }).catch(function(err){ khSay(err.message); });
+  }
+
+  function khLeave(){
+    $('keepView').classList.remove('on');
+    document.body.classList.remove('inside');
+    $('roomsSection').style.display = '';
+    document.querySelector('.door').parentElement.style.display = '';
+    khSay('');
+    $('khMade').hidden = true;
+    window.scrollTo(0, 0);
+    khCheck();           // the dot may have changed while somebody was in there
+  }
+
+  function khDraw(){
+    var d = khData; if (!d) return;
+    var owner = d.you.is_owner;
+
+    /* who is in the house */
+    var ppl = d.house.people, codes = d.house.keys;
+    $('khWhoCount').textContent = ppl.length + (ppl.length === 1 ? ' person' : ' people')
+      + (codes.length ? ' · ' + codes.length + ' key' + (codes.length === 1 ? '' : 's') + ' out there' : '');
+
+    var rows = ['<thead><tr><th>Who</th><th>Came in</th><th>Last here</th><th></th></tr></thead><tbody>'];
+    ppl.forEach(function(p){
+      var tags = (p.is_you ? ' <span class="khpill you">You</span>' : '')
+               + (p.has_key && !p.is_owner ? ' <span class="khpill key">Has the key</span>' : '');
+      var acts = [];
+      if (owner && !p.is_owner){
+        if (p.has_key) acts.push('<button class="btn warn" data-khtake="' + p.id + '">Take the key back</button>');
+        else acts.push('<button class="btn ghost" data-khgive="' + esc(p.name) + '">Give the key</button>');
+      }
+      rows.push('<tr><td><span class="nm">' + esc(p.name) + '</span>' + tags
+        + (p.is_owner ? '<span class="khqu">Started the house</span>' : '')
+        + '</td><td>' + new Date(p.joined_at).toLocaleDateString()
+        + '</td><td>' + (p.seen_at ? when(p.seen_at) : 'Never signed in')
+        + '</td><td><div class="khrowacts">' + acts.join('') + '</div></td></tr>');
+    });
+    rows.push('</tbody>');
+    $('khPeople').innerHTML = rows.join('');
+
+    var cbox = $('khCodes');
+    if (!codes.length) cbox.innerHTML = '';
+    else {
+      cbox.innerHTML = '<h4 class="khhead">Keys made and not used yet</h4>'
+        + codes.map(function(k){
+            return '<div class="khholder"><div class="hh"><div><div class="nm">' + esc(k.for_name)
+              + '</div><div class="em">' + esc(k.code) + ' · made ' + when(k.made_at)
+              + ' · runs out ' + new Date(k.expires_at).toLocaleString() + '</div></div>'
+              + (owner ? '<button class="btn warn" data-khcancel="' + k.id + '">Cancel it</button>' : '')
+              + '</div></div>';
+          }).join('');
+    }
+
+    /* the ledger */
+    var chips = ['<button data-khroom="" class="' + (khRoom ? '' : 'on') + '">Everything</button>'];
+    d.rooms.forEach(function(r){
+      chips.push('<button data-khroom="' + r + '" class="' + (khRoom === r ? 'on' : '')
+        + '">' + esc(KH_ROOMS[r] || r) + '</button>');
+    });
+    $('khChips').innerHTML = chips.join('');
+    khDrawLedger(d.ledger);
+
+    /* what is waiting */
+    var open = d.flags.open;
+    $('khFlagCount').textContent = open.length ? open.length + ' waiting' : 'nothing waiting';
+    $('khFlagCount').className = 'khcount' + (open.length ? ' hot' : '');
+    var fbox = $('khFlags');
+    var html = open.map(function(f){
+      var acts = ['<button class="btn ghost" data-khflag="' + f.id + '" data-khout="left">Leave it — it\'s fine</button>',
+                  '<button class="btn quiet" data-khflag="' + f.id + '" data-khout="asked">'
+                    + (f.who && f.who === d.you.name
+                        ? 'Go back and look at it'
+                        : 'Ask ' + esc((f.who || 'them').split(' ')[0]) + ' about it')
+                    + '</button>'];
+      // Only Tony takes something out of a room, so only Tony is offered it.
+      if (owner) acts.push('<button class="btn warn" data-khflag="' + f.id + '" data-khout="removed">It is out now</button>');
+      return '<div class="khflag"><h4>' + esc(f.why) + '</h4>'
+        + (f.excerpt ? '<p class="said">' + esc(f.excerpt) + '</p>' : '')
+        + '<p class="why">In ' + esc(KH_ROOMS[f.room] || f.room)
+        + (f.who ? ', put up by ' + esc(f.who) : '') + ', ' + when(f.raised_at)
+        + '. Nothing has been hidden or taken down.</p>'
+        + '<div class="khacts">' + acts.join('') + '</div></div>';
+    }).join('');
+    if (!open.length){
+      html = '<p class="khquiet">Nothing is waiting. When something needs a person, it turns up here '
+           + 'and a red dot appears on the key in the courtyard.</p>';
+    }
+    if (d.flags.settled.length){
+      html += '<h4 class="khhead">Already dealt with</h4>'
+        + d.flags.settled.map(function(f){
+            var said = { left: 'left it', asked: 'asked about it', removed: 'took it out' }[f.outcome] || f.outcome;
+            return '<div class="khsettled">' + esc(f.settled_by_name || 'somebody') + ' ' + said
+              + ' — ' + esc(f.why) + ' <span style="opacity:.7">' + when(f.settled_at) + '</span></div>';
+          }).join('');
+    }
+    fbox.innerHTML = html;
+
+    /* how it is holding up */
+    khDrawHealth(d.health);
+
+    /* the key */
+    $('khMake').hidden = !owner;
+    $('khNotYours').hidden = owner;
+    $('khKeyWhy').textContent = owner
+      ? 'Only you can make one. A keyholder can keep the house, but cannot hand the key to anybody '
+        + 'else — otherwise it stops being something you gave and becomes something that spread.'
+      : 'Tony makes the keys. You can keep the house; you cannot let somebody else in to keep it with you.';
+
+    var hold = d.keys.holders.map(function(h){ return khHolder(h, owner); });
+    if (owner){
+      hold.unshift(khHolder({ id: d.keys.owner.id, name: d.keys.owner.name,
+        email: d.keys.owner.email, notices: d.keys.owner.notices, is_you: true, owner: true }, false));
+    }
+    if (!d.keys.holders.length && !owner) hold.push('<p class="khquiet">Just you.</p>');
+    $('khHolders').innerHTML = hold.join('');
+  }
+
+  function khHolder(h, canTake){
+    var lines = h.owner ? 'Yours. It cannot be taken away.'
+      : 'Since ' + when(h.key_at) + (h.given_by ? ' · given by ' + esc(h.given_by) : '');
+    var notices = (khData.notices || []).map(function(n){
+      return '<label><input type="checkbox" data-khnotice="' + n.key + '" data-khwho="' + h.id + '"'
+        + (h.notices[n.key] ? ' checked' : '') + (h.is_you ? '' : ' disabled')
+        + '><span>' + esc(n.says) + '</span></label>';
+    }).join('');
+    return '<div class="khholder"><div class="hh"><div><div class="nm">' + esc(h.name)
+      + '</div><div class="em">' + lines + '</div></div>'
+      + (canTake ? '<button class="btn warn" data-khtake="' + h.id + '">Take the key back</button>' : '')
+      + '</div><div class="khnotices">' + notices + '</div>'
+      + '<p class="khsent">Sent to the address ' + (h.is_you ? 'you' : 'they') + ' signed in with.'
+      + (h.is_you ? '' : ' Only they can change these.') + '</p></div>';
+  }
+
+  function khDrawLedger(rows){
+    var box = $('khLedger');
+    if (!rows.length){ box.innerHTML = '<p class="khquiet">Nothing written down here yet.</p>'; return; }
+    box.innerHTML = rows.map(function(r){
+      var mine = r.room === 'keep';
+      var said;
+      if (mine){
+        said = '<b>' + esc(r.who || 'somebody') + '</b> <i>' + esc(KH_DID[r.field] || r.field)
+             + (r.was ? ' — ' + esc(r.was) : '') + '</i>';
+      } else if (r.room === 'storia'){
+        /* story_edits keeps the version being REPLACED, so there is no "now"
+           to point an arrow at — the new text is already in the room. Saying
+           "→ nothing" would read as though somebody had emptied it. */
+        said = '<b>' + esc(r.who || 'somebody') + '</b> <i>rewrote '
+             + esc(r.was || 'a part of the history') + '</i>'
+             + '<span class="khqu">What it said before is kept.</span>';
+      } else {
+        said = '<b>' + esc(r.who || 'somebody') + '</b> <i>' + esc(r.field) + '</i>'
+             + (r.was || r.now
+                 ? '<span class="khqu">' + (r.was ? '“' + esc(r.was) + '”' : 'nothing')
+                   + ' → ' + (r.now ? '“' + esc(r.now) + '”' : 'nothing') + '</span>'
+                 : '');
+      }
+      return '<div class="khled' + (mine ? ' own' : '') + '"><span class="rm">'
+        + esc(KH_ROOMS[r.room] || r.room) + '</span><span class="wh">' + said
+        + '</span><span class="tm">' + when(r.at) + '</span></div>';
+    }).join('');
+  }
+
+  function khDrawHealth(h){
+    /* Kilobytes under a megabyte. "0.0 MB" beside a database that plainly
+       has the family in it reads as broken, and a number nobody believes is
+       a number nobody reads. */
+    var mb = function(b){
+      if (b == null) return '—';
+      if (b < 1048576) return Math.max(1, Math.round(b / 1024)) + ' KB';
+      return (b / 1048576).toFixed(1) + ' MB';
+    };
+    var cards = [];
+    var b = h.backup || {};
+    if (!b.folder){
+      cards.push(khCard('warn', 'Backups', 'Not set up', 'No backup folder on this machine.'));
+    } else if (!b.taken_at){
+      cards.push(khCard('warn', 'Backups', 'None yet', 'The folder is there; nothing in it.'));
+    } else {
+      cards.push(khCard(b.verified === false ? 'warn' : 'ok', 'Last backup',
+        new Date(b.taken_at).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }),
+        (b.verified === false ? 'It would not open. Worth a look tonight.'
+          : b.verified === null ? 'Compressed — the backup script checks it when it runs.'
+          : 'Checked and opened cleanly.') + ' ' + mb(b.bytes)));
+    }
+    cards.push(khCard('ok', 'Photographs', h.photos == null ? '—' : h.photos, 'On the disk.'));
+    cards.push(khCard('ok', 'Recordings', h.recordings == null ? '—' : h.recordings, 'On the disk.'));
+    cards.push(khCard('ok', 'The database', mb(h.db_bytes), 'Everything the family has written.'));
+    cards.push(khCard(h.open_flags ? 'warn' : 'ok', 'Waiting for a person',
+      h.open_flags, h.open_flags ? 'Up in the queue above.' : 'Nothing.'));
+    cards.push(khCard('ok', 'The house has been up', khUp(h.uptime_s),
+      'Since the last time it was restarted.'));
+    $('khHealth').innerHTML = cards.join('');
+  }
+
+  function khCard(kind, k, v, s){
+    return '<div class="khcard ' + (kind === 'warn' ? 'bad' : 'ok') + '"><div class="k">' + esc(k)
+      + '</div><div class="v">' + esc(String(v)) + '</div><div class="s">' + esc(s) + '</div></div>';
+  }
+
+  function khUp(s){
+    if (s == null) return '—';
+    var d = Math.floor(s / 86400);
+    if (d >= 1) return d + (d === 1 ? ' day' : ' days');
+    var h = Math.floor(s / 3600);
+    if (h >= 1) return h + (h === 1 ? ' hour' : ' hours');
+    var m = Math.max(1, Math.round(s / 60));
+    return m + (m === 1 ? ' minute' : ' minutes');
+  }
+
+  $('keyBtn').addEventListener('click', function(){ khOpen(); });
+  $('khBack').addEventListener('click', khLeave);
+
+  $('khMakeBtn').addEventListener('click', function(){
+    var nm = $('khName').value.trim();
+    if (!nm) return khSay('Whose key is it?');
+    var b = this; b.disabled = true; b.textContent = 'Making';
+    api('/api/keep/keys', { method: 'POST', body: { for_name: nm } }).then(function(d){
+      $('khFor').textContent = d.for_name;
+      $('khCode').textContent = d.code;
+      $('khMade').hidden = false;
+      $('khName').value = '';
+      khSay('');
+      khData = d.keep; khDraw();
+      $('khMade').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }).catch(function(err){ khSay(err.message); })
+      .then(function(){ b.disabled = false; b.textContent = 'Make a key'; });
+  });
+
+  $('khCopy').addEventListener('click', function(){
+    var code = $('khCode').textContent;
+    var done = function(){ khSay('Copied. It works once, and it stops working in a day.', true); };
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(code).then(done, function(){ khSay('Copy it by hand: ' + code); });
+    } else {
+      khSay('Copy it by hand: ' + code);
+    }
+  });
+  $('khHide').addEventListener('click', function(){ $('khMade').hidden = true; khSay(''); });
+
+  $('keepView').addEventListener('click', function(e){
+    if (!e.target.closest) return;
+    var t = e.target;
+
+    var give = t.closest('[data-khgive]');
+    if (give){
+      $('khName').value = give.getAttribute('data-khgive');
+      $('khMakeBtn').click();
+      return;
+    }
+    var take = t.closest('[data-khtake]');
+    if (take){
+      take.disabled = true;
+      api('/api/keep/keys/held/' + take.getAttribute('data-khtake'), { method: 'DELETE' })
+        .then(function(d){ khData = d; khDraw(); khSay('Done. They are ordinary family again.', true); })
+        .catch(function(err){ khSay(err.message); });
+      return;
+    }
+    var cancel = t.closest('[data-khcancel]');
+    if (cancel){
+      cancel.disabled = true;
+      api('/api/keep/keys/' + cancel.getAttribute('data-khcancel'), { method: 'DELETE' })
+        .then(function(d){ khData = d; khDraw(); })
+        .catch(function(err){ khSay(err.message); });
+      return;
+    }
+    var flag = t.closest('[data-khflag]');
+    if (flag){
+      var out = flag.getAttribute('data-khout');
+      flag.disabled = true;
+      api('/api/keep/flags/' + flag.getAttribute('data-khflag'), { method: 'POST', body: { outcome: out } })
+        .then(function(d){
+          khData = d; khDraw();
+          khSay(out === 'asked' ? 'Written down. Now go and ask them.'
+              : out === 'removed' ? 'Written down — and it is your word that it is out, so make sure it is.'
+              : 'Left as it is.', true);
+        })
+        .catch(function(err){ khSay(err.message); });
+      return;
+    }
+    var chip = t.closest('[data-khroom]');
+    if (chip){
+      khRoom = chip.getAttribute('data-khroom');
+      Array.prototype.forEach.call($('khChips').querySelectorAll('button'), function(x){
+        x.classList.toggle('on', x.getAttribute('data-khroom') === khRoom);
+      });
+      api('/api/keep/ledger' + (khRoom ? '?room=' + khRoom : '')).then(function(d){
+        khDrawLedger(d.ledger);
+      }).catch(function(err){ khSay(err.message); });
+      return;
+    }
+  });
+
+  $('keepView').addEventListener('change', function(e){
+    var box = e.target.closest ? e.target.closest('[data-khnotice]') : null;
+    if (!box) return;
+    var body = {};
+    Array.prototype.forEach.call($('khHolders').querySelectorAll('[data-khnotice]'), function(x){
+      if (x.getAttribute('data-khwho') === box.getAttribute('data-khwho') && !x.disabled){
+        body[x.getAttribute('data-khnotice')] = x.checked;
+      }
+    });
+    api('/api/keep/notices', { method: 'POST', body: body })
+      .then(function(){ khSay('Saved.', true); })
+      .catch(function(err){ khSay(err.message); });
+  });
+
   /* ── Il Calendario ───────────────────────────────────
      Three sections, ordered by how much each kind of date asks of you.
      ──────────────────────────────────────────────────── */
@@ -5673,6 +6298,7 @@ footer p{margin:0 auto;max-width:44ch}
       closeHouse();
       // What is coming is family business. It goes away with the sign-in.
       $('soonStrip').hidden = true;
+      $('keyLine').hidden = true;
       if (soonTimer){ clearInterval(soonTimer); soonTimer = null; }
       show('signin');
       say('Signed out. See you soon.', true);
