@@ -2389,11 +2389,19 @@ footer p{margin:0 auto;max-width:44ch}
 
   /* The one line that changes between a laptop and the real thing. Opened
      from a file or from localhost it talks to a server on this machine;
-     anywhere else it talks to sentinel. No build step, no two copies of the
-     page to keep in step. */
+     anywhere else it talks to ragnarok. No build step, no two copies of the
+     page to keep in step.
+
+     7 Nov 2026: moved from sentinel to ragnarok, because sentinel no longer
+     exists. Note what that cost — the page was fine the whole time, but it
+     had a MACHINE NAME written into it, so the site died with the machine
+     and stayed dead until someone edited this line and redeployed. If this
+     ever has to move again, point it at a name you control (an
+     api.theleofamily.com through a tunnel) and the next move becomes a DNS
+     change instead of a release. */
   var API = (location.protocol === 'file:' || /^(localhost|127\.0\.0\.1)$/.test(location.hostname))
     ? 'http://127.0.0.1:3998'
-    : 'https://sentinel.tailb152cd.ts.net:8443';
+    : 'https://ragnarok.tailb152cd.ts.net:8443';
 
   var KEY = 'famiglia_token';
   var token = null;
